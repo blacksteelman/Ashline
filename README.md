@@ -2,6 +2,15 @@
 
 Самостоятельный PC FPS на Godot 4.6.3: оригинальная карта Foundry District, собственные модели, материалы и синтезированные звуки. Это работающая ранняя альфа. Целевое качество современной коммерческой FPS ещё не достигнуто.
 
+## Скачать готовую игру
+
+Проверенные архивы находятся в [ветке builds/v0.3.0-alpha](https://github.com/blacksteelman/Ashline/tree/builds/v0.3.0-alpha). Откройте нужный ZIP и нажмите **Download raw file** (значок скачивания). Для приватного репозитория требуется вход в GitHub с доступом к нему.
+
+- [Windows x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.3.0-alpha/ASHLINE-0.3-Windows-x64.zip)
+- [Linux x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.3.0-alpha/ASHLINE-0.3-Linux-x64.zip)
+- [Исходники](https://github.com/blacksteelman/Ashline/blob/builds/v0.3.0-alpha/ASHLINE-0.3-Source.zip)
+- [Реальные скриншоты](https://github.com/blacksteelman/Ashline/blob/builds/v0.3.0-alpha/ASHLINE-0.3-Screenshots.zip)
+
 ## Запуск готового билда
 
 - Windows x64: распаковать архив, запустить `ASHLINE.exe`.
