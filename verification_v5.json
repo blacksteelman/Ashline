@@ -1,0 +1,291 @@
+{
+  "version": "0.5",
+  "date": "2026-10-08",
+  "engine": "Godot 4.6.3",
+  "functional": {
+    "failed": 0,
+    "passed": 49,
+    "success": true
+  },
+  "regression": {
+    "failed": 0,
+    "passed": 14,
+    "success": true
+  },
+  "character": {
+    "failed": 0,
+    "passed": 18,
+    "success": true
+  },
+  "art_regression": {
+    "passed": 10,
+    "failed": 0,
+    "success": true,
+    "log": "build/regression_art_v4-v5.log",
+    "errors": false,
+    "last_lines": [
+      "PASS: Short flash survives its first slow presentation frame",
+      "PASS: Expired flash is removed after presentation",
+      "ART_REGRESSION_V4 failures=0"
+    ]
+  },
+  "playthrough": {
+    "log": "build/playthrough-v5.log",
+    "errors": false,
+    "last_lines": [
+      "CLICK RESUME (795.0, 305.0) rect=[P: (600.0, 281.0), S: (390.0, 48.0)] viewport=[P: (0.0, 0.0), S: (1600.0, 900.0)]",
+      "PASS: Match resumes from the menu",
+      "PLAYTHROUGH OK failures=0"
+    ]
+  },
+  "stairs": {
+    "log": "build/stairs-v5.log",
+    "errors": false,
+    "last_lines": [
+      "",
+      "STAIR_POSITION (26.0, 2.250215, -11.9624)",
+      "STAIRS_OK"
+    ]
+  },
+  "native_network": {
+    "success": true,
+    "clients": [
+      {
+        "client": 0,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 0,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 1,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 3,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 2,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 8,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 3,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 11,
+        "actors": 12,
+        "shots": 23,
+        "acknowledged": 23,
+        "pending": 0
+      },
+      {
+        "client": 4,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 4,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 5,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 5,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 6,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 1,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 7,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 2,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 8,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 7,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 9,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 9,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 10,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 10,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 11,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 6,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      }
+    ]
+  },
+  "native_vulkan": {
+    "executed": true,
+    "screenshot": "build/screenshots-v5/native-combat.png",
+    "device": "Mesa llvmpipe software Vulkan",
+    "log": "build/native-vulkan-v5.log",
+    "errors": false,
+    "last_lines": [
+      "Vulkan 1.4.305 - Forward+ - Using Device #0: Unknown - llvmpipe (LLVM 19.1.7, 256 bits)",
+      "",
+      "CAPTURE_SAVED"
+    ]
+  },
+  "native_opengl": {
+    "executed": true,
+    "screenshot": "build/screenshots-v5/native-opengl.png",
+    "log": "build/native-opengl-v5.log",
+    "errors": false,
+    "last_lines": [
+      "OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)",
+      "",
+      "CAPTURE_SAVED"
+    ]
+  },
+  "windows": {
+    "exported": true,
+    "executed": false
+  },
+  "audio": {
+    "driver": "Dummy",
+    "real_audio_output_verified": false
+  },
+  "assets": {
+    "manifest": "assets/thirdparty/SOURCES.json",
+    "third_party_license": "CC0-1.0",
+    "new_biped_and_clips": "Original authored rig, skin weights and keyframes; no external character/mocap assets"
+  },
+  "visual_inspection": {
+    "images_viewed": [
+      "combat-opponent",
+      "character-reload",
+      "character-strafe",
+      "firing",
+      "native-combat",
+      "native-opengl"
+    ],
+    "material_tint_fixed": true,
+    "retouched": false,
+    "controlled_pose_screenshots": true,
+    "cod4_quality_reached": false
+  },
+  "bot_matches": {
+    "505": {
+      "completed": true,
+      "matches": 3,
+      "scores": [
+        "MATCH_END 1 SCORE [40, 31] HEADSHOTS 15 SHOTS 499",
+        "MATCH_END 2 SCORE [21, 40] HEADSHOTS 25 SHOTS 871",
+        "MATCH_END 3 SCORE [22, 40] HEADSHOTS 37 SHOTS 1288"
+      ],
+      "shots": 1288,
+      "recovery_events": 3,
+      "last_round_spawn_deaths": 3
+    },
+    "506": {
+      "completed": true,
+      "matches": 3,
+      "scores": [
+        "MATCH_END 1 SCORE [40, 35] HEADSHOTS 26 SHOTS 459",
+        "MATCH_END 2 SCORE [38, 40] HEADSHOTS 42 SHOTS 868",
+        "MATCH_END 3 SCORE [40, 38] HEADSHOTS 54 SHOTS 1382"
+      ],
+      "shots": 1382,
+      "recovery_events": 3,
+      "last_round_spawn_deaths": 3
+    }
+  },
+  "performance": {
+    "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "cpu_threads": 3,
+    "draw_calls_median": 1313.0,
+    "graphics_profile": 1,
+    "median_ms": 1151.325,
+    "msaa": 2,
+    "nodes": 1329.0,
+    "note": "Software llvmpipe rendering. This does not predict performance on a gaming GPU.",
+    "p95_ms": 1223.848,
+    "renderer": "forward_plus",
+    "resolution": [
+      1280,
+      720
+    ],
+    "sample_frames": 30
+  },
+  "remaining": [
+    "Requested COD4 art quality not reached; characters/interiors/weapon geometry need substantial work",
+    "Rare bot recovery events and some early spawn deaths; six bot matches do not prove balance",
+    "No internet lag compensation, matchmaking or production hardening",
+    "Windows runtime, gaming GPU performance and real audio output not verified"
+  ],
+  "sha256": {
+    "build/linux/ASHLINE.x86_64": "4fac0d0deb69b51c9bba2ba88ea8fb128a8105cfb5c278fbf7f10ab84c6920d0",
+    "build/windows/ASHLINE.exe": "14fc13baf2d6b4cf933c944b8b0e0f512b0681aa7664d7f9af5fdfa442c6c2f9"
+  }
+}
