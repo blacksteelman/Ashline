@@ -10,3 +10,5 @@ Third-party CC0 resources added in 0.4:
 
 License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 Pinned files, source links, hashes, source mirror commit and modifications are recorded in assets/thirdparty/SOURCES.json. Local vendor inputs are included for offline rebuilding.
+
+The 0.5 biped skeleton, skin weights, keyframed clips, material derivations and character presentation code were authored specifically for ASHLINE. No third-party motion capture or character animations were imported.

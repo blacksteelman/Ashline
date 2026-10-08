@@ -1,15 +1,15 @@
-# ASHLINE — playable PC alpha 0.4
+# ASHLINE — playable PC alpha 0.5
 
 Самостоятельный PC FPS на Godot 4.6.3: оригинальная карта Foundry District, собственные модели, материалы ambientCG и записи оружия из Free Firearm Sound Library (CC0). Это работающая ранняя альфа. Целевое качество современной коммерческой FPS ещё не достигнуто.
 
 ## Скачать готовую игру
 
-Проверенные архивы находятся в [ветке builds/v0.4.0-alpha](https://github.com/blacksteelman/Ashline/tree/builds/v0.4.0-alpha). Откройте нужный ZIP и нажмите **Download raw file** (значок скачивания). Для приватного репозитория требуется вход в GitHub с доступом к нему.
+Проверенные архивы находятся в [ветке builds/v0.5.0-alpha](https://github.com/blacksteelman/Ashline/tree/builds/v0.5.0-alpha). Откройте нужный ZIP и нажмите **Download raw file** (значок скачивания). Для приватного репозитория требуется вход в GitHub с доступом к нему.
 
-- [Windows x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.4.0-alpha/ASHLINE-0.4-Windows-x64.zip)
-- [Linux x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.4.0-alpha/ASHLINE-0.4-Linux-x64.zip)
-- [Исходники](https://github.com/blacksteelman/Ashline/blob/builds/v0.4.0-alpha/ASHLINE-0.4-Source.zip)
-- [Реальные скриншоты](https://github.com/blacksteelman/Ashline/blob/builds/v0.4.0-alpha/ASHLINE-0.4-Screenshots.zip)
+- [Windows x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.5.0-alpha/ASHLINE-0.5-Windows-x64.zip)
+- [Linux x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.5.0-alpha/ASHLINE-0.5-Linux-x64.zip)
+- [Исходники](https://github.com/blacksteelman/Ashline/blob/builds/v0.5.0-alpha/ASHLINE-0.5-Source.zip)
+- [Реальные скриншоты](https://github.com/blacksteelman/Ashline/blob/builds/v0.5.0-alpha/ASHLINE-0.5-Screenshots.zip)
 
 ## Запуск готового билда
 
@@ -38,6 +38,16 @@ LOCAL NETWORK → HOST создаёт сервер UDP 27841 с ботами н�
 Dedicated автоматически начинает следующий раунд через 8 секунд. Боты занимают освободившиеся места. Сервер рассчитывает движение, здоровье, попадания, reload, score и respawn. Клиент немедленно воспроизводит выстрел, отдачу и звук; боезапас сверяется с подтверждениями выстрелов, удалённые бойцы сглаживаются между снимками. Состояние передаётся примерно 30 раз/сек, DEFLATE.
 
 Сеть рассчитана на текущую LAN-альфу. Lag compensation, matchmaking, NAT traversal и полноценная защита сетевого сервера не реализованы. Не считать испытание автоматическими клиентами доказательством готовности публичного multiplayer-сервиса.
+
+## Изменения 0.5
+
+У солдат теперь полноценный скелет из 17 костей и 11 оригинальных клипов: стойка, движение вперёд/назад/вбок, sprint, crouch, jump, reload и death. AnimationTree смешивает направление и скорость; перезарядка затрагивает левую руку, сохраняя шаг. Таз разворачивается при боковом движении, верх тела остаётся направленным на цель. Оружие закреплено на грудной кости и следует за прицеливанием, а не за прежней неподвижной позицией. Сетевые персонажи используют сглаженную скорость изображения; после смерти остаётся поза упавшего тела.
+
+Исправлен экспорт цвета текстурированных материалов: металл и полимер оружия больше не превращаются в белые поверхности. Добавлены карты ткани и микрорельефа оружия, ленты разгрузки и профилированные наколенники. На dedicated/headless сервере визуальные анимации не вычисляются. Исправлены время индикатора выстрела удалённого бойца и реакция его оружия.
+
+`tests/character_v5.gd` содержит 18 проверок скелета, контакта стопы с землёй, crouch, reload, смешивания ног/руки и смерти. Полные матчи, обычные механики, Linux-бинарник и 12 отдельных сетевых клиентов проверяются отдельно; результаты находятся в `tests/verification_v5.json`. Реальные кадры сохраняются скриптами `tests/visual_character_v5.gd` и `tests/visual_capture_v5.gd`.
+
+Форма солдат, интерьеры и оружие всё ещё требуют художественной доработки: визуальный ориентир COD4 не достигнут. Аппаратный игровой GPU, Windows runtime и прослушивание звука здесь не проверены.
 
 ## Изменения 0.4
 

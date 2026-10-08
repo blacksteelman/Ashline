@@ -516,7 +516,7 @@ func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array)
  for i in range(12):
   var f=fighters[i];var s=data[i]
   var displacement=f.position.distance_to(s[0])
-  if not f.local_player and not s[4]:
+  if not f.local_player and not s[4] and not f.body_motion:
    f.walk_phase+=displacement*1.8
    f.model.get_node('LegL').rotation.x=sin(f.walk_phase)*.45
    f.model.get_node('LegR').rotation.x=-sin(f.walk_phase)*.45
@@ -525,7 +525,7 @@ func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array)
    f.network_position=s[0];f.network_yaw=s[1]
    if not f.network_pose_ready or displacement>3 or f.dead!=s[4]:f.position=s[0];f.rotation.y=s[1]
    f.network_pose_ready=true;f.yaw=s[1];f.pitch=s[2]
-  f.health=s[3];f.dead=s[4];f.kills=s[5];f.deaths=s[6];f.streak=s[7];f.ammo=s[8];f.reserves=s[9];f.respawn_time=s[11];f.rewards.assign(s[12]);f.class_id=s[13];f.reload_left=s[14];f.crouched=s[15];f.col.shape.height=1.2 if f.crouched else 1.8;f.col.position.y=.6 if f.crouched else .9;f.model.visible=not f.local_player or f.dead;f.model.rotation.x=-1.48 if f.dead else 0;f.model.position.y=.12 if f.dead else (-.42 if f.crouched else 0);f.collision_layer=0 if f.dead else 2
+  f.health=s[3];f.dead=s[4];f.kills=s[5];f.deaths=s[6];f.streak=s[7];f.ammo=s[8];f.reserves=s[9];f.respawn_time=s[11];f.rewards.assign(s[12]);f.class_id=s[13];f.reload_left=s[14];f.crouched=s[15];f.col.shape.height=1.2 if f.crouched else 1.8;f.col.position.y=.6 if f.crouched else .9;f.model.visible=not f.local_player or f.dead;f.model.rotation.x=0 if f.body_motion else (-1.48 if f.dead else 0);f.model.position.y=0 if f.body_motion else (.12 if f.dead else (-.42 if f.crouched else 0));f.collision_layer=0 if f.dead else 2
   if f.local_player:
    f.acknowledged_fire=s[16]
    f.pending_predictions=f.pending_predictions.filter(func(shot):return shot.sequence>f.acknowledged_fire)
@@ -557,6 +557,7 @@ func shot_event(who: int, origin: Vector3, dir: Vector3):
  if fighters.size()!=12 or state!='match':return
  var f=fighters[who]
  if f.local_player:return # Local predicted recoil/audio already played.
+ f.last_shot=.4
  sound(Arsenal.WEAPONS[f.weapon_id].sound,origin,f.local_player,-3)
  if f.local_player:f.view.fire(f.weapon_id);f.kick+=.038;f.pitch+=deg_to_rad(Arsenal.WEAPONS[f.weapon_id].recoil);muzzle(f.gun.to_global(f.gun.get_meta('muzzle')),dir)
  else:muzzle(origin+dir*.55,dir)

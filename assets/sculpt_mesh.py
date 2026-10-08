@@ -182,3 +182,12 @@ def soldier(cloth,armor,skin,black):
   glove('World glove',(.088,.582,1.125) if side<0 else (.156,.318,1.084),armor,None,right=side>0)
  loft('Human head',[((0,.018,1.53),.067,.067),((0,.031,1.57),.080,.079),((0,.025,1.62),.109,.094),((0,.018,1.70),.106,.103),((0,.004,1.76),.091,.089),((0,0,1.79),.038,.042)],skin)
  loft('Helmet composite shell',[((0,-.009,1.703),.137,.129),((0,-.015,1.72),.145,.135),((0,-.025,1.76),.140,.126),((0,-.021,1.80),.112,.099),((0,-.015,1.83),.067,.066),((0,-.012,1.84),.018,.018)],armor,segments=32)
+ # Webbing follows the carrier curvature instead of floating flat above it.
+ for z,rx,ry,cy in [(1.275,.214,.172,.022),(1.30,.210,.168,.019),(1.325,.207,.165,.017)]:
+  points=[]
+  for x in [-.165,-.11,-.055,0,.055,.11,.165]:
+   y=cy+ry*math.sqrt(1-(x/rx)**2)+.003
+   points.append(((x,y,z),.0025,.009))
+  loft('Vest webbing',points,cloth,segments=12)
+ for side in [-1,1]:
+  loft('Knee protection',[((side*.115,.072,.51),.060,.04),((side*.115,.105,.49),.074,.037),((side*.115,.113,.44),.078,.03),((side*.115,.101,.39),.065,.027),((side*.115,.087,.37),.03,.02)],black,segments=24)

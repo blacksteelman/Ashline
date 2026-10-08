@@ -44,6 +44,7 @@ var pending_remote_shots: Array[Dictionary]=[]
 var reload_requested=false
 var model: Node3D
 var world_gun: Node3D
+var body_motion: CharacterMotion
 var death_motion: Tween
 var spawn_deaths=0
 var kick=0.0
@@ -86,6 +87,8 @@ func _ready():
  floor_snap_length=.32;floor_stop_on_slope=true;standing_clearance.radius=.29
  col=CollisionShape3D.new();var cap=CapsuleShape3D.new();cap.radius=.30;cap.height=1.8;col.shape=cap;col.position.y=.9;add_child(col)
  model=Art.soldier(self,team)
+ body_motion=CharacterMotion.new()
+ if not body_motion.bind(self):body_motion=null
  if local_player:
   model.visible=false
   camera=Camera3D.new();add_child(camera);camera.position.y=1.62;camera.current=true;camera.fov=game.settings.fov;camera.near=.045
@@ -102,10 +105,11 @@ func load_class(c: int):
  if local_player and rig:build_gun()
  update_world_weapon()
 func update_world_weapon():
- var old=model.get_node_or_null('WorldWeapon')
+ var old=model.find_child('WorldWeapon',true,false)
  if old:
-  model.remove_child(old);old.queue_free()
+  old.visible=false;old.get_parent().remove_child(old);old.queue_free()
  world_gun=Art.weapon(model,weapon_id,false);world_gun.name='WorldWeapon';world_gun.position=Vector3(.13,1.17,-.37);world_gun.scale=Vector3.ONE*.8
+ if body_motion:body_motion.attach_weapon(world_gun)
 func eye() -> Vector3:return global_position+Vector3(0,1.03 if crouched else 1.62,0)
 func aim_dir() -> Vector3:return Vector3(-sin(yaw)*cos(pitch),sin(pitch),-cos(yaw)*cos(pitch))
 func _input(event):
@@ -188,7 +192,7 @@ func _physics_process(dt):
  rotation.y=yaw
  var moving=Vector2(velocity.x,velocity.z).length()
  walk_phase+=dt*moving*1.8
- if model and not game.bot_test:
+ if model and not game.bot_test and not body_motion:
   if not dead:model.rotation.z=lerpf(model.rotation.z,0,dt*9)
   model.get_node('LegL').rotation.x=sin(walk_phase)*minf(.55,moving*.09)
   model.get_node('LegR').rotation.x=-sin(walk_phase)*minf(.55,moving*.09)
@@ -213,6 +217,10 @@ func can_stand() -> bool:
 func _process(dt: float):
  if not game.authority() and not local_player and network_pose_ready:
   position=position.lerp(network_position,1-exp(-dt*20));rotation.y=lerp_angle(rotation.y,network_yaw,1-exp(-dt*20))
+ if body_motion and game.state=='match':
+  body_motion.update(dt)
+  if not dead:model.rotation.z=lerpf(model.rotation.z,0,1-exp(-dt*9))
+ if not game.authority() and not local_player:last_shot=maxf(0,last_shot-dt)
  if not local_player or not camera or game.state!='match' or dead:return
  # Presentation follows the display rate; authoritative motion and weapon timers stay at 60 Hz.
  var blend=1-exp(-dt*14)
@@ -292,7 +300,7 @@ func hurt(amount: float, attacker: Fighter, zone: String):
  if health<=0:
   dead=true;health=0;deaths+=1;streak=0;rewards.clear();respawn_time=2.3;model.visible=true;collision_layer=0
   if life_age<2:spawn_deaths+=1
-  if not game.bot_test:
+  if not game.bot_test and not body_motion:
    death_motion=create_tween();death_motion.set_parallel(true)
    death_motion.tween_property(model,'rotation',Vector3(-1.48,0,randf_range(-.14,.14)),.32).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
    death_motion.tween_property(model,'position:y',.12,.32)
@@ -304,6 +312,7 @@ func spawn():
  if death_motion:death_motion.kill()
  dead=false;pending_fire=false;pending_remote_shots.clear();pending_predictions.clear();reload_requested=false;health=100;collision_layer=2;damage_age=0;velocity=Vector3.ZERO;model.rotation=Vector3.ZERO;model.position=Vector3.ZERO;model.visible=not local_player
  global_position=game.safe_spawn(team);yaw=PI if global_position.z<0 else 0;pitch=0;life_age=0;stuck_time=0;cover_time=0;bot_pause=0;bot_burst=0;load_class(queued_class if queued_class>=0 else class_id);queued_class=-1;path.clear();bot_target=null;bot_think=0
+ if body_motion:body_motion.reset()
  if local_player:gun.visible=true;recoil_return=Vector2.ZERO;recoil_sequence=0;shot_age=1;sprint_blend=0;view.aim_blend=0
 func throw_grenade():
  if not game.authority():game.send_action('grenade');return

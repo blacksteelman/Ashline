@@ -1,18 +1,26 @@
-import bpy, math, random, sys
+import bpy, math, random, sys, json, struct
 sys.path.insert(0,str(__import__("pathlib").Path(__file__).resolve().parent))
 import sculpt_mesh
+import biped_pass
 from mathutils import Vector
 from pathlib import Path
 P=Path(__file__).resolve().parent
 random.seed(33)
 def reset():
  bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
+ for action in list(bpy.data.actions):bpy.data.actions.remove(action)
 def mat(name,c,metal=0,rough=.7):
  m=bpy.data.materials.new(name);m.diffuse_color=(*c,1);m.use_nodes=True;n=m.node_tree.nodes.get('Principled BSDF');n.inputs['Base Color'].default_value=(*c,1);n.inputs['Metallic'].default_value=metal;n.inputs['Roughness'].default_value=rough
  if any(word in name.lower() for word in ['fabric','ripstop','gloves','nylon']):
-  tex=m.node_tree.nodes.new('ShaderNodeTexImage');tex.image=bpy.data.images.load(str(P/'cloth.png'),check_existing=True)
+  m['ashline_tint']=list((*c,1))
+  tex=m.node_tree.nodes.new('ShaderNodeTexImage');tex.image=bpy.data.images.load(str(P/'cloth_weave.png'),check_existing=True)
   mix=m.node_tree.nodes.new('ShaderNodeMixRGB');mix.blend_type='MULTIPLY';mix.inputs[0].default_value=1;mix.inputs[2].default_value=(*c,1)
   m.node_tree.links.new(tex.outputs['Color'],mix.inputs[1]);m.node_tree.links.new(mix.outputs[0],n.inputs['Base Color'])
+ if any(word in name.lower() for word in ['fabric','ripstop','gloves','nylon']):
+  normal=m.node_tree.nodes.new('ShaderNodeTexImage');normal.image=bpy.data.images.load(str(P/'cloth_normal.png'),check_existing=True);normal.image.colorspace_settings.name='Non-Color'
+  normal_map=m.node_tree.nodes.new('ShaderNodeNormalMap');normal_map.inputs['Strength'].default_value=.22
+  m.node_tree.links.new(normal.outputs['Color'],normal_map.inputs['Color']);m.node_tree.links.new(normal_map.outputs['Normal'],n.inputs['Normal'])
+  rough_map=m.node_tree.nodes.new('ShaderNodeTexImage');rough_map.image=bpy.data.images.load(str(P/'cloth_roughness.png'),check_existing=True);rough_map.image.colorspace_settings.name='Non-Color';m.node_tree.links.new(rough_map.outputs['Color'],n.inputs['Roughness'])
  return m
 def cube(name,p,s,m,bevel=.025,parent=None,rot=None):
  bpy.ops.mesh.primitive_cube_add(size=1,location=p);o=bpy.context.object;o.name=name;o.dimensions=s;bpy.ops.object.transform_apply(location=False,rotation=False,scale=True)
@@ -60,6 +68,14 @@ def export(name):
   for o in objects:o.select_set(True)
   bpy.context.view_layer.objects.active=objects[0];bpy.ops.object.join()
  bpy.ops.export_scene.gltf(filepath=str(P/name),export_format='GLB',export_apply=True)
+ # Blender's legacy MixRGB exporter loses the authored tint. Store the glTF
+ # multiplicative factor explicitly; binary buffers and skin binds stay intact.
+ path=P/name;data=path.read_bytes();length=struct.unpack_from('<I',data,12)[0];document=json.loads(data[20:20+length])
+ for material in document.get('materials',[]):
+  source=bpy.data.materials.get(material.get('name',''))
+  if source and 'ashline_tint' in source:material.setdefault('pbrMetallicRoughness',{})['baseColorFactor']=list(source['ashline_tint'])
+ encoded=json.dumps(document,separators=(',',':')).encode();encoded+=b' '*((-len(encoded))%4);tail=data[20+length:]
+ path.write_bytes(struct.pack('<III',0x46546c67,2,20+len(encoded)+len(tail))+struct.pack('<II',len(encoded),0x4e4f534a)+encoded+tail)
 # Blender Z up exports to Godot Y up; forward +Y becomes Godot -Z.
 for team in range(2):
  reset();cloth=mat('Ripstop / muted field fabric',(.10,.14,.10) if team==0 else (.19,.15,.10));armor=mat('Ballistic nylon',(.105,.135,.115));black=mat('Rubber / dark polymer',(.045,.055,.05));skin=mat('Exposed skin',(.46,.33,.23));goggle=mat('Smoked ballistic lens',(.025,.075,.08),.5,.19);accent=mat('Identification band',(.16,.47,.51) if team==0 else (.62,.32,.12));seam=mat('Seams',(.16,.18,.14));metal=mat('Hardware',(.22,.24,.22),.75,.3)
@@ -79,7 +95,7 @@ for team in range(2):
   cube('Pocket flap',(side*.114,0,-.14),(.012,.17,.025),seam,.004,leg)
   ell('Knee',(0,.035,-.42),(.10,.11,.10),cloth,leg);cube('Kneepad',(0,.13,-.43),(.14,.045,.15),armor,.033,leg)
   ell('Trouser calf',(0,-.014,-.58),(.085,.10,.19),cloth,leg)
-  cube('Boot',(0,.065,-.79),(.175,.30,.145),black,.035,leg);cube('Sole',(0,.07,-.86),(.18,.31,.028),seam,.008,leg)
+  cube('Boot',(0,.065,-.79),(.135,.29,.145),black,.035,leg);cube('Sole',(0,.07,-.86),(.14,.30,.028),seam,.008,leg)
   for z in [-.77,-.74,-.71]:cube('Boot lacing',(0,.14,z),(.09,.012,.01),seam,.003,leg)
  cube('Duty belt',(0,0,.92),(.435,.31,.035),black,.015)
  for x in [-.14,0,.14]:
@@ -104,6 +120,7 @@ for team in range(2):
    if any(part.name.startswith(prefix) for prefix in ['Trouser calf','Kneepad','Boot','Sole']):
     part.parent=knee;part.location.z+=.42
  sculpt_mesh.soldier(cloth,armor,skin,black)
+ biped_pass.skin()
  export('soldier_'+str(team)+'.glb')
 # Four distinct, original firearm silhouettes with bevelled metal and individual hardware.
 for kind,length in enumerate([.72,.49,.92,.26]):
@@ -143,8 +160,13 @@ for kind,length in enumerate([.72,.49,.92,.26]):
  for i in range(5):cube('Grip checkering',(.030,-.062,-.055-i*.018),(.002,.041,.004),paint,.001)
  # Separate roughness and microfinish rather than a uniformly shiny weapon.
  for material in [steel,poly,paint,bolt]:
+  material['ashline_tint']=list(material.diffuse_color)
   nodes=material.node_tree.nodes;links=material.node_tree.links;bsdf=nodes.get('Principled BSDF')
   rough=nodes.new('ShaderNodeTexImage');rough.image=bpy.data.images.load(str(P/'gunfinish_roughness.png'),check_existing=True);rough.image.colorspace_settings.name='Non-Color';links.new(rough.outputs['Color'],bsdf.inputs['Roughness'])
+  finish=nodes.new('ShaderNodeTexImage');finish.image=bpy.data.images.load(str(P/'gunfinish.png'),check_existing=True)
+  multiply=nodes.new('ShaderNodeMixRGB');multiply.blend_type='MULTIPLY';multiply.inputs[0].default_value=1;multiply.inputs[2].default_value=bsdf.inputs['Base Color'].default_value;links.new(finish.outputs['Color'],multiply.inputs[1]);links.new(multiply.outputs[0],bsdf.inputs['Base Color'])
+  normal=nodes.new('ShaderNodeTexImage');normal.image=bpy.data.images.load(str(P/'gunfinish_normal.png'),check_existing=True);normal.image.colorspace_settings.name='Non-Color'
+  bump=nodes.new('ShaderNodeNormalMap');bump.inputs['Strength'].default_value=.18;links.new(normal.outputs['Color'],bump.inputs['Color']);links.new(bump.outputs['Normal'],bsdf.inputs['Normal'])
  cube('Trigger hand',(.042,-.06,-.12),(.075,.10,.05),glove,.018,rot=(.26,0,0))
  cube('Support hand',(-.045,.275 if kind!=3 else .035,-.058),(.075,.10,.047),glove,.017)
  start=Vector((.18,-.53,-.39));end=Vector((.055,-.065,-.14))
