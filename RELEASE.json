@@ -1,0 +1,9 @@
+{
+  "version": "0.3",
+  "commit": "b24987abeceee77f3416e2d912b987973a0c6c41",
+  "tag": "v0.3.0-alpha",
+  "engine": "Godot 4.6.3",
+  "verification": "verification_v3.json",
+  "windows_runtime_tested": false,
+  "gpu_hardware_tested": false
+}
