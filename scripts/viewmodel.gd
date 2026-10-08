@@ -4,6 +4,8 @@ var gun: Node3D
 var magazine: Node3D
 var support: Node3D
 var sleeve: Node3D
+var animator: AnimationPlayer
+var contact_clip: StringName=&""
 var bolt: Node3D
 var rest: Dictionary={}
 var recoil_position=Vector3.ZERO
@@ -15,6 +17,12 @@ var equip_blend=0.0
 var reload_stage=-1
 func bind(node: Node3D):
  gun=node;rest.clear()
+ animator=gun.find_child("AnimationPlayer",true,false)
+ contact_clip=&""
+ if animator:
+  for clip in animator.get_animation_list():
+   if "SupportHand_reload_contact" in clip:contact_clip=clip;break
+  if contact_clip!=&"":animator.play(contact_clip);animator.pause()
  magazine=gun.find_child('MagazineRig',true,false)
  support=gun.find_child('LeftHand',true,false)
  sleeve=gun.find_child('LeftSleeve',true,false)
@@ -42,7 +50,7 @@ func update(owner: Fighter, dt: float):
  var aim=owner.ads and not owner.sprinting and owner.reload_left<=0
  aim_blend=move_toward(aim_blend,1 if aim else 0,dt*(7.5 if aim else 10.0))
  var smooth_aim=smoothstep(0,1,aim_blend)
- var position=Vector3(.185,-.185,-.38).lerp(Vector3(0,[-.102,-.102,-.126,-.085][owner.weapon_id],-.29),smooth_aim)
+ var position=Vector3(.185,-.185,-.38).lerp(Vector3(0,[-.102,-.102,-.126,-.085][owner.weapon_id],-.36 if owner.weapon_id==0 else -.29),smooth_aim)
  var angles=Vector3.ZERO
  position=position.lerp(Vector3(.18,-.26,-.31),owner.sprint_blend);angles=Vector3(-.08,-.40,-.30)*owner.sprint_blend
  var movement=clampf(Vector2(owner.velocity.x,owner.velocity.z).length()/5,0,1)
@@ -59,6 +67,12 @@ func update(owner: Fighter, dt: float):
  for part in [magazine,support,sleeve,bolt]:
   if part:part.transform=rest[part.get_instance_id()]
  if bolt:bolt.position.z+=recoil_position.z*.38
+ if animator and contact_clip!=&"":
+  var contact_time=0.0
+  if owner.reload_left>0:
+   var reload_duration=Arsenal.WEAPONS[owner.weapon_id].reload*(.78 if owner.class_id==0 else 1.0)
+   contact_time=clampf(1-owner.reload_left/reload_duration,0,1)*animator.get_animation(contact_clip).length
+  animator.seek(contact_time,true)
  if owner.reload_left>0:
   var duration=Arsenal.WEAPONS[owner.weapon_id].reload*(.78 if owner.class_id==0 else 1.0)
   var progress=clampf(1-owner.reload_left/duration,0,1)
@@ -69,11 +83,21 @@ func update(owner: Fighter, dt: float):
   var reach=smoothstep(.04,.18,progress)*(1-smoothstep(.83,.98,progress))
   if support:
    support.position+=Vector3(0,-.048,.205)*reach+Vector3(-.07,-.15,.04)*removed
-  if sleeve:sleeve.position+=Vector3(-.03,-.12,.17)*reach
+  # Forearm follows the wrist below; independent translation detached it during reload.
   var stage=-1 if progress<.14 else (0 if progress<.68 else (1 if progress<.90 else 2))
   if stage!=reload_stage:
    reload_stage=stage
    if stage>=0:owner.game.sound(['mag_out','mag_in','bolt'][stage],owner.eye(),owner.local_player,-10)
  else:reload_stage=-1
+ if sleeve and support:
+  var rest_arm: Transform3D=rest[sleeve.get_instance_id()]
+  var support_shift=support.position-rest[support.get_instance_id()].origin
+  var wrist=Vector3(-.067,-.066,-(.265 if owner.weapon_id!=3 else .035)+.052)+support_shift
+  var original_wrist=Vector3(-.067,-.066,-(.265 if owner.weapon_id!=3 else .035)+.052)
+  var direction=wrist-rest_arm.origin
+  var original_length=original_wrist.distance_to(rest_arm.origin)
+  var alignment=Quaternion(rest_arm.basis.y.normalized(),direction.normalized())
+  sleeve.basis=Basis(alignment)*rest_arm.basis
+  sleeve.basis.y*=direction.length()/maxf(.001,original_length)
  gun.position=gun.position.lerp(position,1-exp(-dt*26))
  gun.rotation=gun.rotation.lerp(angles,1-exp(-dt*28))

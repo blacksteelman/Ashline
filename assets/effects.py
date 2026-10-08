@@ -5,7 +5,7 @@ p=Path(__file__).parent;rng=np.random.default_rng(303)
 y,x=np.mgrid[-1:1:128j,-1:1:128j];r=np.sqrt(x*x+y*y);angle=np.arctan2(y,x)
 for name in ['smoke','muzzle']:
  if name=='smoke':
-  alpha=np.clip((1-r)**2,0,1)*np.clip(1+.25*np.sin(x*12)*np.cos(y*10)+rng.normal(0,.025,r.shape),.6,1);rgb=np.full((128,128,3),220)
+  alpha=np.clip(1-r,0,1)**2*np.clip(1+.25*np.sin(x*12)*np.cos(y*10)+rng.normal(0,.025,r.shape),.6,1);rgb=np.full((128,128,3),220)
  else:
   star=.28+.3*np.maximum(0,np.cos(angle*5))**7
   alpha=np.clip((star-r)*5,0,1)+np.exp(-r*r*60)

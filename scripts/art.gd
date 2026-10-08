@@ -14,17 +14,19 @@ static func mat(key: String, color: Color = Color.WHITE, metallic: float = 0.0) 
   m.normal_enabled = true
   m.normal_scale = 0.28
   m.normal_texture = load('res://assets/'+key+'_normal.png')
-  m.uv1_scale = Vector3(0.65,0.65,0.65)
+  m.uv1_scale = Vector3(.38,.76,.38) if key=="brick" else Vector3(0.65,0.65,0.65)
+  if ResourceLoader.exists('res://assets/'+key+'_ao.png'):
+   m.ao_enabled=true;m.ao_texture=load('res://assets/'+key+'_ao.png');m.ao_light_affect=.3
   m.uv1_triplanar = true
   m.uv1_world_triplanar = true
   m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
   if ResourceLoader.exists('res://assets/'+key+'_roughness.png'):m.roughness_texture=load('res://assets/'+key+'_roughness.png')
  materials[cache] = m
  return m
-static func box(parent: Node3D, pos: Vector3, size: Vector3, material: Material, collision: bool = false, surface: String = 'concrete') -> MeshInstance3D:
+static func box(parent: Node3D, pos: Vector3, size: Vector3, material: Material, collision: bool = false, surface: String = 'concrete', damaged: bool = true) -> MeshInstance3D:
  var mesh = MeshInstance3D.new()
  var b = BoxMesh.new(); b.size = size; mesh.mesh = b; mesh.material_override = material
- var broken=collision and surface=='concrete' and size.y>=1.5 and maxf(size.x,size.z)>2.5 and minf(size.x,size.z)<.65
+ var broken=damaged and collision and surface=='concrete' and size.y>=1.5 and maxf(size.x,size.z)>2.5 and minf(size.x,size.z)<.65
  if broken:
   mesh.mesh=Ruins.wall(size,hash(pos))
   material.cull_mode=BaseMaterial3D.CULL_DISABLED

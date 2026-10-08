@@ -24,14 +24,16 @@ static func build(arena: Node3D):
     for dx in [-1.72,1.72]:Art.box(arena,Vector3(x+dx,1.70,z+side*9.3),Vector3(.09,3.4,.09),steel)
    # Recessed window reveals, mullions and uneven remaining panes.
    for side in [-1,1]:
-    for dz in [-8,-4,0,4,8]:
+    for dz in [-6.5,6.5]:
      var edge=x+side*5.84
-     Art.box(arena,Vector3(edge,2.27,z+dz),Vector3(.25,.14,1.75),trim)
-     for offset in [-.77,.77]:Art.box(arena,Vector3(edge,3,z+dz+offset),Vector3(.09,1.4,.055),steel)
+     Art.box(arena,Vector3(edge,2.27,z+dz),Vector3(.54,.14,2.94),trim)
+     for offset in [-1.36,1.36]:Art.box(arena,Vector3(edge,3,z+dz+offset),Vector3(.16,1.7,.07),steel)
+     Art.box(arena,Vector3(edge,3.81,z+dz),Vector3(.16,.08,2.8),steel)
+     Art.box(arena,Vector3(edge,3,z+dz),Vector3(.15,1.6,.06),steel)
      for pane in [-1,1]:
       if (int(x+z+dz)+pane)%3==0:continue
-      var glass=Art.mat('glass'+str(pane),Color('#364949') if pane<0 else Color('#536362'),.28);glass.roughness=.31
-      Art.box(arena,Vector3(edge+side*.015,3.02,z+dz+pane*.36),Vector3(.02,1.20,.61),glass)
+      var glass=Art.mat('glass'+str(pane),Color(.22,.29,.28,.35),.08);glass.roughness=.22;glass.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA;glass.cull_mode=BaseMaterial3D.CULL_DISABLED
+      Art.box(arena,Vector3(edge+side*.015,3.02,z+dz+pane*.68),Vector3(.02,1.54,1.25),glass)
    # Low maintenance kerbs outline the yard without changing the existing routes.
    for side in [-1,1]:Art.box(arena,Vector3(x+side*5.97,.055,z),Vector3(.25,.11,18),trim)
    # Painted sector plate on the entrance, readable as a landmark instead of floating text.

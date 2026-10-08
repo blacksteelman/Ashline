@@ -27,6 +27,7 @@ var test_matches=0
 var test_goal=3
 var test_elapsed=0.0
 var test_shots=0
+var combat_tick=0
 var test_headshots=0
 var test_recoveries: Array=[]
 var menu_camera: Camera3D
@@ -43,6 +44,7 @@ var sound_cache: Dictionary={}
 var address_field: LineEdit
 var selected_class=0
 func _ready():
+ process_physics_priority=-100
  configure_input();configure_network();AudioMix.configure();load_settings()
  if OS.has_feature('editor'):capture_path='res://build/capture.png'
  arena=Arena.new();add_child(arena)
@@ -63,6 +65,8 @@ func _ready():
  ui=Control.new();hud.add_child(ui)
  resize_ui();get_viewport().size_changed.connect(resize_ui)
  for name in ['rifle','smg','marksman','pistol','reload','step','hit','kill','explosion','ambient','mag_out','mag_in','bolt','impact_metal','impact_concrete','ricochet','step_concrete','step_metal','dryfire','impact_body']:sound_cache[name]=load('res://assets/'+name+'.wav')
+ for weapon_sound in ['rifle','smg','marksman','pistol']:
+  sound_cache[weapon_sound+'_alt']=load('res://assets/'+weapon_sound+'_alt.wav')
  sound_cache['ambient'].loop_mode=AudioStreamWAV.LOOP_FORWARD
  sound('ambient',Vector3.ZERO,true,-14)
  var args=OS.get_cmdline_user_args()
@@ -221,6 +225,9 @@ func _input(event):
   else:pause_menu()
 func _physics_process(dt):
  if state=='match' and authority():
+  combat_tick+=1
+  # Rotate simulation order so one team never owns every same-tick first shot.
+  for actor in fighters:actor.process_physics_priority=-50 if actor.local_player else (actor.id+combat_tick)%12
   time_left-=dt
   if bot_test:test_elapsed+=dt
 func _process(dt):
@@ -299,14 +306,18 @@ func sound(key: String, pos: Vector3, local: bool=false, volume: float=0):
  var audio: Node
  if local:audio=AudioStreamPlayer.new()
  else:audio=AudioStreamPlayer3D.new();audio.max_distance=65;audio.unit_size=9
- audio.stream=sound_cache.get(key);audio.bus=AudioMix.bus(self,key,pos,local);audio.volume_db=volume;audio.pitch_scale=randf_range(.985,1.015) if key in ['rifle','smg','marksman','pistol'] else randf_range(.96,1.04);add_child(audio)
+ var selected_sound=key+'_alt' if key in ['rifle','smg','marksman','pistol'] and randf()<.5 else key
+ audio.stream=sound_cache.get(selected_sound);audio.bus=AudioMix.bus(self,key,pos,local);audio.volume_db=volume;audio.pitch_scale=randf_range(.985,1.015) if key in ['rifle','smg','marksman','pistol'] else randf_range(.96,1.04);add_child(audio)
  if audio is Node3D:audio.global_position=pos
  audio.finished.connect(audio.queue_free);audio.play()
 func add_fx(node: Node3D, life: float, velocity: Vector3=Vector3.ZERO, gravity: bool=false):
- fx.append({'node':node,'life':life,'total':life,'velocity':velocity,'gravity':gravity})
+ fx.append({'node':node,'life':life,'total':life,'velocity':velocity,'gravity':gravity,'presented':false})
 func update_fx(dt):
  for i in range(fx.size()-1,-1,-1):
-  var f=fx[i];f.life-=dt
+  var f=fx[i]
+  # Short flashes must survive their first presentation, even during a slow frame.
+  if not f.presented:f.presented=true;continue
+  f.life-=dt
   if f.life<=0:f.node.queue_free();fx.remove_at(i);continue
   var before=f.node.position
   var after=before+f.velocity*dt
@@ -323,10 +334,12 @@ func update_fx(dt):
   if f.node is OmniLight3D:f.node.light_energy=f.life/f.total*1.6
 func smoke_sprite(pos: Vector3, scale_v: float, life: float, velocity: Vector3, tint: Color=Color('#87877b')):
  var sprite=Sprite3D.new();sprite.texture=load('res://assets/smoke.png');sprite.billboard=BaseMaterial3D.BILLBOARD_ENABLED;sprite.pixel_size=.01;sprite.modulate=tint;sprite.no_depth_test=false
+ sprite.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
  add_child(sprite);sprite.position=pos;sprite.scale=Vector3.ONE*scale_v;add_fx(sprite,life,velocity)
 func muzzle(pos: Vector3, _dir: Vector3):
  if bot_test or dedicated_server or DisplayServer.get_name()=='headless':return
  var flash=Sprite3D.new();flash.texture=load('res://assets/muzzle.png');flash.billboard=BaseMaterial3D.BILLBOARD_ENABLED;flash.pixel_size=.002;flash.shaded=false
+ flash.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
  add_child(flash);flash.position=pos;flash.rotation.z=randf()*TAU;add_fx(flash,.035)
  if fx.size()<160:
   var light=OmniLight3D.new();add_child(light);light.position=pos;light.light_color=Color('#ffa659');light.omni_range=3;light.light_energy=1.6;add_fx(light,.065)
@@ -342,10 +355,17 @@ func impact(pos: Vector3, normal: Vector3, material: String):
  var flesh=material=='flesh'
  var color=Color('#806552') if flesh else (Color('#ffd59a') if metal else Color('#85887b'))
  sound('impact_body' if flesh else ('impact_metal' if metal else 'impact_concrete'),pos,false,-16 if metal else -20)
+ # Body hits shed a little fabric dust, never solid masonry fragments.
+ # Effects inside the first-person near field become distracting giant shapes.
+ if flesh:
+  if not player or pos.distance_to(player.camera.global_position)>.45:
+   smoke_sprite(pos,.055,.14,normal*.25+Vector3.UP*.12,Color('#706b61'))
+  return
  for i in range(4 if metal else 3):
   var particle_material=Art.mat('impact'+material,color)
   if metal:particle_material.emission_enabled=true;particle_material.emission=color;particle_material.emission_energy_multiplier=1.8
   var m=Art.box(self,pos+normal*.015,Vector3(.008,.008,.055) if metal else Vector3(.018,.013,.019),particle_material)
+  if not metal:m.mesh=Ruins.fragment(Vector3(.018,.013,.019),i+hash(pos))
   add_fx(m,randf_range(.10,.28),normal*randf_range(.7,2)+Vector3(randf_range(-1,1),randf(),randf_range(-1,1)),true)
  if not flesh:
   for i in range(2):smoke_sprite(pos+normal*.04,.20,.48,normal*.4+Vector3.UP*.3,Color('#8b8c7e'))

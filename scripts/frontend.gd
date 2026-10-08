@@ -11,7 +11,7 @@ static func backdrop(g: Node, heavy: bool=false):
  var line=ColorRect.new();line.position=Vector2(72,80);line.size=Vector2(38,3);line.color=ACCENT;g.ui.add_child(line)
  var brand=g.label(g.ui,'ASHLINE  /  FIELD OPERATIONS',14,ACCENT);brand.position=Vector2(126,69)
  var footer=g.label(g.ui,'FOUNDRY DISTRICT     /     6 v 6     /     TEAM DEATHMATCH',12,MUTED);footer.position=Vector2(72,848)
- var version=g.label(g.ui,'ALPHA 0.3',12,MUTED);version.position=Vector2(1410,848)
+ var version=g.label(g.ui,'ALPHA 0.4',12,MUTED);version.position=Vector2(1410,848)
 static func column(g: Node, pos: Vector2, width: float) -> VBoxContainer:
  var v=VBoxContainer.new();g.ui.add_child(v);v.position=pos;v.custom_minimum_size.x=width;v.add_theme_constant_override('separation',14);return v
 static func space(v: Node, height: float):

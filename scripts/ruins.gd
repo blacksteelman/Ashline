@@ -31,3 +31,25 @@ static func wall(size: Vector3, seed_value: int) -> ArrayMesh:
    surface.set_normal(normal);surface.set_uv(Vector2(point.x+point.z,point.y));surface.add_vertex(point)
  surface.generate_tangents()
  return surface.commit()
+static func fragment(size: Vector3, seed_value: int) -> ArrayMesh:
+ # Broken masonry has irregular facets rather than pristine box silhouettes.
+ var random=RandomNumberGenerator.new();random.seed=seed_value
+ var vertices=PackedVector3Array()
+ for layer in range(2):
+  for i in range(7):
+   var angle=TAU*i/7
+   var radial=random.randf_range(.72,1.0)
+   vertices.append(Vector3(cos(angle)*size.x*.5*radial,(layer-.5)*size.y*random.randf_range(.62,1.0),sin(angle)*size.z*.5*radial))
+ var tool=SurfaceTool.new();tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+ var triangles=[]
+ for i in range(7):
+  var next=(i+1)%7
+  triangles.append([i,next,7+next]);triangles.append([i,7+next,7+i])
+ for i in range(1,6):triangles.append([0,i+1,i]);triangles.append([7,7+i,7+i+1])
+ for indices in triangles:
+  var a=vertices[indices[0]];var b=vertices[indices[1]];var c=vertices[indices[2]]
+  var normal=(b-a).cross(c-a).normalized()
+  for vertex in [a,b,c]:
+   tool.set_normal(normal);tool.set_uv(Vector2(vertex.x+vertex.z,vertex.y));tool.add_vertex(vertex)
+ tool.generate_tangents()
+ return tool.commit()

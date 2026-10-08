@@ -1,4 +1,6 @@
-import bpy, math, random
+import bpy, math, random, sys
+sys.path.insert(0,str(__import__("pathlib").Path(__file__).resolve().parent))
+import sculpt_mesh
 from mathutils import Vector
 from pathlib import Path
 P=Path(__file__).resolve().parent
@@ -44,11 +46,13 @@ def tube(name,p,r,inner,h,m):
  mesh=bpy.data.meshes.new(name);mesh.from_pydata(vertices,[],faces);mesh.update();o=bpy.data.objects.new(name,mesh);bpy.context.collection.objects.link(o);o.data.materials.append(m);return o
 def export(name):
  # Merge rigid pieces by material and animation parent. Preserve the actual reload rig.
- protected=['Bolt carrier','Adjustable stock','Recoil pad','Buffer tube','Trigger hand','Right sleeve','Trigger finger','Lens']
+ protected=['Trigger glove','Grip','Support','Bolt carrier','Adjustable stock','Recoil pad','Buffer tube','Trigger hand','Right sleeve','Trigger finger','Lens']
  groups={}
  for o in list(bpy.context.scene.objects):
-  if o.type!='MESH' or any(o.name.startswith(k) for k in protected):continue
-  key=(o.parent.name if o.parent else '',o.data.materials[0].name)
+  if o.type!='MESH':continue
+  rig=next((m.object for m in o.modifiers if m.type=='ARMATURE'),None)
+  if rig is None and any(o.name.startswith(k) for k in protected):continue
+  key=(o.parent.name if o.parent else '',o.data.materials[0].name,rig.name if rig else '')
   groups.setdefault(key,[]).append(o)
  for objects in groups.values():
   if len(objects)<2:continue
@@ -99,10 +103,11 @@ for team in range(2):
   for part in list(leg.children):
    if any(part.name.startswith(prefix) for prefix in ['Trouser calf','Kneepad','Boot','Sole']):
     part.parent=knee;part.location.z+=.42
+ sculpt_mesh.soldier(cloth,armor,skin,black)
  export('soldier_'+str(team)+'.glb')
 # Four distinct, original firearm silhouettes with bevelled metal and individual hardware.
 for kind,length in enumerate([.72,.49,.92,.26]):
- reset();steel=mat('Parkerized steel',(.022,.028,.025),.35,.46);poly=mat('Textured polymer',(.045,.055,.053),.05,.72);paint=mat('Cerakote',(.045,.052,.040),.25,.52);bolt=mat('Machined hardware',(.16,.18,.17),.65,.34);glass=mat('Optic glass',(.04,.16,.18),.55,.1);glove=mat('Field gloves',(.075,.10,.075));sleeve=mat('Ripstop sleeve',(.09,.13,.085))
+ reset();steel=mat('Parkerized steel',(.022,.028,.025),.35,.46);poly=mat('Textured polymer',(.045,.055,.053),.05,.72);paint=mat('Cerakote',(.045,.052,.040),.25,.52);bolt=mat('Machined hardware',(.16,.18,.17),.65,.34);glass=mat('Optic glass',(.04,.16,.18),.55,.1);glove=mat('Field gloves',(.025,.030,.022));sleeve=mat('Ripstop sleeve',(.055,.075,.046))
  cube('Receiver',(0,.10,0),(.073,length*.40,.075),steel,.009);cube('Upper receiver',(0,.12,.040),(.070,length*.44,.028),paint,.005)
  cube('Handguard',(0,length*.43,.022),(.067,length*.35,.065),paint,.007)
  cyl('Free floated barrel',(0,length*.72,.021),.012,length*.35,steel,rot=(math.pi/2,0,0));cyl('Muzzle brake',(0,length*.91,.021),.022,.065,steel,rot=(math.pi/2,0,0))
@@ -174,6 +179,7 @@ for kind,length in enumerate([.72,.49,.92,.26]):
     if o.type=='MESH':o.location.y-=.13;o.location.z-=.009
   hand=bpy.data.objects.get('LeftHand')
   hand.location.y=-.21;hand.location.x=.013
+ sculpt_mesh.first_person(kind,glove,sleeve,steel,paint,poly,cube)
  export('weapon_'+str(kind)+'.glb')
 # Burned service vehicle, a compact original environmental prop.
 reset();body=mat('Burned paint',(.12,.15,.14),.6,.8);rust=mat('Heat exposed steel',(.28,.17,.10),.55,.9);rubber=mat('Tire rubber',(.025,.029,.026));glass=mat('Sooted windows',(.055,.074,.075),.4,.22);metal=mat('Wheel hubs',(.23,.25,.24),.9,.4)

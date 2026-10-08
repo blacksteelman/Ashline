@@ -92,7 +92,8 @@ func _ready():
   rig=Node3D.new();camera.add_child(rig);build_gun()
  load_class(class_id)
 func build_gun():
- if gun:gun.queue_free()
+ if gun:
+  gun.visible=false;gun.get_parent().remove_child(gun);gun.queue_free()
  gun=Art.weapon(rig,weapon_id)
  view.bind(gun)
 func load_class(c: int):

@@ -3,8 +3,8 @@ extends Node3D
 var obstacles: Array[Rect2] = []
 var grid = AStarGrid2D.new()
 var spawns = [[],[]]
-func block(pos: Vector3, size: Vector3, m: Material, surface: String='concrete') -> MeshInstance3D:
- var visual=Art.box(self,pos,size,m,true,surface)
+func block(pos: Vector3, size: Vector3, m: Material, surface: String='concrete', damaged: bool=true) -> MeshInstance3D:
+ var visual=Art.box(self,pos,size,m,true,surface,damaged)
  if pos.y-size.y/2<1.6 and pos.y+size.y/2>.3: obstacles.append(Rect2(Vector2(pos.x-size.x/2-.45,pos.z-size.z/2-.45),Vector2(size.x+.9,size.z+.9)))
  return visual
 func _ready():
@@ -20,9 +20,13 @@ func _ready():
   for z in [-17,17]:
    block(Vector3(x, .05,z),Vector3(11,.1,18),concrete)
    for side in [-1,1]:
-    for dz in [-6.5,6.5]:block(Vector3(x+side*5.5,2.5,z+dz),Vector3(.5,5,5),brick)
+    for dz in [-6.5,6.5]:
+     # Real 2.7m window opening: collision and geometry agree on the reveal.
+     block(Vector3(x+side*5.5,1.075,z+dz),Vector3(.5,2.15,5),brick,'concrete',false)
+     block(Vector3(x+side*5.5,4.425,z+dz),Vector3(.5,1.15,5),brick,'concrete',false)
+     for jamb in [-1.925,1.925]:block(Vector3(x+side*5.5,3,z+dz+jamb),Vector3(.5,1.7,1.15),brick,'concrete',false)
     block(Vector3(x+side*5.5,4.25,z),Vector3(.5,1.5,8),plaster)
-    for dx in [-3.6,3.6]:block(Vector3(x+dx,2.5,z+side*9),Vector3(3.8,5,.5),plaster)
+    for dx in [-3.6,3.6]:block(Vector3(x+dx,2.5,z+side*9),Vector3(3.8,5,.5),plaster,'concrete',x<0 and z>0 and side<0)
     block(Vector3(x,4.25,z+side*9),Vector3(3.4,1.5,.5),brick)
    # Broken roof edges, inner pillars, pipes and lit fixtures.
    for dx in [-4.8,4.8]:
@@ -36,11 +40,6 @@ func _ready():
    for dz in [-6,4]:
     block(Vector3(x+2, .65,z+dz),Vector3(2.0,1.3,1.0),metal,'metal')
     for i in range(5):Art.box(self,Vector3(x+1.08+i*.45,.65,z+dz-.52),Vector3(.035,1.2,.03),dark)
-   for dz in [-8,-4,0,4,8]:
-    for dx in [-5.77,5.77]:
-     Art.box(self,Vector3(x+dx,3,z+dz),Vector3(.06,1.35,1.5),dark)
-     Art.box(self,Vector3(x+dx*1.005,3,z+dz),Vector3(.08,.06,1.55),metal)
-     Art.box(self,Vector3(x+dx*1.005,3,z+dz),Vector3(.08,1.4,.055),metal)
  # Central landmark: damaged turbine and orange maintenance gantry.
  block(Vector3(-2.8,1.1,0),Vector3(3.8,2.2,4),concrete).visible=false
  var turbine=load('res://assets/turbine.glb').instantiate();add_child(turbine);turbine.position=Vector3(-2.8,0,0)
@@ -75,7 +74,7 @@ func _ready():
  for i in range(170):
   var p=Vector3(randf_range(-30,30),.07,randf_range(-30,30))
   if abs(p.x)<5 and abs(p.z)>5:continue
-  var debris=Art.box(self,p,Vector3(randf_range(.08,.5),randf_range(.06,.25),randf_range(.08,.45)),concrete);debris.rotation=Vector3(randf()*.3,randf()*6,.1)
+  var debris=Art.box(self,p,Vector3(randf_range(.08,.5),randf_range(.06,.25),randf_range(.08,.45)),concrete);debris.mesh=Ruins.fragment(debris.mesh.size,4481+i);debris.rotation=Vector3(randf()*.3,randf()*6,.1)
  # Skyline, original water tower, cables, lamps, distant industrial silhouettes.
  for i in range(22):
   var x=randf_range(-65,65);var z=-42.0 if i%2==0 else 42.0
@@ -111,6 +110,7 @@ func _ready():
  for p in [Vector3(-15,0,-26),Vector3(15,0,26),Vector3(-6,0,8),Vector3(6,0,-8)]:
   for i in range(22):
    var slab=Art.box(self,p+Vector3(randf_range(-1.6,1.6),randf_range(.05,.55),randf_range(-1.4,1.4)),Vector3(randf_range(.3,1.0),randf_range(.12,.4),randf_range(.3,.8)),brick if i%3==0 else concrete)
+   slab.mesh=Ruins.fragment(slab.mesh.size,hash(p)+i)
    slab.rotation=Vector3(randf_range(-.3,.3),randf()*6,randf_range(-.4,.4))
  for x in [-10,10]:
   for z in [-17,17]:
@@ -127,6 +127,8 @@ func _ready():
    for i in range(3):Art.cylinder(self,Vector3(x-4.3+i*.10,3,z+6),.025,3,dark)
  # Smoke at distant fire; original particle motion, outside navigation lanes.
  var plume=CPUParticles3D.new();add_child(plume);plume.position=Vector3(-29,2,35);plume.amount=22;plume.lifetime=7;plume.direction=Vector3.UP;plume.spread=12;plume.initial_velocity_min=1;plume.initial_velocity_max=2;plume.gravity=Vector3(.18,.1,0);plume.scale_amount_min=1.4;plume.scale_amount_max=3
+ plume.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+ var fade=Gradient.new();fade.offsets=PackedFloat32Array([0,.12,.65,1]);fade.colors=PackedColorArray([Color(1,1,1,0),Color(1,1,1,.65),Color(1,1,1,.42),Color(1,1,1,0)]);plume.color_ramp=fade
  var sm=QuadMesh.new();sm.size=Vector2(3,3)
  var smoke_material=StandardMaterial3D.new();smoke_material.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA;smoke_material.albedo_texture=load('res://assets/smoke.png');smoke_material.albedo_color=Color(.32,.34,.32,.55);smoke_material.billboard_mode=BaseMaterial3D.BILLBOARD_ENABLED;smoke_material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED;smoke_material.cull_mode=BaseMaterial3D.CULL_DISABLED;sm.material=smoke_material;plume.mesh=sm
  # The district sits in a larger industrial landscape rather than floating in the sky.

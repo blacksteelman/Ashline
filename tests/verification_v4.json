@@ -1,0 +1,274 @@
+{
+  "version": "0.4",
+  "date": "2026-10-08",
+  "engine": "Godot 4.6.3",
+  "functional": {
+    "failed": 0,
+    "passed": 49,
+    "success": true
+  },
+  "regression": {
+    "failed": 0,
+    "passed": 14,
+    "success": true
+  },
+  "art_regression": {
+    "passed": 10,
+    "failed": 0,
+    "success": true,
+    "log": "build/regression_art_v4-licensed-final.log",
+    "errors": false,
+    "last_lines": [
+      "PASS: Short flash survives its first slow presentation frame",
+      "PASS: Expired flash is removed after presentation",
+      "ART_REGRESSION_V4 failures=0"
+    ]
+  },
+  "playthrough": {
+    "log": "build/playthrough-licensed-final.log",
+    "errors": false,
+    "last_lines": [
+      "CLICK RESUME (795.0, 305.0) rect=[P: (600.0, 281.0), S: (390.0, 48.0)] viewport=[P: (0.0, 0.0), S: (1600.0, 900.0)]",
+      "PASS: Match resumes from the menu",
+      "PLAYTHROUGH OK failures=0"
+    ]
+  },
+  "stairs": {
+    "log": "build/stairs-licensed-final.log",
+    "errors": false,
+    "last_lines": [
+      "",
+      "STAIR_POSITION (26.0, 2.250215, -11.9624)",
+      "STAIRS_OK"
+    ]
+  },
+  "native_network": {
+    "success": true,
+    "clients": [
+      {
+        "client": 0,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 6,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 1,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 9,
+        "actors": 12,
+        "shots": 23,
+        "acknowledged": 23,
+        "pending": 0
+      },
+      {
+        "client": 2,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 2,
+        "actors": 12,
+        "shots": 32,
+        "acknowledged": 32,
+        "pending": 0
+      },
+      {
+        "client": 3,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 3,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 4,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 8,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 5,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 10,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 6,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 0,
+        "actors": 12,
+        "shots": 32,
+        "acknowledged": 32,
+        "pending": 0
+      },
+      {
+        "client": 7,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 1,
+        "actors": 12,
+        "shots": 32,
+        "acknowledged": 32,
+        "pending": 0
+      },
+      {
+        "client": 8,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 4,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 9,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 7,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 10,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 11,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 11,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 5,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      }
+    ]
+  },
+  "native_vulkan": {
+    "executed": true,
+    "screenshot": "build/screenshots-v4/native-combat.png",
+    "device": "Mesa llvmpipe software Vulkan",
+    "log": "build/native-combat-licensed-final.log",
+    "errors": false,
+    "last_lines": [
+      "Vulkan 1.4.305 - Forward+ - Using Device #0: Unknown - llvmpipe (LLVM 19.1.7, 256 bits)",
+      "",
+      "CAPTURE_SAVED"
+    ]
+  },
+  "native_opengl": {
+    "executed": true,
+    "screenshot": "build/screenshots-v4/native-opengl.png",
+    "log": "build/native-opengl-licensed-final.log",
+    "errors": false,
+    "last_lines": [
+      "OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)",
+      "",
+      "CAPTURE_SAVED"
+    ]
+  },
+  "windows": {
+    "exported": true,
+    "executed": false
+  },
+  "audio": {
+    "driver": "Dummy",
+    "real_audio_output_verified": false,
+    "recordings": "Eight CC0 single shots, trimmed/mixed; no subjective listening claim."
+  },
+  "assets": {
+    "manifest": "assets/thirdparty/SOURCES.json",
+    "license": "CC0-1.0",
+    "pinned_inputs_verified": 28
+  },
+  "bot_matches": {
+    "404": {
+      "completed": true,
+      "matches": 3,
+      "scores": [
+        "MATCH_END 1 SCORE [40, 19] HEADSHOTS 13 SHOTS 456",
+        "MATCH_END 2 SCORE [16, 40] HEADSHOTS 24 SHOTS 791",
+        "MATCH_END 3 SCORE [34, 40] HEADSHOTS 34 SHOTS 1311"
+      ],
+      "shots": 1311,
+      "recovery_events": 0,
+      "last_round_spawn_deaths": 1
+    },
+    "405": {
+      "completed": true,
+      "matches": 3,
+      "scores": [
+        "MATCH_END 1 SCORE [35, 40] HEADSHOTS 19 SHOTS 383",
+        "MATCH_END 2 SCORE [40, 35] HEADSHOTS 34 SHOTS 851",
+        "MATCH_END 3 SCORE [36, 40] HEADSHOTS 45 SHOTS 1334"
+      ],
+      "shots": 1334,
+      "recovery_events": 0,
+      "last_round_spawn_deaths": 1
+    }
+  },
+  "performance": {
+    "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "cpu_threads": 3,
+    "draw_calls_median": 1343.0,
+    "graphics_profile": 1,
+    "median_ms": 1220.856,
+    "msaa": 2,
+    "nodes": 1413.0,
+    "note": "Software llvmpipe rendering. This does not predict performance on a gaming GPU.",
+    "p95_ms": 1300.01,
+    "renderer": "forward_plus",
+    "resolution": [
+      1280,
+      720
+    ],
+    "sample_frames": 30
+  },
+  "remaining": [
+    "Requested COD4 art quality not reached; characters/interiors/weapon surfacing need substantial work",
+    "Full soldier skeletal locomotion rig is not implemented",
+    "Some early spawn deaths; six bot matches do not prove balance",
+    "No internet lag compensation, matchmaking or production hardening",
+    "Windows runtime, gaming GPU performance and real audio output not verified"
+  ],
+  "sha256": {
+    "build/linux/ASHLINE.x86_64": "9ae61c5ff62b85f009c80f558777801c21bd28cf879605c843d296e3b0dd863e",
+    "build/windows/ASHLINE.exe": "5b482dbb394e55c79af3256579d62a841555eb23ae819348ab63471241a1c423"
+  }
+}
