@@ -23,3 +23,5 @@
 ![Reload](reload.png)
 
 Исходники: [main](https://github.com/blacksteelman/Ashline/tree/main), tag v0.4.0-alpha. В исходниках — LICENSES.md, assets/thirdparty/SOURCES.json и SESSION_HANDOFF.md.
+
+Все четыре ZIP обратно скачаны из GitHub; SHA-256 совпали, ZIP прошли проверку целостности. [Отчёт скачивания](GITHUB-DOWNLOAD-VERIFICATION.json).
