@@ -1,0 +1,13 @@
+{
+  "version": "0.2",
+  "functional": {
+    "failed": 0,
+    "passed": 49,
+    "success": true
+  },
+  "stairs": true,
+  "native_network": "Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org\n\nNETWORK_OK snapshots=120 slot=1 actors=12 score=[50, 38] predicted_shots=29 ammo=[1, 36, 14, 12]",
+  "native_render_capture": true,
+  "windows_exported": true,
+  "windows_run_tested": false
+}
