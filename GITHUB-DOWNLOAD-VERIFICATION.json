@@ -1,0 +1,26 @@
+{
+  "ASHLINE-0.5-Linux-x64.zip": {
+    "downloaded": true,
+    "sha256_matches": true,
+    "zip_valid": true,
+    "bytes": 68899288
+  },
+  "ASHLINE-0.5-Screenshots.zip": {
+    "downloaded": true,
+    "sha256_matches": true,
+    "zip_valid": true,
+    "bytes": 27270226
+  },
+  "ASHLINE-0.5-Source.zip": {
+    "downloaded": true,
+    "sha256_matches": true,
+    "zip_valid": true,
+    "bytes": 65252306
+  },
+  "ASHLINE-0.5-Windows-x64.zip": {
+    "downloaded": true,
+    "sha256_matches": true,
+    "zip_valid": true,
+    "bytes": 77614474
+  }
+}
