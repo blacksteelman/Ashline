@@ -42,7 +42,20 @@ def tube(name,p,r,inner,h,m):
   j=(i+1)%32
   faces.extend([(i,j,32+j,32+i),(64+j,64+i,96+i,96+j),(i,64+i,64+j,j),(32+j,96+j,96+i,32+i)])
  mesh=bpy.data.meshes.new(name);mesh.from_pydata(vertices,[],faces);mesh.update();o=bpy.data.objects.new(name,mesh);bpy.context.collection.objects.link(o);o.data.materials.append(m);return o
-def export(name):bpy.ops.export_scene.gltf(filepath=str(P/name),export_format='GLB',export_apply=True)
+def export(name):
+ # Merge rigid pieces by material and animation parent. Preserve the actual reload rig.
+ protected=['Bolt carrier','Adjustable stock','Recoil pad','Buffer tube','Trigger hand','Right sleeve','Trigger finger','Lens']
+ groups={}
+ for o in list(bpy.context.scene.objects):
+  if o.type!='MESH' or any(o.name.startswith(k) for k in protected):continue
+  key=(o.parent.name if o.parent else '',o.data.materials[0].name)
+  groups.setdefault(key,[]).append(o)
+ for objects in groups.values():
+  if len(objects)<2:continue
+  bpy.ops.object.select_all(action='DESELECT')
+  for o in objects:o.select_set(True)
+  bpy.context.view_layer.objects.active=objects[0];bpy.ops.object.join()
+ bpy.ops.export_scene.gltf(filepath=str(P/name),export_format='GLB',export_apply=True)
 # Blender Z up exports to Godot Y up; forward +Y becomes Godot -Z.
 for team in range(2):
  reset();cloth=mat('Ripstop / muted field fabric',(.10,.14,.10) if team==0 else (.19,.15,.10));armor=mat('Ballistic nylon',(.105,.135,.115));black=mat('Rubber / dark polymer',(.045,.055,.05));skin=mat('Exposed skin',(.46,.33,.23));goggle=mat('Smoked ballistic lens',(.025,.075,.08),.5,.19);accent=mat('Identification band',(.16,.47,.51) if team==0 else (.62,.32,.12));seam=mat('Seams',(.16,.18,.14));metal=mat('Hardware',(.22,.24,.22),.75,.3)
@@ -89,9 +102,9 @@ for team in range(2):
  export('soldier_'+str(team)+'.glb')
 # Four distinct, original firearm silhouettes with bevelled metal and individual hardware.
 for kind,length in enumerate([.72,.49,.92,.26]):
- reset();steel=mat('Parkerized steel',(.10,.135,.15),.8,.36);poly=mat('Textured polymer',(.045,.055,.053),.05,.72);paint=mat('Cerakote',(.10,.12,.105),.6,.42);bolt=mat('Machined hardware',(.31,.33,.32),.9,.26);glass=mat('Optic glass',(.04,.16,.18),.55,.1);glove=mat('Field gloves',(.075,.10,.075));sleeve=mat('Ripstop sleeve',(.09,.13,.085))
- cube('Receiver',(0,.10,0),(.083,length*.40,.09),steel,.012);cube('Upper receiver',(0,.12,.046),(.077,length*.44,.033),paint,.007)
- cube('Handguard',(0,length*.43,.022),(.075,length*.35,.077),paint,.009)
+ reset();steel=mat('Parkerized steel',(.022,.028,.025),.35,.46);poly=mat('Textured polymer',(.045,.055,.053),.05,.72);paint=mat('Cerakote',(.045,.052,.040),.25,.52);bolt=mat('Machined hardware',(.16,.18,.17),.65,.34);glass=mat('Optic glass',(.04,.16,.18),.55,.1);glove=mat('Field gloves',(.075,.10,.075));sleeve=mat('Ripstop sleeve',(.09,.13,.085))
+ cube('Receiver',(0,.10,0),(.073,length*.40,.075),steel,.009);cube('Upper receiver',(0,.12,.040),(.070,length*.44,.028),paint,.005)
+ cube('Handguard',(0,length*.43,.022),(.067,length*.35,.065),paint,.007)
  cyl('Free floated barrel',(0,length*.72,.021),.012,length*.35,steel,rot=(math.pi/2,0,0));cyl('Muzzle brake',(0,length*.91,.021),.022,.065,steel,rot=(math.pi/2,0,0))
  for side in [-1,1]:
   for i in range(6):cube('MLOK slot',(side*.038,length*.29+i*.027,.018),(.003,.016,.012),poly,.003)
@@ -110,17 +123,32 @@ for kind,length in enumerate([.72,.49,.92,.26]):
  if kind==2:
   cube('Optic mount',(0,.10,.086),(.045,.12,.025),steel,.004);tube('Scope tube',(0,.12,.126),.027,.022,.23,steel);tube('Objective',(0,.26,.126),.040,.033,.065,steel);cyl('Lens',(0,.294,.126),.034,.002,glass,rot=(math.pi/2,0,0));cyl('Elevation turret',(0,.13,.169),.018,.03,bolt)
  else:
-  for x in [-.025,.025]:cube('Rear sight wing',(x,.042,.10),(.012,.018,.052),steel,.003)
-  cube('Rear notch',(0,.042,.085),(.055,.012,.012),steel,.002);cube('Front post',(0,length*.57,.099),(.012,.018,.043),steel,.003)
+  for x in [-.025,.025]:cube('Rear sight wing',(x,.042,.095),(.010,.018,.036),steel,.003)
+  cube('Rear notch',(0,.042,.079),(.055,.012,.010),steel,.002);cube('Front post',(0,length*.57,.086),(.006,.014,.032),steel,.002)
+ # Receiver reinforcement, fasteners, selector, charging handle and rail clamps.
+ for side in [-1,1]:
+  cube('Receiver contour',(side*.041,.065,-.027),(.008,.155,.036),paint,.006)
+  cube('Handguard chamfer',(side*.029,length*.43,.050),(.012,length*.31,.014),poly,.004)
+  for y in [.065,.165]:
+   cyl('Recessed fastener',(side*.049,y,-.018),.0055,.004,poly,rot=(0,math.pi/2,0))
+   cube('Fastener slot',(side*.052,y,-.018),(.001,.006,.0015),bolt,.0005)
+  cube('Charging handle',(side*.05,-.02,.043),(.033,.018,.012),poly,.003)
+ cube('Selector lever',(-.05,-.025,-.012),(.007,.035,.009),bolt,.002,rot=(0,.35,0))
+ cube('Port lower lip',(.049,.12,-.006),(.009,.076,.007),paint,.002)
+ for i in range(5):cube('Grip checkering',(.030,-.062,-.055-i*.018),(.002,.041,.004),paint,.001)
+ # Separate roughness and microfinish rather than a uniformly shiny weapon.
+ for material in [steel,poly,paint,bolt]:
+  nodes=material.node_tree.nodes;links=material.node_tree.links;bsdf=nodes.get('Principled BSDF')
+  rough=nodes.new('ShaderNodeTexImage');rough.image=bpy.data.images.load(str(P/'gunfinish_roughness.png'),check_existing=True);rough.image.colorspace_settings.name='Non-Color';links.new(rough.outputs['Color'],bsdf.inputs['Roughness'])
  cube('Trigger hand',(.042,-.06,-.12),(.075,.10,.05),glove,.018,rot=(.26,0,0))
  cube('Support hand',(-.045,.275 if kind!=3 else .035,-.058),(.075,.10,.047),glove,.017)
- start=Vector((.15,-.24,-.28));end=Vector((.055,-.065,-.14))
+ start=Vector((.18,-.53,-.39));end=Vector((.055,-.065,-.14))
  arm=ell('Right sleeve',(start+end)*.5,(.057,.057,(end-start).length*.55),sleeve);arm.rotation_euler=(end-start).to_track_quat('Z','Y').to_euler()
- start=Vector((-.16,-.16,-.25));end=Vector((-.045,.245 if kind!=3 else .02,-.075))
+ start=Vector((-.19,-.46,-.38));end=Vector((-.045,.245 if kind!=3 else .02,-.075))
  arm=ell('Left sleeve',(start+end)*.5,(.055,.055,(end-start).length*.51),sleeve);arm.rotation_euler=(end-start).to_track_quat('Z','Y').to_euler()
  for y in [.235,.25,.265]:cube('Glove knuckle',(-.071,y,-.065),(.022,.012,.029),poly,.005)
  # Articulated viewmodel parts remain separate nodes for reload animation.
- for group_name,prefixes in [('MagazineRig',['Magazine']),('LeftHand',['Support hand']),('LeftSleeve',['Left sleeve'])]:
+ for group_name,prefixes in [('MagazineRig',['Magazine']),('LeftHand',['Support hand','Glove knuckle']),('LeftSleeve',['Left sleeve'])]:
   group=bpy.data.objects.new(group_name,None);bpy.context.collection.objects.link(group)
   for part in list(bpy.context.scene.objects):
    if part!=group and any(part.name.startswith(prefix) for prefix in prefixes):part.parent=group
@@ -131,6 +159,21 @@ for kind,length in enumerate([.72,.49,.92,.26]):
  ell('Support thumb',(-.065,.27,.0),(.015,.042,.014),glove,hand)
  for i in range(4):
   ell('Trigger finger',(.043,-.08+i*.015,-.090),(.013,.012,.028),glove)
+ if kind==3:
+  remove=['Receiver contour','Charging handle','Picatinny rail','MLOK slot','Handguard chamfer','Muzzle brake','Brake port','Handguard','Upper receiver','Receiver pin','Recessed fastener','Fastener slot','Rear sight wing','Rear notch','Front post']
+  for o in list(bpy.context.scene.objects):
+   if any(o.name.startswith(prefix) for prefix in remove):bpy.data.objects.remove(o,do_unlink=True)
+  cube('Slide',(0,.083,.036),(.068,.235,.058),steel,.008)
+  cube('Rear sight',(0,-.019,.076),(.045,.018,.024),poly,.003)
+  cube('Sight notch',(0,-.030,.081),(.012,.002,.012),paint,.001)
+  cube('Front blade',(0,.185,.076),(.006,.012,.018),poly,.002)
+  for side in [-1,1]:
+   for i in range(7):cube('Slide serration',(side*.035,-.012+i*.009,.036),(.003,.003,.038),poly,.001)
+  for o in list(bpy.context.scene.objects):
+   if o.name.startswith('Magazine'):
+    if o.type=='MESH':o.location.y-=.13;o.location.z-=.009
+  hand=bpy.data.objects.get('LeftHand')
+  hand.location.y=-.21;hand.location.x=.013
  export('weapon_'+str(kind)+'.glb')
 # Burned service vehicle, a compact original environmental prop.
 reset();body=mat('Burned paint',(.12,.15,.14),.6,.8);rust=mat('Heat exposed steel',(.28,.17,.10),.55,.9);rubber=mat('Tire rubber',(.025,.029,.026));glass=mat('Sooted windows',(.055,.074,.075),.4,.22);metal=mat('Wheel hubs',(.23,.25,.24),.9,.4)

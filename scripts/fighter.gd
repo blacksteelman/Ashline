@@ -32,8 +32,16 @@ var rig: Node3D
 var gun: Node3D
 var view=WeaponView.new()
 var recoil_sequence=0
+var recoil_return=Vector2.ZERO
+var shot_age=1.0
+var sprint_blend=0.0
 var predicted_shots=0
 var pending_fire=false
+var fire_sequence=0
+var acknowledged_fire=0
+var pending_predictions: Array[Dictionary]=[]
+var pending_remote_shots: Array[Dictionary]=[]
+var reload_requested=false
 var model: Node3D
 var world_gun: Node3D
 var death_motion: Tween
@@ -68,9 +76,14 @@ var cover_time=0.0
 var col: CollisionShape3D
 var step_timer=0.0
 var network_input: Dictionary={}
+var remote_jump_held=false
+var network_position=Vector3.ZERO
+var network_yaw=0.0
+var network_pose_ready=false
+var standing_clearance=SphereShape3D.new()
 func _ready():
  collision_layer=2;collision_mask=1 if bot else 1|2
- floor_snap_length=.32;floor_stop_on_slope=true
+ floor_snap_length=.32;floor_stop_on_slope=true;standing_clearance.radius=.29
  col=CollisionShape3D.new();var cap=CapsuleShape3D.new();cap.radius=.30;cap.height=1.8;col.shape=cap;col.position.y=.9;add_child(col)
  model=Art.soldier(self,team)
  if local_player:
@@ -92,13 +105,15 @@ func update_world_weapon():
  if old:
   model.remove_child(old);old.queue_free()
  world_gun=Art.weapon(model,weapon_id,false);world_gun.name='WorldWeapon';world_gun.position=Vector3(.13,1.17,-.37);world_gun.scale=Vector3.ONE*.8
-func eye() -> Vector3:return global_position+Vector3(0,1.0 if crouched else 1.62,0)
+func eye() -> Vector3:return global_position+Vector3(0,1.03 if crouched else 1.62,0)
 func aim_dir() -> Vector3:return Vector3(-sin(yaw)*cos(pitch),sin(pitch),-cos(yaw)*cos(pitch))
 func _input(event):
  if not local_player or dead or game.state!='match' or game.menu_open:return
  if event is InputEventMouseMotion and Input.mouse_mode==Input.MOUSE_MODE_CAPTURED:
-  yaw-=event.relative.x*game.settings.sensitivity*.001
-  pitch=clampf(pitch-event.relative.y*game.settings.sensitivity*.001,-1.45,1.45)
+  yaw-=event.screen_relative.x*game.settings.sensitivity*.001
+  var look_y=-event.screen_relative.y*game.settings.sensitivity*.001
+  if look_y<0:recoil_return.x=maxf(0,recoil_return.x+look_y)
+  pitch=clampf(pitch+look_y,-1.45,1.45)
   sway=Vector2(clampf(event.relative.x*.0003,-.02,.02),clampf(event.relative.y*.0003,-.02,.02))
  if event.is_action_pressed('reload'):
   if game.authority():start_reload()
@@ -115,22 +130,24 @@ func switch_weapon():
 func _physics_process(dt):
  if game.state!='match':return
  if not game.authority() and not local_player:return
- cooldown=maxf(0,cooldown-dt);last_shot=maxf(0,last_shot-dt);damage_age+=dt;life_age+=dt
+ cooldown=maxf(-dt,cooldown-dt);shot_age+=dt;last_shot=maxf(0,last_shot-dt);damage_age+=dt;life_age+=dt
  if dead:
   if local_player:
    camera.position.y=lerpf(camera.position.y,.85,dt*3);camera.rotation.x=lerpf(camera.rotation.x,-.18,dt*2)
   respawn_time-=dt
   if respawn_time<=0 and game.authority():spawn()
   return
+ if local_player:recover_recoil(dt)
  if reload_left>0:
   reload_left-=dt
   if reload_left<=0 and game.authority():
    var need=Arsenal.WEAPONS[weapon_id].mag-ammo[weapon_id];var take=mini(need,reserves[weapon_id]);ammo[weapon_id]+=take;reserves[weapon_id]-=take
  if damage_age>4:health=minf(100,health+dt*24)
+ var was_crouched=crouched
  if bot and game.authority():think_bot(dt)
  elif local_player:
   if not game.menu_open:
-   move_wish=Input.get_vector('left','right','forward','back');ads=Input.is_action_pressed('ads');crouched=Input.is_action_pressed('crouch');sprinting=Input.is_action_pressed('sprint') and move_wish.y<-.2 and not ads and not crouched
+   move_wish=Input.get_vector('left','right','forward','back');ads=Input.is_action_pressed('ads');crouched=Input.is_action_pressed('crouch');sprinting=Input.is_action_pressed('sprint') and move_wish.y<-.2 and not ads and not crouched and not Input.is_action_pressed('fire') and reload_left<=0
    if Input.is_action_just_pressed('jump') and is_on_floor():velocity.y=5.7
    var pressed=Input.is_action_pressed('fire')
    if pressed and (Arsenal.WEAPONS[weapon_id].auto or not trigger_was):shoot()
@@ -138,8 +155,12 @@ func _physics_process(dt):
   else:move_wish=Vector2.ZERO;ads=false;sprinting=false
  elif not bot:
   apply_remote_input()
-  if pending_fire and cooldown<=0:
-   pending_fire=false;shoot()
+  if not pending_remote_shots.is_empty() and cooldown<=0:
+   var request=pending_remote_shots.pop_front();acknowledged_fire=maxi(acknowledged_fire,request.sequence)
+   if request.weapon==weapon_id:
+    var latest_aim=Vector2(yaw,pitch);yaw=request.aim.x;pitch=request.aim.y;shoot();yaw=latest_aim.x;pitch=latest_aim.y
+  if reload_requested and pending_remote_shots.is_empty():reload_requested=false;start_reload()
+ if was_crouched and not crouched and not can_stand():crouched=true
  var direction=Vector3(move_wish.x,0,move_wish.y).rotated(Vector3.UP,yaw)
  if bot and direction.length_squared()>.1:
   for ally in game.fighters:
@@ -177,11 +198,6 @@ func _physics_process(dt):
   if world_gun:world_gun.rotation.x=pitch*.65+last_shot*.04
   model.position.y=-.42 if crouched else 0.0
  if local_player:
-  camera.rotation.x=pitch;step_visual=move_toward(step_visual,0,dt*1.6)
-  camera.position.y=lerpf(camera.position.y,(1.03 if crouched else 1.62)-step_visual,dt*14)
-  camera.fov=lerpf(camera.fov,game.settings.fov*((.52 if weapon_id==2 else .72) if ads and reload_left<=0 else 1.0),dt*17)
-  kick=move_toward(kick,0,dt*.7);landing=move_toward(landing,0,dt*.25);sway=sway.lerp(Vector2.ZERO,dt*10)
-  view.update(self,dt)
   step_timer-=dt
   if moving>2 and was_floor and step_timer<=0:
    var ground=get_world_3d().direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(global_position+Vector3.UP*.2,global_position-Vector3.UP*.3,1))
@@ -190,16 +206,47 @@ func _physics_process(dt):
     var surface=ground.collider.get_meta('surface','asphalt')
     sound_key='step_metal' if surface=='metal' else ('step_concrete' if surface in ['concrete','brick','plaster'] else 'step')
    game.sound(sound_key,eye(),true,-17);step_timer=.30 if sprinting else .42
+func can_stand() -> bool:
+ var query=PhysicsShapeQueryParameters3D.new();query.shape=standing_clearance;query.transform=Transform3D(Basis.IDENTITY,global_position+Vector3.UP*1.49);query.collision_mask=1;query.exclude=[get_rid()]
+ return get_world_3d().direct_space_state.intersect_shape(query,1).is_empty()
+func _process(dt: float):
+ if not game.authority() and not local_player and network_pose_ready:
+  position=position.lerp(network_position,1-exp(-dt*20));rotation.y=lerp_angle(rotation.y,network_yaw,1-exp(-dt*20))
+ if not local_player or not camera or game.state!='match' or dead:return
+ # Presentation follows the display rate; authoritative motion and weapon timers stay at 60 Hz.
+ var blend=1-exp(-dt*14)
+ camera.rotation=Vector3(pitch,yaw-rotation.y,0)
+ step_visual=move_toward(step_visual,0,dt*1.6)
+ camera.position.y=lerpf(camera.position.y,(1.03 if crouched else 1.62)-step_visual,blend)
+ var aiming=ads and not sprinting and reload_left<=0
+ camera.fov=lerpf(camera.fov,game.settings.fov*((.52 if weapon_id==2 else .72) if aiming else 1.0),1-exp(-dt*20))
+ kick=move_toward(kick,0,dt*.7);landing=move_toward(landing,0,dt*.25);sway=sway.lerp(Vector2.ZERO,1-exp(-dt*10))
+ sprint_blend=lerpf(sprint_blend,1.0 if sprinting else 0.0,1-exp(-dt*14))
+ view.update(self,dt)
+ gun.visible=not (weapon_id==2 and aiming and view.aim_blend>.98)
+func recover_recoil(dt: float):
+ if shot_age<.14:return
+ var correction=recoil_return*(1-exp(-dt*8))
+ pitch-=correction.x;yaw-=correction.y;recoil_return-=correction
+ if shot_age>.35:recoil_sequence=0
 func start_reload():
  if dead or reload_left>0 or ammo[weapon_id]>=Arsenal.WEAPONS[weapon_id].mag or reserves[weapon_id]<=0:return
  reload_left=Arsenal.WEAPONS[weapon_id].reload*(.78 if class_id==0 else 1.0)
  recoil_sequence=0
 func shoot():
  if dead or cooldown>0 or reload_left>0 or sprinting:return
- if ammo[weapon_id]<=0:start_reload();return
- var w=Arsenal.WEAPONS[weapon_id];ammo[weapon_id]-=1;cooldown=w.interval;last_shot=.4
+ if ammo[weapon_id]<=0:
+  if reserves[weapon_id]>0:start_reload()
+  elif local_player:game.sound('dryfire',eye(),true,-12);cooldown=.23
+  return
+ var w=Arsenal.WEAPONS[weapon_id];ammo[weapon_id]-=1;cooldown=maxf(cooldown,-1.0/60.0)+w.interval;last_shot=.4
  if not game.authority():
-  predicted_shots+=1;local_fire_feedback(w,aim_dir());game.send_action('fire');return
+  predicted_shots+=1;game.send_shot(self,Vector2(yaw,pitch))
+  var direction=aim_dir()
+  var visual_ray=PhysicsRayQueryParameters3D.create(eye(),eye()+direction*140,1|2,[get_rid()])
+  var predicted_hit=get_world_3d().direct_space_state.intersect_ray(visual_ray)
+  if not predicted_hit.is_empty() and not predicted_hit.collider is Fighter:game.impact(predicted_hit.position,predicted_hit.normal,predicted_hit.collider.get_meta('surface','concrete'))
+  local_fire_feedback(w,direction);return
  var dir=aim_dir();var spread=w.spread*(.18 if ads else 1.0)*(1.7 if not is_on_floor() else 1.0)
  dir=(dir+Vector3(randf_range(-spread,spread),randf_range(-spread,spread),randf_range(-spread,spread))).normalized()
  var origin=eye();var ray=PhysicsRayQueryParameters3D.create(origin,origin+dir*140,1|2,[get_rid()]);var hit=get_world_3d().direct_space_state.intersect_ray(ray)
@@ -218,15 +265,20 @@ func shoot():
      game.hit_time=.16
      if zone=='HEAD':game.head_time=.3
      game.sound('hit',eye(),true,-7)
-  else:game.impact(hit.position,hit.normal,target.get_meta('surface','concrete'))
+  else:
+   var material=target.get_meta('surface','concrete')
+   game.impact(hit.position,hit.normal,material);game.broadcast_impact(id,hit.position,hit.normal,material)
  if not local_player and randf()<.22:game.tracer(origin+dir*.7,hit.position if not hit.is_empty() else origin+dir*45)
  game.broadcast_shot(id,origin,dir)
 func local_fire_feedback(w: Dictionary, direction: Vector3):
  game.sound(w.sound,eye(),true,-3)
  view.fire(weapon_id);recoil_sequence+=1
  kick=minf(.095,kick+.038)
- pitch=clampf(pitch+deg_to_rad(w.recoil)*(.7 if ads else 1),-1.45,1.45)
- yaw+=deg_to_rad(sin(recoil_sequence*1.75)*.17)
+ var rise=deg_to_rad(w.recoil)*(.7 if ads else 1)
+ var lateral=deg_to_rad(sin(recoil_sequence*1.75)*.17)
+ var previous_pitch=pitch
+ pitch=clampf(pitch+rise,-1.45,1.45);yaw+=lateral
+ recoil_return+=Vector2((pitch-previous_pitch)*.65,lateral);shot_age=0
  game.muzzle(gun.to_global(gun.get_meta('muzzle')),direction)
  game.shell(eye()+Vector3(.25,-.12,-.35).rotated(Vector3.UP,yaw))
 func hurt(amount: float, attacker: Fighter, zone: String):
@@ -235,7 +287,7 @@ func hurt(amount: float, attacker: Fighter, zone: String):
  health-=amount;damage_age=0
  if local_player:game.damage_flash=.5
  model.rotation.z=randf_range(-.06,.06)
- if game.net_mode=='host':game.damage_event.rpc(id,attacker.id,eye())
+ if game.net_mode=='host':game.damage_event.rpc(id,attacker.id,eye(),zone)
  if health<=0:
   dead=true;health=0;deaths+=1;streak=0;rewards.clear();respawn_time=2.3;model.visible=true;collision_layer=0
   if life_age<2:spawn_deaths+=1
@@ -249,9 +301,9 @@ func hurt(amount: float, attacker: Fighter, zone: String):
   game.confirm_kill(attacker,self,zone)
 func spawn():
  if death_motion:death_motion.kill()
- dead=false;pending_fire=false;health=100;collision_layer=2;damage_age=0;velocity=Vector3.ZERO;model.rotation=Vector3.ZERO;model.position=Vector3.ZERO;model.visible=not local_player
- global_position=game.safe_spawn(team);yaw=PI if team==0 else 0;pitch=0;life_age=0;stuck_time=0;cover_time=0;bot_pause=0;bot_burst=0;load_class(queued_class if queued_class>=0 else class_id);queued_class=-1;path.clear();bot_target=null;bot_think=0
- if local_player:gun.visible=true
+ dead=false;pending_fire=false;pending_remote_shots.clear();pending_predictions.clear();reload_requested=false;health=100;collision_layer=2;damage_age=0;velocity=Vector3.ZERO;model.rotation=Vector3.ZERO;model.position=Vector3.ZERO;model.visible=not local_player
+ global_position=game.safe_spawn(team);yaw=PI if global_position.z<0 else 0;pitch=0;life_age=0;stuck_time=0;cover_time=0;bot_pause=0;bot_burst=0;load_class(queued_class if queued_class>=0 else class_id);queued_class=-1;path.clear();bot_target=null;bot_think=0
+ if local_player:gun.visible=true;recoil_return=Vector2.ZERO;recoil_sequence=0;shot_age=1;sprint_blend=0;view.aim_blend=0
 func throw_grenade():
  if not game.authority():game.send_action('grenade');return
  if dead or grenades<=0:return
@@ -267,7 +319,7 @@ func follow_route(dt: float, face_path: bool=true):
  while path_index<path.size():
   var point=Vector3(path[path_index].x,global_position.y,path[path_index].y)
   var direction=point-global_position
-  if direction.length()<.30:path_index+=1;continue
+  if direction.length()<.48:path_index+=1;continue
   if face_path:yaw=lerp_angle(yaw,atan2(-direction.x,-direction.z),dt*12);pitch=0
   var local_direction=direction.normalized().rotated(Vector3.UP,-yaw)
   move_wish=Vector2(local_direction.x,local_direction.z)
@@ -325,12 +377,15 @@ func think_bot(dt: float):
  else:stuck_time=0
  last_position=global_position
  if stuck_time>1.1:
+  if game.bot_test and game.test_recoveries.size()<80:game.test_recoveries.append({'actor':id,'position':str(position),'waypoint':str(path[path_index]) if path_index<path.size() else 'none','cover':cover_time>0})
   recoveries+=1;cover_time=0;bot_target=null;bot_think=0;stuck_time=0
   set_route(Vector3([-20.0,0.0,20.0].pick_random(),0,randf_range(-24,24)))
  if not rewards.is_empty():activate_streak()
 func apply_remote_input():
- move_wish=Vector2(network_input.get('x',0),network_input.get('z',0));yaw=network_input.get('yaw',yaw);pitch=clampf(network_input.get('pitch',pitch),-1.45,1.45);ads=network_input.get('ads',false);sprinting=network_input.get('sprint',false);crouched=network_input.get('crouch',false)
- if network_input.get('jump',false) and is_on_floor():velocity.y=5.7
+ move_wish=Vector2(network_input.get('x',0),network_input.get('z',0)).limit_length(1.0);yaw=network_input.get('yaw',yaw);pitch=clampf(network_input.get('pitch',pitch),-1.45,1.45);ads=network_input.get('ads',false);sprinting=network_input.get('sprint',false);crouched=network_input.get('crouch',false)
+ var held=network_input.get('jump',false)
+ if held and not remote_jump_held and is_on_floor():velocity.y=5.7
+ remote_jump_held=held
 
 func choose_cover(enemy: Fighter):
  var best=9.0

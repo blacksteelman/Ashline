@@ -29,4 +29,5 @@ static func wall(size: Vector3, seed_value: int) -> ArrayMesh:
   for point in [Vector3(a.x,a.y,-thickness/2),Vector3(b.x,b.y,-thickness/2),Vector3(a.x,a.y,thickness/2),Vector3(a.x,a.y,thickness/2),Vector3(b.x,b.y,-thickness/2),Vector3(b.x,b.y,thickness/2)]:
    if not along_x:point=Vector3(point.z,point.y,point.x)
    surface.set_normal(normal);surface.set_uv(Vector2(point.x+point.z,point.y));surface.add_vertex(point)
+ surface.generate_tangents()
  return surface.commit()

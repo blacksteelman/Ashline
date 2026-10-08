@@ -1,0 +1,251 @@
+{
+  "version": "0.3",
+  "date": "2026-10-08",
+  "engine": "Godot 4.6.3",
+  "functional": {
+    "failed": 0,
+    "passed": 49,
+    "success": true,
+    "log": "tests/functional_v3ship.log"
+  },
+  "regression": {
+    "failed": 0,
+    "passed": 14,
+    "success": true,
+    "log": "tests/regression_v3ship.log"
+  },
+  "playthrough": {
+    "log": "tests/playthrough_v3release.log",
+    "errors": false,
+    "last_lines": [
+      "CLICK RESUME (795.0, 305.0) rect=[P: (600.0, 281.0), S: (390.0, 48.0)] viewport=[P: (0.0, 0.0), S: (1600.0, 900.0)]",
+      "PASS: Match resumes from the menu",
+      "PLAYTHROUGH OK failures=0"
+    ]
+  },
+  "stairs": {
+    "log": "tests/stairs_v3release.log",
+    "errors": false,
+    "last_lines": [
+      "",
+      "STAIR_POSITION (26.0, 2.250215, -11.9624)",
+      "STAIRS_OK"
+    ]
+  },
+  "native_network": {
+    "success": true,
+    "clients": [
+      {
+        "client": 0,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 4,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 1,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 3,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 2,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 5,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 3,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 6,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 4,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 8,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 5,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 0,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 6,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 9,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 7,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 10,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 8,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 11,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 9,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 1,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 10,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 2,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 11,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 7,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      }
+    ],
+    "log": "tests/native_swarm_v3ship.log"
+  },
+  "native_vulkan": {
+    "executed": true,
+    "screenshot": "build/screenshots-v3/native-combat.png",
+    "device": "Mesa llvmpipe software Vulkan",
+    "log": "tests/native_visual_v3ship.log",
+    "capture_saved": true,
+    "errors": false
+  },
+  "native_opengl": {
+    "log": "tests/native_opengl_v3ship.log",
+    "errors": false,
+    "last_lines": [
+      "OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)",
+      "",
+      "CAPTURE_SAVED"
+    ]
+  },
+  "windows": {
+    "exported": true,
+    "executed": false
+  },
+  "audio": {
+    "driver": "Dummy",
+    "real_audio_output_verified": false
+  },
+  "bot_matches": {
+    "bots_v3_303.log": {
+      "completed": true,
+      "scores": [
+        "MATCH_END 1 SCORE [40, 31] HEADSHOTS 17 SHOTS 473",
+        "MATCH_END 2 SCORE [40, 25] HEADSHOTS 34 SHOTS 950",
+        "MATCH_END 3 SCORE [40, 35] HEADSHOTS 50 SHOTS 1386"
+      ],
+      "shots": 1386,
+      "recovery_events": 0
+    },
+    "bots_v3_304.log": {
+      "completed": true,
+      "scores": [
+        "MATCH_END 1 SCORE [40, 16] HEADSHOTS 9 SHOTS 346",
+        "MATCH_END 2 SCORE [40, 29] HEADSHOTS 24 SHOTS 838",
+        "MATCH_END 3 SCORE [40, 22] HEADSHOTS 39 SHOTS 1169"
+      ],
+      "shots": 1169,
+      "recovery_events": 0
+    },
+    "bots_v3_305_fixed.log": {
+      "completed": true,
+      "scores": [
+        "MATCH_END 1 SCORE [37, 40] HEADSHOTS 18 SHOTS 636",
+        "MATCH_END 2 SCORE [40, 32] HEADSHOTS 40 SHOTS 1186",
+        "MATCH_END 3 SCORE [40, 20] HEADSHOTS 56 SHOTS 1606"
+      ],
+      "shots": 1606,
+      "recovery_events": 4
+    }
+  },
+  "performance": {
+    "draw_calls_baseline_opengl": 7959,
+    "draw_calls_optimized_opengl": 1527,
+    "nodes_baseline": 4132,
+    "nodes_optimized": 1177,
+    "frame_time_baseline_software_ms": 985.63,
+    "frame_time_optimized_software_ms": 1200.173,
+    "gpu_fps_verified": false,
+    "note": "The material/light settings also changed; these software-rendered times are not a controlled GPU performance comparison."
+  },
+  "remaining": [
+    "Target art/animation quality not reached",
+    "Aegis wins disproportionately in current bot matches",
+    "Some early spawn deaths and route recovery remain",
+    "No internet lag compensation, matchmaking or production hardening",
+    "Windows runtime and real GPU/audio not verified"
+  ],
+  "sha256": {
+    "build/linux/ASHLINE.x86_64": "7923eb31a0f792822362847fad637da463cc0ed208b708ded97cc276cf8dbbf3",
+    "build/windows/ASHLINE.exe": "77335ed2763d919b26b9e243db2d67da8c59524be39c7898e47522f2a167a447"
+  }
+}

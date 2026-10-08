@@ -1,0 +1,137 @@
+{
+  "success": true,
+  "clients": [
+    {
+      "client": 0,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 4,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 1,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 3,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 2,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 5,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 3,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 6,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 4,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 8,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 5,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 0,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 6,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 9,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 7,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 10,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 8,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 11,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 9,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 1,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 10,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 2,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    },
+    {
+      "client": 11,
+      "exit_code": 0,
+      "ok": true,
+      "snapshots": 120,
+      "slot": 7,
+      "actors": 12,
+      "shots": 30,
+      "acknowledged": 30,
+      "pending": 0
+    }
+  ]
+}

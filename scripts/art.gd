@@ -2,7 +2,7 @@ class_name Art
 extends RefCounted
 static var materials: Dictionary = {}
 static func mat(key: String, color: Color = Color.WHITE, metallic: float = 0.0) -> StandardMaterial3D:
- var cache = key + str(color)
+ var cache = key + str(color) + str(metallic)
  if materials.has(cache): return materials[cache]
  var m = StandardMaterial3D.new()
  m.albedo_color = color
@@ -12,11 +12,12 @@ static func mat(key: String, color: Color = Color.WHITE, metallic: float = 0.0) 
  if ResourceLoader.exists('res://assets/'+key+'.png'):
   m.albedo_texture = load('res://assets/'+key+'.png')
   m.normal_enabled = true
-  m.normal_scale = 0.16
+  m.normal_scale = 0.28
   m.normal_texture = load('res://assets/'+key+'_normal.png')
   m.uv1_scale = Vector3(0.65,0.65,0.65)
   m.uv1_triplanar = true
-  m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+  m.uv1_world_triplanar = true
+  m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
   if ResourceLoader.exists('res://assets/'+key+'_roughness.png'):m.roughness_texture=load('res://assets/'+key+'_roughness.png')
  materials[cache] = m
  return m
@@ -26,18 +27,20 @@ static func box(parent: Node3D, pos: Vector3, size: Vector3, material: Material,
  var broken=collision and surface=='concrete' and size.y>=1.5 and maxf(size.x,size.z)>2.5 and minf(size.x,size.z)<.65
  if broken:
   mesh.mesh=Ruins.wall(size,hash(pos))
-  var damaged=material.duplicate();damaged.cull_mode=BaseMaterial3D.CULL_DISABLED;mesh.material_override=damaged
+  material.cull_mode=BaseMaterial3D.CULL_DISABLED
  parent.add_child(mesh); mesh.position = pos
  if collision:
   var body = StaticBody3D.new(); body.set_meta('surface', material.get_meta('surface',surface) if surface=='concrete' else surface); parent.add_child(body); body.position = pos
-  var shape = CollisionShape3D.new(); var s = BoxShape3D.new(); s.size = size; shape.shape = mesh.mesh.create_trimesh_shape() if broken else s; body.add_child(shape)
+  var shape = CollisionShape3D.new(); var s = BoxShape3D.new(); s.size = size; shape.shape = mesh.mesh.create_trimesh_shape() if broken else s
+  if broken:shape.shape.backface_collision=true
+  body.add_child(shape)
  return mesh
 static func cylinder(parent: Node3D, pos: Vector3, radius: float, height: float, material: Material, top: float = -1.0) -> MeshInstance3D:
  var m = MeshInstance3D.new(); var c = CylinderMesh.new(); c.top_radius = radius if top < 0 else top; c.bottom_radius = radius; c.height = height; c.radial_segments = 12; m.mesh = c; m.material_override = material; parent.add_child(m); m.position = pos; return m
 static func sphere(parent: Node3D, pos: Vector3, scale_v: Vector3, material: Material) -> MeshInstance3D:
  var m = MeshInstance3D.new(); m.mesh = SphereMesh.new(); m.material_override = material; parent.add_child(m); m.position = pos; m.scale = scale_v; return m
 static func text(parent: Node3D, pos: Vector3, words: String, size: int, color: Color) -> Label3D:
- var l = Label3D.new(); l.text = words; l.font_size = size; l.pixel_size = 0.012; l.modulate = color; parent.add_child(l); l.position = pos; l.rotation.y=PI; l.double_sided=false; return l
+ var l = Label3D.new(); l.text = words; l.font_size = size; l.pixel_size = 0.006; l.outline_size=2;l.font=load('res://assets/interface.ttf');l.shaded=true;l.modulate = color; parent.add_child(l); l.position = pos; l.rotation.y=PI; l.double_sided=false; return l
 static func weapon(parent: Node3D, kind: int, first_person: bool=true) -> Node3D:
  if ResourceLoader.exists('res://assets/weapon_'+str(kind)+'.glb'):
   var scene=load('res://assets/weapon_'+str(kind)+'.glb').instantiate()

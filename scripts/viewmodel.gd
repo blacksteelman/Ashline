@@ -14,7 +14,7 @@ var aim_blend=0.0
 var equip_blend=0.0
 var reload_stage=-1
 func bind(node: Node3D):
- gun=node
+ gun=node;rest.clear()
  magazine=gun.find_child('MagazineRig',true,false)
  support=gun.find_child('LeftHand',true,false)
  sleeve=gun.find_child('LeftSleeve',true,false)
@@ -42,13 +42,13 @@ func update(owner: Fighter, dt: float):
  var aim=owner.ads and not owner.sprinting and owner.reload_left<=0
  aim_blend=move_toward(aim_blend,1 if aim else 0,dt*(7.5 if aim else 10.0))
  var smooth_aim=smoothstep(0,1,aim_blend)
- var position=Vector3(.185,-.185,-.38).lerp(Vector3(0,-.102 if owner.weapon_id!=2 else -.129,-.29),smooth_aim)
+ var position=Vector3(.185,-.185,-.38).lerp(Vector3(0,[-.102,-.102,-.126,-.085][owner.weapon_id],-.29),smooth_aim)
  var angles=Vector3.ZERO
- if owner.sprinting:position=Vector3(.18,-.26,-.31);angles=Vector3(-.08,-.40,-.30)
+ position=position.lerp(Vector3(.18,-.26,-.31),owner.sprint_blend);angles=Vector3(-.08,-.40,-.30)*owner.sprint_blend
  var movement=clampf(Vector2(owner.velocity.x,owner.velocity.z).length()/5,0,1)
  var bob=Vector3(sin(owner.walk_phase)*.009,cos(owner.walk_phase*2)*.005,0)*movement*(1-smooth_aim*.85)
- position+=bob+recoil_position+Vector3(0,-owner.landing,0)
- angles+=recoil_angle+Vector3(owner.sway.y,-owner.sway.x,owner.move_wish.x*-.02)
+ position+=bob+recoil_position*(1-smooth_aim*.42)+Vector3(0,-owner.landing,0)
+ angles+=recoil_angle*(1-smooth_aim*.52)+Vector3(owner.sway.y,-owner.sway.x,owner.move_wish.x*-.02)
  position.y-=(1-equip_blend)*.13;angles.x+=(1-equip_blend)*.22
  # Near-wall retraction checks the same physical geometry as bullet impacts.
  var ray=PhysicsRayQueryParameters3D.create(owner.eye(),owner.eye()+owner.aim_dir()*.9,1)
@@ -63,18 +63,17 @@ func update(owner: Fighter, dt: float):
   var duration=Arsenal.WEAPONS[owner.weapon_id].reload*(.78 if owner.class_id==0 else 1.0)
   var progress=clampf(1-owner.reload_left/duration,0,1)
   var tilt=sin(progress*PI)
-  position+=Vector3(-.085,.18,-.16)*tilt;angles+=Vector3(.12,-.10,-.52)*tilt
+  position+=Vector3(-.035,.07,-.02)*tilt;angles+=Vector3(.16,-.16,-.45)*tilt
   var removed=smoothstep(.15,.33,progress)*(1-smoothstep(.60,.82,progress))
-  if magazine:magazine.position+=Vector3(-.07,-.15,.04)*removed;magazine.rotation.z-=removed*.14
+  if magazine:magazine.position+=Vector3(-.07,-.15,.04)*removed;magazine.rotation.z-=removed*.06
   var reach=smoothstep(.04,.18,progress)*(1-smoothstep(.83,.98,progress))
   if support:
-   support.position+=Vector3(.055,-.15,.16)*reach+Vector3(-.04,-.075,.02)*removed
-   support.rotation.z-=reach*.35
-  if sleeve:sleeve.position+=Vector3(.01,-.09,.12)*reach
-  var stage=0 if progress<.28 else (1 if progress<.73 else 2)
+   support.position+=Vector3(0,-.048,.205)*reach+Vector3(-.07,-.15,.04)*removed
+  if sleeve:sleeve.position+=Vector3(-.03,-.12,.17)*reach
+  var stage=-1 if progress<.14 else (0 if progress<.68 else (1 if progress<.90 else 2))
   if stage!=reload_stage:
    reload_stage=stage
-   owner.game.sound(['mag_out','mag_in','bolt'][stage],owner.eye(),owner.local_player,-10)
+   if stage>=0:owner.game.sound(['mag_out','mag_in','bolt'][stage],owner.eye(),owner.local_player,-10)
  else:reload_stage=-1
  gun.position=gun.position.lerp(position,1-exp(-dt*26))
  gun.rotation=gun.rotation.lerp(angles,1-exp(-dt*28))

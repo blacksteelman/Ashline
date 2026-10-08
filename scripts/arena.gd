@@ -51,13 +51,14 @@ func _ready():
  Art.box(self,Vector3(0,9.05,1),Vector3(11,.10,.4),ochre)
  for i in range(8):
   var brace=Art.box(self,Vector3(-4.8+i*1.35,9.4,1),Vector3(1.45,.08,.12),ochre);brace.rotation.z=.5 if i%2==0 else -.5
+ Art.box(self,Vector3(-2.8,2.3,-2.005),Vector3(2.2,.40,.055),dark)
  Art.text(self,Vector3(-2.8,2.3,-2.04),'TURBINE 04',42,Color('#e5d4ad'))
  # Lane cover, cargo, breached barricades, oil drums.
  for x in [-23,23]:
   for z in [-16,4,18]:
    block(Vector3(x,1.25,z),Vector3(3.5,2.5,5),metal,'metal')
    for i in range(10):Art.box(self,Vector3(x-1.79,1.25,z-2.3+i*.5),Vector3(.06,2.4,.065),dark)
-   Art.text(self,Vector3(x,1.5,z-2.53),'AL / 08',32,white.albedo_color)
+   Art.text(self,Vector3(x,1.5,z-2.64),'AL / 08',32,white.albedo_color)
  for p in [Vector3(3,.65,-8),Vector3(-4,.65,9),Vector3(20,.65,-3),Vector3(-20,.65,11),Vector3(0,.65,22),Vector3(0,.65,-23)]:
   block(p,Vector3(3.8,1.3,.8),concrete)
   for i in range(7):
@@ -90,8 +91,8 @@ func _ready():
   for z in [37,41]:Art.cylinder(self,Vector3(x,8,z),.15,16,dark)
  Art.cylinder(self,Vector3(26,16,39),3.5,4,metal)
  Art.text(self,Vector3(26,16,35.48),'ASHLINE\nWATER AUTHORITY',40,Color('#dfd1ae'))
- Art.text(self,Vector3(-10,3.1,-26.3),'FOUNDRY / WEST',42,Color('#e1cda4'))
- Art.text(self,Vector3(10,3.1,-26.3),'RELAY / EAST',42,Color('#8bb9bb'))
+ Art.text(self,Vector3(-10,3.15,-26.40),'FOUNDRY / WEST',42,Color('#e1cda4'))
+ Art.text(self,Vector3(10,3.15,-26.40),'RELAY / EAST',42,Color('#8bb9bb'))
  # Accessible maintenance deck, stair ramp and partial industrial railings.
  block(Vector3(26,2.1,-9),Vector3(7,.3,7),metal,'metal')
  for i in range(13):
@@ -139,6 +140,8 @@ func _ready():
  for z in [-46,46]:
   for x in range(-60,61,6):Art.cylinder(self,Vector3(x,2,z),.045,4,dark)
   Art.box(self,Vector3(0,4,z),Vector3(120,.04,.04),dark)
+ DistrictDetail.build(self)
+ if not '--no-batching' in OS.get_cmdline_user_args():StaticBatch.bake(self)
  for team in range(2):
   for x in [-27,-18,-3,3,18,27]:spawns[team].append(Vector3(x,.2,-29 if team==0 else 29))
  grid.region=Rect2i(-31,-31,63,63);grid.cell_size=Vector2.ONE;grid.diagonal_mode=AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES;grid.update()

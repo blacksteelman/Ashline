@@ -1,0 +1,197 @@
+{
+  "fighters": [
+    {
+      "deaths": 5,
+      "id": 0,
+      "kills": 4,
+      "position": [
+        21.0625782012939,
+        0.000234388746321201,
+        20.8539638519287
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 187.477881163592
+    },
+    {
+      "deaths": 5,
+      "id": 1,
+      "kills": 2,
+      "position": [
+        20.2227077484131,
+        0.000234388746321201,
+        22.2227077484131
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 189.228789940476
+    },
+    {
+      "deaths": 1,
+      "id": 2,
+      "kills": 12,
+      "position": [
+        14.4063386917114,
+        0.100939884781837,
+        18.3345069885254
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 186.158352219558
+    },
+    {
+      "deaths": 2,
+      "id": 3,
+      "kills": 11,
+      "position": [
+        16.3910045623779,
+        0.000703141093254089,
+        21.0937004089355
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 181.875813600374
+    },
+    {
+      "deaths": 3,
+      "id": 4,
+      "kills": 2,
+      "position": [
+        15.4300193786621,
+        0.100234404206276,
+        15.6541118621826
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 205.384958154697
+    },
+    {
+      "deaths": 4,
+      "id": 5,
+      "kills": 9,
+      "position": [
+        16.9772186279297,
+        0.000936706375796348,
+        9.7855749130249
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 200.891702987719
+    },
+    {
+      "deaths": 7,
+      "id": 6,
+      "kills": 3,
+      "position": [
+        -12.4598913192749,
+        0.100234389305115,
+        -14.4598913192749
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 1,
+      "travelled": 164.856936752447
+    },
+    {
+      "deaths": 7,
+      "id": 7,
+      "kills": 4,
+      "position": [
+        -2.21008658409119,
+        0.00093802809715271,
+        -11.1646213531494
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 2,
+      "travelled": 180.674285906309
+    },
+    {
+      "deaths": 6,
+      "id": 8,
+      "kills": 3,
+      "position": [
+        -3.97962999343872,
+        0.000234387814998627,
+        -13.9511222839355
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 179.395066195168
+    },
+    {
+      "deaths": 6,
+      "id": 9,
+      "kills": 4,
+      "position": [
+        -21.8987121582031,
+        0.000234388746321201,
+        -20.8986473083496
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 147.032022336498
+    },
+    {
+      "deaths": 7,
+      "id": 10,
+      "kills": 3,
+      "position": [
+        -1.36139166355133,
+        0.000156261958181858,
+        -12.0671367645264
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 179.699515864952
+    },
+    {
+      "deaths": 7,
+      "id": 11,
+      "kills": 3,
+      "position": [
+        -9.0,
+        0.000625055748969316,
+        -7.00180721282959
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 1,
+      "travelled": 190.279361519963
+    }
+  ],
+  "headshots": 56,
+  "matches": 3,
+  "reason": "completed",
+  "recoveries": [
+    {
+      "actor": 1,
+      "cover": true,
+      "position": "(27.80094, 0.000942, -15.87326)",
+      "waypoint": "(27.0, -16.0)"
+    },
+    {
+      "actor": 1,
+      "cover": false,
+      "position": "(27.80094, 0.000942, -16.93882)",
+      "waypoint": "(27.0, -17.0)"
+    },
+    {
+      "actor": 1,
+      "cover": false,
+      "position": "(27.80094, 0.000942, -16.03197)",
+      "waypoint": "(27.0, -16.0)"
+    },
+    {
+      "actor": 3,
+      "cover": false,
+      "position": "(24.19835, 0.000907, -18.92609)",
+      "waypoint": "(25.0, -19.0)"
+    }
+  ],
+  "score": [
+    40,
+    20
+  ],
+  "seed": 305,
+  "shots": 1606,
+  "simulation_seconds": 174.866666666662,
+  "success": true
+}
