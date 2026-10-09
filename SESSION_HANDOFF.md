@@ -63,7 +63,7 @@ python3 tools/verify_downloads.py
 
 ## Сохранение и доставка
 
-Source сохраняется на main и теге v0.7.0-alpha; точный commit указан в RELEASE.json каждого архива. Готовые файлы доставляются через ветку `builds/v0.7.0-alpha`, а не ссылку на недоступный разговорный артефакт. ZIP-файлы должны быть меньше 100MiB каждый. Source ZIP содержит runtime GLB, Asset-Sources ZIP — дополнительные исходные vendor-ресурсы. `tools/verify_downloads.py` реально скачивает каждый ZIP из GitHub, сверяет размер/SHA-256/целостность и добавляет доказательство в build branch. Никогда не печатать короткоживущие приватные download URLs из gh API.
+Source сохраняется на main и теге v0.7.0-alpha; точный commit указан в RELEASE.json нативных архивов и в корне build branch. Готовые файлы доставляются через ветку `builds/v0.7.0-alpha`, а не ссылку на недоступный разговорный артефакт. ZIP-файлы должны быть меньше 100MiB каждый. Source ZIP содержит runtime GLB, Asset-Sources ZIP — дополнительные исходные vendor-ресурсы. `tools/verify_downloads.py` реально скачивает каждый ZIP из GitHub, сверяет размер/SHA-256/целостность и добавляет доказательство в build branch. Никогда не печатать короткоживущие приватные download URLs из gh API.
 
 Для приватного репозитория пользователю требуется вход в GitHub. Открыть ZIP → Download raw file. Не утверждать, что reverse download проверен, пока скрипт не завершился для всех пяти архивов.
 
