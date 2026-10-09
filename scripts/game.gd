@@ -5,7 +5,7 @@ var fighters: Array[Fighter]=[]
 var player: Fighter
 var state='menu'
 var menu_open=false
-var settings={'sensitivity':1.5,'fov':90.0,'volume':.75,'fullscreen':false,'graphics':1,'vsync':true}
+var settings={'sensitivity':1.5,'fov':90.0,'volume':.75,'fullscreen':false,'graphics':2,'vsync':true}
 var hud: CanvasLayer
 var ui: Control
 var scores=[0,0]
@@ -48,17 +48,8 @@ func _ready():
  configure_input();configure_network();AudioMix.configure();load_settings()
  if OS.has_feature('editor'):capture_path='res://build/capture.png'
  arena=Arena.new();add_child(arena)
- var env=WorldEnvironment.new();var e=Environment.new();env.environment=e;world_environment=e;add_child(env)
- e.background_mode=Environment.BG_SKY
- var sky=Sky.new();var sky_mat=ProceduralSkyMaterial.new();sky_mat.sky_top_color=Color('#253e50');sky_mat.sky_horizon_color=Color('#95b0bc');sky_mat.ground_bottom_color=Color('#222b32');sky_mat.ground_horizon_color=Color('#a9aaa0');sky_mat.sun_angle_max=12;var atmosphere=ShaderMaterial.new();atmosphere.shader=load('res://assets/industrial_sky.gdshader');sky.sky_material=atmosphere;e.sky=sky
- e.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR;e.ambient_light_color=Color('#a6bdcb');e.ambient_light_energy=.32;e.tonemap_mode=Environment.TONE_MAPPER_FILMIC
- if RenderingServer.get_current_rendering_method()=='forward_plus':
-  e.ssao_enabled=true;e.ssao_radius=1.2;e.ssao_intensity=1.5;e.ssao_power=1.4
-  e.ssil_radius=3;e.ssil_intensity=.6
-  e.tonemap_mode=Environment.TONE_MAPPER_ACES
+ world_environment=Atmosphere.build(self)
  apply_graphics()
- e.fog_enabled=true;e.fog_light_color=Color('#889795');e.fog_density=.0012;e.fog_sky_affect=.20
- var sun=DirectionalLight3D.new();add_child(sun);sun.rotation_degrees=Vector3(-36,-38,0);sun.light_color=Color('#ffe3bd');sun.light_energy=1.15;sun.shadow_enabled=true;sun.directional_shadow_max_distance=85
  menu_camera=Camera3D.new();add_child(menu_camera);menu_camera.position=Vector3(29,14,28);menu_camera.look_at(Vector3(0,2,0));menu_camera.current=true
  hud=CanvasLayer.new();hud.layer=5;add_child(hud)
  var overlay=load('res://scripts/hud.gd').new();overlay.game=self;hud.add_child(overlay)
@@ -110,14 +101,12 @@ func load_settings():
  var cfg=ConfigFile.new()
  if cfg.load('user://settings.cfg')==OK:
   for key in settings:settings[key]=cfg.get_value('game',key,settings[key])
+ for a in OS.get_cmdline_user_args():
+  if a.begins_with('--graphics='):settings.graphics=int(a.split('=')[1])
  apply_settings()
 func apply_graphics():
  if not world_environment:return
- var modern=RenderingServer.get_current_rendering_method()=='forward_plus'
- world_environment.ssao_enabled=modern and settings.graphics>0
- world_environment.ssil_enabled=modern and settings.graphics==2
- world_environment.ssr_enabled=modern and settings.graphics==2
- get_viewport().msaa_3d=Viewport.MSAA_DISABLED if settings.graphics==0 else Viewport.MSAA_4X
+ Atmosphere.apply(self,world_environment,clampi(int(settings.graphics),0,3))
 func apply_settings():
  apply_graphics()
  AudioServer.set_bus_volume_db(0,linear_to_db(maxf(.001,settings.volume)))
@@ -167,7 +156,7 @@ func settings_menu(in_match: bool):
   slider.value_changed.connect(func(value):settings[key]=value;l.text=entry[1]+'   '+str(snappedf(value,.01));save_settings())
  label(v,'GRAPHICS',13)
  var quality=OptionButton.new()
- for preset in ['PERFORMANCE','BALANCED','QUALITY']:quality.add_item(preset)
+ for preset in ['PERFORMANCE','BALANCED','QUALITY','ULTRA']:quality.add_item(preset)
  quality.selected=settings.graphics;v.add_child(quality);quality.item_selected.connect(func(value):settings.graphics=value;save_settings())
  var sync=CheckButton.new();sync.text='VSync';sync.button_pressed=settings.vsync;v.add_child(sync);sync.toggled.connect(func(value):settings.vsync=value;save_settings())
  var check=CheckButton.new();check.text='Fullscreen';check.button_pressed=settings.fullscreen;v.add_child(check);check.toggled.connect(func(value):settings.fullscreen=value;save_settings())
@@ -451,7 +440,7 @@ func peer_joined(_peer: int):pass
 func peer_left(peer: int):
  if peer_slots.has(peer):
   var slot=peer_slots[peer]
-  if slot<fighters.size():fighters[slot].bot=true;fighters[slot].collision_mask=1
+  if slot<fighters.size():fighters[slot].bot=true;fighters[slot].collision_mask=1|8
   peer_slots.erase(peer)
 @rpc('any_peer','call_remote','reliable')
 func request_slot(c: int):
@@ -460,7 +449,7 @@ func request_slot(c: int):
  if not dedicated_server:used.append(0)
  for slot in range(12):
   if slot not in used:
-   peer_slots[sender]=slot;var f=fighters[slot];f.bot=false;f.collision_mask=1|2;f.kills=0;f.deaths=0;f.streak=0;f.rewards.clear();f.load_class(clampi(c,0,2));f.spawn();assign_slot.rpc_id(sender,slot,match_number);return
+   peer_slots[sender]=slot;var f=fighters[slot];f.bot=false;f.collision_mask=1|2|8;f.kills=0;f.deaths=0;f.streak=0;f.rewards.clear();f.load_class(clampi(c,0,2));f.spawn();assign_slot.rpc_id(sender,slot,match_number);return
  connection_denied.rpc_id(sender)
 @rpc('authority','call_remote','reliable')
 func connection_denied():leave_match();show_error('Server is full')

@@ -6,3 +6,11 @@ build/
 
 __pycache__/
 *.pyc
+
+# Poly Haven sources are re-downloadable with tools/fetch_polyhaven.py (md5 verified)
+assets/thirdparty/polyhaven/*/
+# Godot extracts textures embedded in kit GLBs on import; they are regenerated.
+assets/kit/*.jpg
+assets/kit/*.png
+assets/kit/*.jpg.import
+assets/kit/*.png.import

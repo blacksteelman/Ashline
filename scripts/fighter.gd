@@ -83,7 +83,7 @@ var network_yaw=0.0
 var network_pose_ready=false
 var standing_clearance=SphereShape3D.new()
 func _ready():
- collision_layer=2;collision_mask=1 if bot else 1|2
+ collision_layer=2;collision_mask=(1|8) if bot else (1|2|8)
  floor_snap_length=.32;floor_stop_on_slope=true;standing_clearance.radius=.29
  col=CollisionShape3D.new();var cap=CapsuleShape3D.new();cap.radius=.30;cap.height=1.8;col.shape=cap;col.position.y=.9;add_child(col)
  model=Art.soldier(self,team)
@@ -358,10 +358,11 @@ func think_bot(dt: float):
   elif cover_time<=0 and (path.is_empty() or path_index>=path.size()):
    if memory_time>0:set_route(last_known)
    else:
-    var lane=[-20.0,-10.0,0.0,10.0,20.0][(id+randi_range(0,2))%5]
-    var destination=Vector3(lane,0,randf_range(-20,20))
-    if abs(global_position.z)<12 and randf()<.4:destination.z=20 if team==0 else -20
-    if randf()<.12:destination=Vector3(26,2.25,-9)
+    # Push toward the enemy half most of the time, otherwise hold a known position.
+    var destination=game.arena.random_patrol()
+    if randf()<.35:
+     var forward=game.arena.patrol.filter(func(p):return p.z*(1.0 if team==0 else -1.0)>4.0)
+     if not forward.is_empty():destination=forward.pick_random()
     set_route(destination)
  if is_instance_valid(bot_target) and not bot_target.dead:
   var aim=bot_target.position+Vector3(0,bot_aim_height-(.42 if bot_target.crouched else 0.0),0)-eye()
@@ -390,7 +391,7 @@ func think_bot(dt: float):
  if stuck_time>1.1:
   if game.bot_test and game.test_recoveries.size()<80:game.test_recoveries.append({'actor':id,'position':str(position),'waypoint':str(path[path_index]) if path_index<path.size() else 'none','cover':cover_time>0})
   recoveries+=1;cover_time=0;bot_target=null;bot_think=0;stuck_time=0
-  set_route(Vector3([-20.0,0.0,20.0].pick_random(),0,randf_range(-24,24)))
+  set_route(game.arena.random_patrol())
  if not rewards.is_empty():activate_streak()
 func apply_remote_input():
  move_wish=Vector2(network_input.get('x',0),network_input.get('z',0)).limit_length(1.0);yaw=network_input.get('yaw',yaw);pitch=clampf(network_input.get('pitch',pitch),-1.45,1.45);ads=network_input.get('ads',false);sprinting=network_input.get('sprint',false);crouched=network_input.get('crouch',false)

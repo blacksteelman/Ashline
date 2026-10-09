@@ -1,208 +1,591 @@
 class_name Arena
 extends Node3D
-var obstacles: Array[Rect2] = []
-var grid = AStarGrid2D.new()
-var navigation = AStar3D.new()
-var spawns = [[],[]]
-func block(pos: Vector3, size: Vector3, m: Material, surface: String='concrete', damaged: bool=true) -> MeshInstance3D:
- var visual=Art.box(self,pos,size,m,true,surface,damaged)
- if pos.y-size.y/2<1.6 and pos.y+size.y/2>.3: obstacles.append(Rect2(Vector2(pos.x-size.x/2-.45,pos.z-size.z/2-.45),Vector2(size.x+.9,size.z+.9)))
- return visual
+# FOUNDRY DISTRICT: a two-lane urban/industrial TDM map.
+# Geometry is authored here; modular CC0 facade and prop kits come from assets/kit.
+# Coordinates: X east, Z south(-)/north(+), Aegis deploys south, Ember north.
+const MAP_NAME='FOUNDRY DISTRICT'
+const BOUNDS=Rect2(-36,-45,72,90)
+const CLIP_LAYER=8 # blocks players and bots, not bullets
+var obstacles: Array[Rect2]=[]
+var spawns=[[],[]]
+var patrol: Array[Vector3]=[]
+var navigation=AStar3D.new()
+var nav_columns: Dictionary={}
+var nav_ready=false
+var kit: Dictionary={}
+var facade_meshes: Dictionary={}
+var facade_open: Dictionary={}
+var lights_root: Node3D
+var structure: Node3D
+var facade_batches: Dictionary={}
+
 func _ready():
  seed(4481)
- var concrete=Art.mat('concrete');var brick=Art.mat('brick');var asphalt=Art.mat('asphalt');var metal=Art.mat('metal',Color('#718789'),.55);var plaster=Art.mat('plaster');var dark=Art.mat('charcoal',Color('#2d373a'));var ochre=Art.mat('ochre',Color('#ae8046'));var white=Art.mat('stripe',Color('#c2b99d'))
- Art.box(self,Vector3(0,-.60,0),Vector3(340,.2,340),Art.mat('asphalt',Color('#6a7970')))
- block(Vector3(0,-.25,0),Vector3(64,.5,64),asphalt)
- obstacles.clear()
- for x in [-32,32]:block(Vector3(x,2,0),Vector3(1,4,64),concrete)
- for z in [-32,32]:block(Vector3(0,2,z),Vector3(64,4,1),concrete)
- # Four original walk-through buildings: doorways on both sides and connecting courtyard.
- for x in [-10,10]:
-  for z in [-17,17]:
-   block(Vector3(x, .05,z),Vector3(11,.1,18),concrete)
-   for side in [-1,1]:
-    for dz in [-6.5,6.5]:
-     # Real 2.7m window opening: collision and geometry agree on the reveal.
-     block(Vector3(x+side*5.5,1.075,z+dz),Vector3(.5,2.15,5),brick,'concrete',false)
-     block(Vector3(x+side*5.5,4.425,z+dz),Vector3(.5,1.15,5),brick,'concrete',false)
-     for jamb in [-1.925,1.925]:block(Vector3(x+side*5.5,3,z+dz+jamb),Vector3(.5,1.7,1.15),brick,'concrete',false)
-    block(Vector3(x+side*5.5,4.25,z),Vector3(.5,1.5,8),plaster)
-    for dx in [-3.6,3.6]:block(Vector3(x+dx,2.5,z+side*9),Vector3(3.8,5,.5),plaster,'concrete',x<0 and z>0 and side<0)
-    block(Vector3(x,4.25,z+side*9),Vector3(3.4,1.5,.5),brick)
-   # Broken roof edges, inner pillars, pipes and lit fixtures.
-   for dx in [-4.8,4.8]:
-    for dz in [-7,7]:block(Vector3(x+dx,2.3,z+dz),Vector3(.45,4.6,.45),concrete)
-   Art.box(self,Vector3(x,5.05,z+5),Vector3(11,.22,8),concrete)
-   for dz in [-6,0,6]:
-    for dx in [-5.8,5.8]:
-     var pipe=Art.cylinder(self,Vector3(x+dx,2.6,z+dz),.07,5,metal)
-     Art.box(self,Vector3(x+dx*.97,3.45,z+dz),Vector3(.1,.2,1.3),dark)
-    var light=OmniLight3D.new();add_child(light);light.position=Vector3(x,3.5,z+dz);light.light_color=Color('#ffcc8c');light.light_energy=.7;light.omni_range=7
-   for dz in [-6,4]:
-    block(Vector3(x+2, .65,z+dz),Vector3(2.0,1.3,1.0),metal,'metal')
-    for i in range(5):Art.box(self,Vector3(x+1.08+i*.45,.65,z+dz-.52),Vector3(.035,1.2,.03),dark)
- # Central landmark: damaged turbine and orange maintenance gantry.
- block(Vector3(-2.8,1.1,0),Vector3(3.8,2.2,4),concrete).visible=false
- var turbine=load('res://assets/turbine.glb').instantiate();add_child(turbine);turbine.position=Vector3(-2.8,0,0)
- for x in [-5,5]:
-  Art.cylinder(self,Vector3(x,5,1),.16,10,ochre)
-  for h in range(9):Art.box(self,Vector3(x,1+h,1),Vector3(.42,.08,.4),dark)
- Art.box(self,Vector3(0,9.8,1),Vector3(11,.25,.4),ochre)
- Art.box(self,Vector3(0,9.05,1),Vector3(11,.10,.4),ochre)
- for i in range(8):
-  var brace=Art.box(self,Vector3(-4.8+i*1.35,9.4,1),Vector3(1.45,.08,.12),ochre);brace.rotation.z=.5 if i%2==0 else -.5
- Art.box(self,Vector3(-2.8,2.3,-2.005),Vector3(2.2,.40,.055),dark)
- Art.text(self,Vector3(-2.8,2.3,-2.04),'TURBINE 04',42,Color('#e5d4ad'))
- # Lane cover, cargo, breached barricades, oil drums.
- for x in [-23,23]:
-  for z in [-16,4,18]:
-   block(Vector3(x,1.25,z),Vector3(3.5,2.5,5),metal,'metal')
-   for i in range(10):Art.box(self,Vector3(x-1.79,1.25,z-2.3+i*.5),Vector3(.06,2.4,.065),dark)
-   Art.text(self,Vector3(x,1.5,z-2.64),'AL / 08',32,white.albedo_color)
- for p in [Vector3(3,.65,-8),Vector3(-4,.65,9),Vector3(20,.65,-3),Vector3(-20,.65,11),Vector3(0,.65,22),Vector3(0,.65,-23)]:
-  block(p,Vector3(3.8,1.3,.8),concrete)
-  for i in range(7):
-   var stripe=Art.box(self,p+Vector3(-1.5+i*.5,.1,-.412),Vector3(.22,.85,.02),ochre);stripe.rotation.z=-.45
- for x in [-28,27]:
-  for z in [-25,-7,10,24]:
-   Art.cylinder(self,Vector3(x,.5,z),.4,1,metal)
-   Art.cylinder(self,Vector3(x,1.02,z),.41,.04,dark)
- # Road and pedestrian markings.
- for z in range(-29,30,5):Art.box(self,Vector3(.5,.015,z),Vector3(.12,.015,2),white)
- for x in [-18,18]:
-  for z in [-28,28]:
-   for i in range(7):Art.box(self,Vector3(x-2.4+i*.8,.017,z),Vector3(.4,.02,3),white)
- for i in range(170):
-  var p=Vector3(randf_range(-30,30),.07,randf_range(-30,30))
-  if abs(p.x)<5 and abs(p.z)>5:continue
-  var debris=Art.box(self,p,Vector3(randf_range(.08,.5),randf_range(.06,.25),randf_range(.08,.45)),concrete);debris.mesh=Ruins.fragment(debris.mesh.size,4481+i);debris.rotation=Vector3(randf()*.3,randf()*6,.1)
- # Skyline, original water tower, cables, lamps, distant industrial silhouettes.
- for i in range(22):
-  var x=randf_range(-65,65);var z=-42.0 if i%2==0 else 42.0
-  var h=randf_range(8,22);Art.box(self,Vector3(x,h/2,z),Vector3(randf_range(5,10),h,7),plaster)
-  for y in range(3,int(h),3):
-   for k in range(4):Art.box(self,Vector3(x-2.7+k*1.8,y,z+(-3.55 if z>0 else 3.55)),Vector3(.8,1.2,.05),dark)
- for x in [-28,28]:
-  for z in [-26,0,26]:
-   Art.cylinder(self,Vector3(x,3.5,z),.10,7,dark)
-   Art.box(self,Vector3(x-.7,7,z),Vector3(1.5,.10,.1),dark)
-   var lamp=OmniLight3D.new();add_child(lamp);lamp.position=Vector3(x-.7,6.8,z);lamp.light_color=Color('#ffd5a0');lamp.light_energy=1.3;lamp.omni_range=11
- for x in [24,28]:
-  for z in [37,41]:Art.cylinder(self,Vector3(x,8,z),.15,16,dark)
- Art.cylinder(self,Vector3(26,16,39),3.5,4,metal)
- Art.text(self,Vector3(26,16,35.48),'ASHLINE\nWATER AUTHORITY',40,Color('#dfd1ae'))
- Art.text(self,Vector3(-10,3.15,-26.40),'WEST / SERVICE BAY',29,Color('#e1cda4'))
- Art.text(self,Vector3(10,3.15,-26.40),'RELAY / EAST',42,Color('#8bb9bb'))
- # Accessible maintenance deck, stair ramp and partial industrial railings.
- block(Vector3(26,2.1,-9),Vector3(7,.3,7),metal,'metal')
- for i in range(13):
-  Art.box(self,Vector3(26,(i+1)*.0875,-20+i*.6),Vector3(3.0,(i+1)*.175,.62),concrete)
- # A continuous collision ramp keeps fast movement smooth on the visible stair risers.
- var ramp=StaticBody3D.new();add_child(ramp);ramp.position=Vector3(26,1.09,-16.10);ramp.rotation.x=-atan2(2.275,7.8);ramp.set_meta('surface','concrete')
- var ramp_shape=CollisionShape3D.new();var slope=BoxShape3D.new();slope.size=Vector3(3,.12,8.125);ramp_shape.shape=slope;ramp.add_child(ramp_shape)
- for x in [22.7,29.3]:
-  for z in [-12,-9,-6]:Art.cylinder(self,Vector3(x,2.7,z),.045,1.1,ochre)
-  Art.box(self,Vector3(x,3.2,-9),Vector3(.065,.07,7),ochre)
- Art.box(self,Vector3(26,3.2,-5.7),Vector3(7,.07,.07),ochre)
- # Scorched utility vehicles, broken masonry piles, small street infrastructure.
- for p in [Vector3(-20,0,-5),Vector3(19,0,12),Vector3(4,0,27)]:
-  var wreck=load('res://assets/wreck.glb').instantiate();add_child(wreck);wreck.position=p;wreck.rotation.y=.25 if p.x<0 else -.4
-  block(p+Vector3(0,.65,0),Vector3(1.9,1.3,3.7),dark,'metal').visible=false
- for p in [Vector3(-15,0,-26),Vector3(15,0,26),Vector3(-6,0,8),Vector3(6,0,-8)]:
-  for i in range(22):
-   var slab=Art.box(self,p+Vector3(randf_range(-1.6,1.6),randf_range(.05,.55),randf_range(-1.4,1.4)),Vector3(randf_range(.3,1.0),randf_range(.12,.4),randf_range(.3,.8)),brick if i%3==0 else concrete)
-   slab.mesh=Ruins.fragment(slab.mesh.size,hash(p)+i)
-   slab.rotation=Vector3(randf_range(-.3,.3),randf()*6,randf_range(-.4,.4))
- for x in [-10,10]:
-  for z in [-17,17]:
-   var bench=load('res://assets/workbench.glb').instantiate();add_child(bench);bench.position=Vector3(x-2.2,.10,z+5.5)
-   block(Vector3(x-2.2,.5,z+5.5),Vector3(2.2,1,.8),metal,'metal').visible=false
-   var generator=load('res://assets/generator.glb').instantiate();add_child(generator);generator.position=Vector3(x+3,.1,z-3);generator.rotation.y=.2
-   block(Vector3(x+3,.6,z-3),Vector3(1.4,1.2,1),metal,'metal').visible=false
-   # Floor marking, wall ventilation, fuse cabinets, cable conduits.
-   for dx in [-3.5,3.5]:Art.box(self,Vector3(x+dx,.12,z),Vector3(.09,.02,16),ochre)
-   Art.box(self,Vector3(x+4.8,1.65,z-6),Vector3(.5,1.1,1.2),metal)
-   for i in range(8):Art.box(self,Vector3(x+4.51,1.3+i*.08,z-6),Vector3(.015,.018,.9),dark)
-   Art.box(self,Vector3(x-4.4,1.5,z+6),Vector3(.8,1.0,.30),metal)
-   Art.text(self,Vector3(x-4.4,1.65,z+5.83),'⚡  415 V',16,Color('#dabf82'))
-   for i in range(3):Art.cylinder(self,Vector3(x-4.3+i*.10,3,z+6),.025,3,dark)
- # Smoke at distant fire; original particle motion, outside navigation lanes.
- var plume=CPUParticles3D.new();add_child(plume);plume.position=Vector3(-29,2,35);plume.amount=22;plume.lifetime=7;plume.direction=Vector3.UP;plume.spread=12;plume.initial_velocity_min=1;plume.initial_velocity_max=2;plume.gravity=Vector3(.18,.1,0);plume.scale_amount_min=1.4;plume.scale_amount_max=3
- plume.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
- var fade=Gradient.new();fade.offsets=PackedFloat32Array([0,.12,.65,1]);fade.colors=PackedColorArray([Color(1,1,1,0),Color(1,1,1,.65),Color(1,1,1,.42),Color(1,1,1,0)]);plume.color_ramp=fade
- var sm=QuadMesh.new();sm.size=Vector2(3,3)
- var smoke_material=StandardMaterial3D.new();smoke_material.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA;smoke_material.albedo_texture=load('res://assets/smoke.png');smoke_material.albedo_color=Color(.32,.34,.32,.55);smoke_material.billboard_mode=BaseMaterial3D.BILLBOARD_ENABLED;smoke_material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED;smoke_material.cull_mode=BaseMaterial3D.CULL_DISABLED;sm.material=smoke_material;plume.mesh=sm
- # The district sits in a larger industrial landscape rather than floating in the sky.
- for x in [-46,44]:
-  for z in [-20,15,36]:
-   Art.box(self,Vector3(x,1.4,z),Vector3(5,2.8,9),metal)
-   for i in range(12):Art.box(self,Vector3(x-2.53,1.4,z-4+i*.7),Vector3(.04,2.6,.055),dark)
- for x in [-56,-61]:
-  Art.cylinder(self,Vector3(x,12,8),1.1,24,brick)
-  Art.cylinder(self,Vector3(x,24.2,8),1.2,.5,dark)
- for z in [-46,46]:
-  for x in range(-60,61,6):Art.cylinder(self,Vector3(x,2,z),.045,4,dark)
-  Art.box(self,Vector3(0,4,z),Vector3(120,.04,.04),dark)
- DistrictDetail.build(self)
- WorkshopArt.build(self)
- if not '--no-batching' in OS.get_cmdline_user_args():StaticBatch.bake(self)
+ kit=JSON.parse_string(FileAccess.get_file_as_string('res://assets/kit/kit.json'))
+ load_facade()
+ lights_root=Node3D.new();lights_root.name='Lights';add_child(lights_root)
+ structure=Node3D.new();structure.name='Structure';add_child(structure)
+ build_ground()
+ build_apartment_north()
+ build_market_south()
+ build_foundry_hall()
+ build_container_yard()
+ build_streets()
+ build_west_alley()
+ build_spawn_zones()
+ build_perimeter()
+ build_patrol()
+ flush_facades()
+ if not '--no-batching' in OS.get_cmdline_user_args():StaticBatch.bake(structure)
+ # Navigation needs registered physics shapes: build it after the first physics step.
+ get_tree().physics_frame.connect(build_navigation,CONNECT_ONE_SHOT)
+
+# ---------------------------------------------------------------- primitives
+func solid(pos: Vector3, size: Vector3, key: String, cover: bool=true, yaw: float=0.0, visible_mesh: bool=true, collide: bool=true) -> MeshInstance3D:
+ var visual: MeshInstance3D=null
+ if visible_mesh:
+  visual=MeshInstance3D.new();var b=BoxMesh.new();b.size=size;visual.mesh=b
+  var bottom=pos.y-size.y/2
+  visual.material_override=Surfaces.get_material(key,floorf((bottom+.5)/3.0)*3.0+.15);structure.add_child(visual)
+  visual.position=pos;visual.rotation.y=yaw
+ if collide:
+  var body=StaticBody3D.new();body.set_meta('surface',Surfaces.surface_of(key));add_child(body);body.position=pos;body.rotation.y=yaw
+  var shape=CollisionShape3D.new();var s=BoxShape3D.new();s.size=size;shape.shape=s;body.add_child(shape)
+ if cover:add_obstacle(pos,size,yaw)
+ return visual
+
+func clip(pos: Vector3, size: Vector3, yaw: float=0.0):
+ var body=StaticBody3D.new();body.collision_layer=CLIP_LAYER;body.collision_mask=0;add_child(body);body.position=pos;body.rotation.y=yaw
+ var shape=CollisionShape3D.new();var s=BoxShape3D.new();s.size=size;shape.shape=s;body.add_child(shape)
+
+func add_obstacle(pos: Vector3, size: Vector3, yaw: float=0.0):
+ # Ground-level cover footprints feed the minimap and bot cover search.
+ if pos.y-size.y/2>1.2 or pos.y+size.y/2<.5:return
+ var c=absf(cos(yaw));var s=absf(sin(yaw))
+ var w=size.x*c+size.z*s;var d=size.x*s+size.z*c
+ obstacles.append(Rect2(pos.x-w/2,pos.z-d/2,w,d))
+
+const PROP_SURFACE={'jersey_barrier':'concrete','jersey_barrier_plain':'concrete','cement_bag':'concrete','cardboard_box':'wood','crate_wood':'wood','crate_wood_long':'wood','crate_military':'wood','military_crate':'wood','military_crate_open':'wood','trashbag':'wood','tyre':'wood','plastic_crate':'wood','covered_car':'metal'}
+func prop(name: String, pos: Vector3, yaw: float=0.0, collide: bool=true, scale_v: float=1.0) -> Node3D:
+ var scene: Node3D=load('res://assets/kit/'+name+'.glb').instantiate()
+ add_child(scene);scene.position=pos;scene.rotation.y=yaw;scene.scale=Vector3.ONE*scale_v
+ if name.begins_with('fence'):cutout(scene)
+ if collide and kit.has(name):
+  var lo=Vector3(kit[name].aabb_min[0],kit[name].aabb_min[1],kit[name].aabb_min[2])*scale_v
+  var hi=Vector3(kit[name].aabb_max[0],kit[name].aabb_max[1],kit[name].aabb_max[2])*scale_v
+  var body=StaticBody3D.new();body.set_meta('surface',PROP_SURFACE.get(name,'metal'));add_child(body)
+  body.transform=Transform3D(Basis(Vector3.UP,yaw),pos)
+  var shape=CollisionShape3D.new();var box=BoxShape3D.new();box.size=hi-lo;shape.shape=box;shape.position=(lo+hi)/2;body.add_child(shape)
+  add_obstacle(pos+Basis(Vector3.UP,yaw)*((lo+hi)/2),hi-lo,yaw)
+ return scene
+
+static var cutout_cache: Dictionary={}
+func cutout(scene: Node):
+ # Chain-link wire: alpha-tested with alpha-to-coverage instead of sorted blending.
+ for mi in scene.find_children('*','MeshInstance3D',true,false):
+  for i in range(mi.mesh.get_surface_count()):
+   var m=mi.mesh.surface_get_material(i)
+   if m is BaseMaterial3D and m.transparency!=BaseMaterial3D.TRANSPARENCY_DISABLED:
+    if not cutout_cache.has(m):
+     var c: BaseMaterial3D=m.duplicate();c.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR;c.alpha_scissor_threshold=.45
+     c.alpha_antialiasing_mode=BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE;c.cull_mode=BaseMaterial3D.CULL_DISABLED;cutout_cache[m]=c
+    mi.set_surface_override_material(i,cutout_cache[m])
+
+func lamp(pos: Vector3, energy: float=1.6, range_v: float=9.0, color: Color=Color('#ffd9a8'), shadow: bool=false) -> OmniLight3D:
+ var l=OmniLight3D.new();lights_root.add_child(l);l.position=pos;l.light_energy=energy;l.omni_range=range_v;l.light_color=color;l.shadow_enabled=shadow;l.omni_attenuation=1.4
+ return l
+
+# Box wall from a to b (ground plan) with rectangular openings [u0,u1,v0,v1] measured from a.
+func wall(a: Vector3, b: Vector3, height: float, thickness: float, key: String, openings: Array=[]):
+ var along=(b-a);var length=along.length();var dir=along/length;var yaw=atan2(-dir.z,dir.x)
+ var normal=Vector3(-dir.z,0,dir.x)
+ var cuts=openings.duplicate();cuts.sort_custom(func(p,q):return p[0]<q[0])
+ var u=0.0
+ for o in cuts:
+  if o[0]>u+.01:wall_piece(a,dir,yaw,u,o[0],0,height,thickness,key)
+  if o[2]>.01:wall_piece(a,dir,yaw,o[0],o[1],0,o[2],thickness,key)
+  if o[3]<height-.01:wall_piece(a,dir,yaw,o[0],o[1],o[3],height,thickness,key)
+  u=maxf(u,o[1])
+ if u<length-.01:wall_piece(a,dir,yaw,u,length,0,height,thickness,key)
+ return normal
+
+func wall_piece(a: Vector3, dir: Vector3, yaw: float, u0: float, u1: float, v0: float, v1: float, t: float, key: String):
+ var center=a+dir*(u0+u1)/2+Vector3.UP*(v0+v1)/2
+ solid(center,Vector3(u1-u0,v1-v0,t),key,v0<.5,yaw)
+
+func stairs(bottom: Vector3, dir: Vector3, run: float, rise: float, width: float, key: String='concrete'):
+ # Visible treads with one continuous ramp collider so movement stays smooth.
+ var steps=int(round(rise/.2));var yaw=atan2(dir.x,dir.z)
+ for i in range(steps):
+  var h=rise*(i+1)/steps;var d=run*(i+.5)/steps
+  solid(bottom+dir*d+Vector3.UP*(h/2),Vector3(width,h,run/steps),key,false,yaw,true,false)
+ # A solid wedge: smooth to walk up, with vertical sides that cannot be stepped onto.
+ var body=StaticBody3D.new();body.set_meta('surface',Surfaces.surface_of(key));add_child(body)
+ body.position=bottom;body.basis=Basis(Vector3.UP,yaw)
+ var hw=width/2;var wedge=ConvexPolygonShape3D.new()
+ wedge.points=PackedVector3Array([Vector3(-hw,0,0),Vector3(hw,0,0),Vector3(-hw,0,run),Vector3(hw,0,run),Vector3(-hw,rise,run),Vector3(hw,rise,run)])
+ var shape=CollisionShape3D.new();shape.shape=wedge;body.add_child(shape)
+
+# ---------------------------------------------------------------- facade kit
+func load_facade():
+ var scene=load('res://assets/kit/facade.glb').instantiate()
+ for node in scene.find_children('*','MeshInstance3D',true,false):facade_meshes[String(node.name)]=node.mesh
+ scene.free()
+ for key in facade_meshes:
+  # Playable windows have broken-out glass; the frame and sill remain.
+  var source: Mesh=facade_meshes[key];var stripped=ArrayMesh.new();var had_glass=false
+  for i in range(source.get_surface_count()):
+   var m=source.surface_get_material(i)
+   if m and 'glass' in m.resource_name.to_lower():had_glass=true;continue
+   stripped.add_surface_from_arrays(source.surface_get_primitive_type(i),source.surface_get_arrays(i))
+   stripped.surface_set_material(stripped.get_surface_count()-1,m)
+  if had_glass:facade_open[key]=stripped
+
+func piece(name: String, xform: Transform3D, broken: bool=false):
+ if not facade_meshes.has(name):push_warning('Missing facade piece '+name);return
+ var mesh: Mesh=facade_open[name] if broken and facade_open.has(name) else facade_meshes[name]
+ # Group by mesh and by 24 m cell: instanced draws that still frustum-cull.
+ var cell=Vector2i(floori(xform.origin.x/24.0),floori(xform.origin.z/24.0))
+ var key=str(mesh.get_instance_id())+'/'+str(cell)
+ if not facade_batches.has(key):facade_batches[key]={'mesh':mesh,'xforms':[]}
+ facade_batches[key].xforms.append(xform)
+
+func flush_facades():
+ for key in facade_batches:
+  var batch=facade_batches[key];var mm=MultiMesh.new();mm.transform_format=MultiMesh.TRANSFORM_3D;mm.mesh=batch.mesh
+  mm.instance_count=batch.xforms.size()
+  for i in range(batch.xforms.size()):mm.set_instance_transform(i,batch.xforms[i])
+  var node=MultiMeshInstance3D.new();node.multimesh=mm;node.name='Facade';add_child(node)
+ facade_batches.clear()
+
+func piece_box(name: String) -> AABB:
+ var p=kit.facade.pieces[name];var lo=Vector3(p.aabb_min[0],p.aabb_min[1],p.aabb_min[2]);var hi=Vector3(p.aabb_max[0],p.aabb_max[1],p.aabb_max[2])
+ return AABB(lo,hi-lo)
+
+const GROUND_CODES={'D':['wall_door_centered_large_01','',true],'d':['wall_door_centered_large_01','door_centered_large_01',false],'o':['wall_door_offset_small_01','door_offset_small_01',false],'W':['wall_window_centered_large_01','window_centered_large_01',true],'w':['wall_window_centered_small_01','window_centered_small_01',true],'-':['wall_standard_standard_01','',false],'S':['wall_standard_standard_01','',false]}
+func upper_code(c: String, floor_i: int, top: bool) -> Array:
+ var level='03' if top else '02'
+ match c:
+  'L':return ['wall_window_centered_large_'+level,'window_centered_large_'+level,true]
+  'M':return ['wall_window_centered_small_'+level,'window_centered_small_'+level,true]
+  'X':return ['wall_window_centered_double_'+level,'window_centered_double_'+level,true]
+  'B':return ['wall_door_window_small_0'+('9' if top else '5'),'door_window_small_0'+('9' if top else '5'),false]
+ return ['wall_standard_standard_01','',false]
+
+# Builds a rectangular facade building. plan: {'s':'D-W','n':...} ground codes per side
+# (listed in the side's module order), upper: same for upper floors.
+# playable floors get interior walls with matching openings; others are sealed volumes.
+func building(x0: float, z0: float, x1: float, z1: float, floors: int, plan: Dictionary, upper: Dictionary, playable_floors: int, base_y: float=.15, interior_key: String='plaster_peel'):
+ var top=base_y+floors*3.0
+ var sides={'s':[Vector3(0,0,-1)],'n':[Vector3(0,0,1)],'e':[Vector3(1,0,0)],'w':[Vector3(-1,0,0)]}
+ for side in sides:
+  var out: Vector3=sides[side][0];var right=Vector3.UP.cross(out)
+  var corners=[Vector3(x0,base_y,z0),Vector3(x1,base_y,z0),Vector3(x0,base_y,z1),Vector3(x1,base_y,z1)]
+  var on_side=corners.filter(func(c):return absf((c-Vector3((x0+x1)/2,base_y,(z0+z1)/2)).dot(out))>.1 and (c-Vector3((x0+x1)/2,base_y,(z0+z1)/2)).dot(out)>0)
+  on_side.sort_custom(func(p,q):return p.dot(right)<q.dot(right))
+  var p0: Vector3=on_side[0];var length=(on_side[1]-on_side[0]).length();var count=int(round(length/3.0))
+  var basis=Basis(right,Vector3.UP,out)
+  var ground: String=plan.get(side,'-'.repeat(count))
+  var up_codes: String=upper.get(side,'L'.repeat(count))
+  for f in range(floors):
+   var y=base_y+f*3.0
+   var openings=[]
+   for i in range(count):
+    var origin=p0+right*3.0*(i+1)+Vector3.UP*(y-base_y)
+    var entry=GROUND_CODES.get(ground[i] if i<ground.length() else '-') if f==0 else upper_code(up_codes[i] if i<up_codes.length() else 'L',f,f==floors-1)
+    var xf=Transform3D(basis,origin)
+    piece(entry[0],xf)
+    var broken=f<playable_floors and f>0
+    if entry[1]!='':piece(entry[1],xf,broken)
+    var code=ground[i] if i<ground.length() else '-'
+    if f==0 and code!='D':piece('base_standard_01',xf)
+    elif f==0 and code=='D':
+     piece('base_end_02',Transform3D(basis,origin-right*3.0));piece('base_end_01',xf)
+    if f==0 and code=='S':prop('shutter_window_graffiti' if (i+hash(side))%2==0 else 'shutter_window',origin+basis*Vector3(-1.5,.95,.16),atan2(out.x,out.z),false)
+    if f>0:piece('cornice_standard_standard_01',xf)
+    if f<playable_floors and (entry[2] or (entry[1]!='' and f>0)):
+     var box=piece_box(entry[1]) if entry[1]!='' else piece_box('door_centered_large_01')
+     # Opening measured from the side's start corner (p0) along +right.
+     var u0=3.0*(i+1)+box.position.x+.04;var u1=3.0*(i+1)+box.end.x-.04
+     var v0=maxf(0,box.position.y+(.02 if box.position.y>.1 else 0));var v1=box.end.y
+     openings.append([u0,u1,v0,v1,code if f==0 else 'up'])
+   if f<playable_floors:
+    var t=.25;var inset=out*-(.02+t/2)
+    var a=p0+inset+Vector3.UP*(y-base_y);var b=on_side[1]+inset+Vector3.UP*(y-base_y)
+    var cut=[]
+    for o in openings:cut.append([o[0],o[1],o[2],o[3]])
+    wall(a,b,3.0,t,interior_key,cut)
+    for o in openings:
+     # Shop windows are looked through, not walked through.
+     if o[4] in ['W','w']:
+      var mid=(o[0]+o[1])/2;var c=a+right*mid+Vector3.UP*1.5
+      clip(c,Vector3(o[1]-o[0],3.0,.3),atan2(-right.z,right.x))
+   else:
+    # Sealed storey: dark rooms behind the glass, and a solid hull for bullets.
+    var inset2=out*-.7
+    var a2=p0+inset2+Vector3.UP*(y-base_y);var b2=on_side[1]+inset2+Vector3.UP*(y-base_y)
+    solid((a2+b2)/2+Vector3.UP*1.5,Vector3((b2-a2).length()+1.4,3.0,.3),'plaster_dark',false,atan2(-right.z,right.x),true,false)
+    solid((p0+on_side[1])/2+out*-.15+Vector3.UP*(y-base_y+1.5),Vector3(length,3.0,.2),'plaster_dark',false,atan2(-right.z,right.x),false,true)
+  # Corner piers and roof crown.
+  for f in range(floors):piece('wall_pier_corner_02',Transform3D(basis,p0+Vector3.UP*f*3.0))
+  piece('crown_pier_corner_02',Transform3D(basis,p0+Vector3.UP*(top-base_y)))
+  for i in range(count):
+   var o2=p0+right*3.0*(i+1)+Vector3.UP*(top-base_y)
+   piece('crown_standard_standard_01',Transform3D(basis,o2))
+ # Floor slabs and roof.
+ var w=x1-x0;var d=z1-z0;var c=Vector3((x0+x1)/2,0,(z0+z1)/2)
+ solid(Vector3(c.x,top-.15,c.z),Vector3(w,.3,d),'concrete',false)
+ if playable_floors>0:solid(Vector3(c.x,base_y+.01,c.z),Vector3(w-.1,.04,d-.1),'tiles' if interior_key=='plaster_peel' else 'concrete_floor',false)
+ for f in range(1,floors):
+  if f>=playable_floors+1:break
+  # Intermediate slabs are added by the caller when they need stair holes.
+ return {'top':top}
+
+# ---------------------------------------------------------------- districts
+func build_ground():
+ # Asphalt carriageways and raised sidewalks / yards (top at 0.15).
+ solid(Vector3(0,-.5,0),Vector3(160,1,180),'road',false)
+ # Blocks: [x0,x1,z0,z1]
+ for block in [[-36,-6,5,45],[6,36,5,45],[-36,-6,-45,-5],[6,36,-45,-5]]:
+  var x0=block[0];var x1=block[1];var z0=block[2];var z1=block[3]
+  var street_x=x1 if x1==-6 else x0;var street_z=z0 if z0==5 else z1
+  # Sidewalk strips along both streets, yard paving inside.
+  solid(Vector3(street_x+(-1.5 if street_x==-6 else 1.5),.075,(z0+z1)/2),Vector3(3,.15,z1-z0),'sidewalk',false)
+  var zx0=x0 if street_x==-6 else x0+3;var zx1=x1-3 if street_x==-6 else x1
+  solid(Vector3((zx0+zx1)/2,.075,street_z+(1.5 if street_z==5 else -1.5)),Vector3(zx1-zx0,.15,3),'sidewalk',false)
+  var yz0=z0+3 if street_z==5 else z0;var yz1=z1 if street_z==5 else z1-3
+  solid(Vector3((zx0+zx1)/2,.07,(yz0+yz1)/2),Vector3(zx1-zx0,.14,yz1-yz0),'paving' if x0<0 else 'concrete_floor',false)
+  # Curbs: a slightly taller stone edge at the carriageway.
+  solid(Vector3(street_x+(-.12 if street_x==-6 else .12),.09,(z0+z1)/2),Vector3(.24,.18,z1-z0),'curb',false)
+  solid(Vector3((x0+x1)/2,.09,street_z+(.12 if street_z==5 else -.12)),Vector3(x1-x0,.18,.24),'curb',false)
+ # Painted lane markings: worn dashes down the main street and a stop line.
+ var paint=StandardMaterial3D.new();paint.albedo_color=Color(.78,.76,.68);paint.roughness=.8
+ for z in range(-44,45,6):
+  if absf(z)<7:continue
+  var dash=MeshInstance3D.new();var q=BoxMesh.new();q.size=Vector3(.14,.01,2.4);dash.mesh=q;dash.material_override=paint;add_child(dash);dash.position=Vector3(0,.005,z)
+ for z in [-6.2,6.2]:
+  var stop=MeshInstance3D.new();var q2=BoxMesh.new();q2.size=Vector3(5.6,.01,.35);stop.mesh=q2;stop.material_override=paint;add_child(stop);stop.position=Vector3(3.0 if z<0 else -3.0,.005,z)
+
+func build_apartment_north():
+ # Ashline House: playable two-storey corner block with a stairwell and
+ # first-floor rooms overlooking the intersection and the main street.
+ var x0=-24.0;var x1=-9.0;var z0=11.0;var z1=26.0
+ building(x0,z0,x1,z1,3,{'e':'WWDWw','s':'w-D-W','w':'-SDS-','n':'--o--'},{'e':'LLXLL','s':'MLXLM','w':'MLLLM','n':'MLLLM'},2,.15,'plaster')
+ # First-floor slab with stair hole along the north wall.
+ var y=3.15
+ solid(Vector3((x0+x1)/2,y-.1,(z0+23.6)/2),Vector3(x1-x0,.2,23.6-z0),'concrete',false)
+ solid(Vector3((x0+(-21.2))/2,y-.1,(23.6+z1)/2),Vector3(-21.2-x0,.2,z1-23.6),'concrete',false)
+ solid(Vector3((-13.8+x1)/2,y-.1,(23.6+z1)/2),Vector3(x1+13.8,.2,z1-23.6),'concrete',false)
+ solid(Vector3((x0+x1)/2,y+.012,(z0+23.6)/2),Vector3(x1-x0-.6,.02,23.6-z0-.4),'planks',false,0,true,false)
+ solid(Vector3((x0+x1)/2,6.05,(z0+z1)/2),Vector3(x1-x0,.2,z1-z0),'concrete',false)
+ # Ceiling of the ground floor (underside), visible from the shop floor.
+ stairs(Vector3(-21.0,.17,24.7),Vector3(1,0,0),7.2,y-.17,1.8,'concrete')
+ # Stair rail and hole guard upstairs.
+ for i in range(5):solid(Vector3(-20.8+i*1.7,y+.5,23.55),Vector3(.05,1.0,.05),'steel',false,0,true,false)
+ solid(Vector3(-17.4,y+1.0,23.55),Vector3(7.0,.06,.06),'steel',false,0,true,false)
+ clip(Vector3(-17.2,y+.6,23.5),Vector3(7.4,1.2,.1))
+ # Ground floor: counter, shelving and a partition with a doorway.
+ wall(Vector3(-16.5,.15,11.27),Vector3(-16.5,.15,19.0),3.0,.2,'plaster_peel',[[3.0,4.6,0,2.3]])
+ prop('shelves',Vector3(-23.2,.17,14.0),PI/2);prop('shelves',Vector3(-23.2,.17,16.2),PI/2)
+ prop('desk',Vector3(-12.6,.17,20.6),PI);prop('cardboard_box',Vector3(-19.8,.17,12.3),.4)
+ prop('cardboard_box',Vector3(-20.3,.17,12.9),1.2);prop('crate_wood',Vector3(-14.0,.17,13.1),.2)
+ prop('power_box',Vector3(-23.7,1.2,21.0),PI/2,false);prop('extinguisher',Vector3(-9.6,.17,24.9),-PI/2)
+ prop('trashbag',Vector3(-22.6,.17,24.6),.8)
+ # First floor: two rooms and a corridor; firing positions at the windows.
+ wall(Vector3(-16.5,y,11.27),Vector3(-16.5,y,23.4),3.0,.2,'plaster_peel',[[6.0,7.4,0,2.2]])
+ prop('desk',Vector3(-11.4,y,15.4),PI/2);prop('military_crate',Vector3(-13.0,y,12.2),.1)
+ prop('ammo_box',Vector3(-12.9,y+.27,12.2),.5,false);prop('crate_military',Vector3(-21.6,y,13.0),.3)
+ prop('metal_rack',Vector3(-23.4,y,18.4),PI/2);prop('cement_bag',Vector3(-19.0,y,12.0),.2)
+ prop('cement_bag',Vector3(-18.6,y,12.1),1.4);prop('jerrycan',Vector3(-10.0,y,22.6),.6)
+ for p in [Vector3(-12.8,2.9,15.5),Vector3(-20.0,2.9,17.0),Vector3(-12.8,5.9,17.0),Vector3(-20.0,5.9,16.5)]:
+  prop('lamp_hanging',p,0,false,.8);lamp(p-Vector3(0,1.3,0),1.1,7.5,Color('#ffd7a3'),p.y<4)
+
+func build_market_south():
+ # Market row: shops on the ground floor, sealed flats above.
+ var x0=-27.0;var x1=-9.0;var z0=-26.0;var z1=-11.0
+ building(x0,z0,x1,z1,3,{'e':'WDWDW','n':'-SDS-S','w':'S-D-S','s':'-S-S-S'},{'e':'LMLML','n':'MLLLLM','w':'MLLLM','s':'LMXXML'},1,.15,'plaster_peel')
+ solid(Vector3((x0+x1)/2,3.05,(z0+z1)/2),Vector3(x1-x0,.2,z1-z0),'concrete',false)
+ # Two shops split by a wall with a pass-through.
+ wall(Vector3(-18.0,.15,-25.73),Vector3(-18.0,.15,-11.27),3.0,.2,'plaster_peel',[[4.0,5.6,0,2.3],[10.0,11.6,0,2.3]])
+ prop('shelves',Vector3(-26.2,.17,-21.0),PI/2);prop('shelves',Vector3(-26.2,.17,-17.8),PI/2)
+ prop('metal_rack',Vector3(-20.0,.17,-25.3),0);prop('plastic_crate',Vector3(-23.5,.17,-12.0),.3)
+ prop('plastic_crate',Vector3(-23.0,.17,-12.4),1.0);prop('plastic_crate',Vector3(-23.3,.44,-12.2),.6,false)
+ prop('desk',Vector3(-13.0,.17,-24.2),0);prop('tool_cart',Vector3(-11.4,.17,-15.0),PI/2)
+ prop('crate_wood_long',Vector3(-15.5,.17,-19.0),.3);prop('cardboard_box',Vector3(-21.5,.17,-23.4),.7)
+ for p in [Vector3(-22.5,2.95,-18.5),Vector3(-13.5,2.95,-18.5)]:
+  prop('fluorescent',p,PI/2,false);lamp(p-Vector3(0,.4,0),1.2,8.0,Color('#e8f0ff'),true)
+
+func build_foundry_hall():
+ # Foundry hall: brick plinth, corrugated cladding, three doors and a catwalk.
+ var x0=12.0;var x1=33.0;var z0=12.0;var z1=33.0;var h=7.5
+ var plinth=1.3
+ var doors={'w':[[7.0,12.0,0,4.6]],'s':[[6.0,11.0,0,4.6]],'n':[[15.0,17.0,0,2.5]],'e':[]}
+ var sides={'w':[Vector3(x0,.15,z0),Vector3(x0,.15,z1)],'e':[Vector3(x1,.15,z1),Vector3(x1,.15,z0)],'s':[Vector3(x1,.15,z0),Vector3(x0,.15,z0)],'n':[Vector3(x0,.15,z1),Vector3(x1,.15,z1)]}
+ for side in sides:
+  var a: Vector3=sides[side][0];var b: Vector3=sides[side][1]
+  # A low brick course with corrugated steel above, sharing the same openings.
+  wall(a,b,plinth,.35,'brick_block',doors[side])
+  var upper=[]
+  for o in doors[side]:upper.append([o[0],o[1],0,maxf(0,o[3]-plinth)])
+  wall(a+Vector3.UP*plinth,b+Vector3.UP*plinth,h-plinth,.18,'corrugated_green' if side in ['w','n'] else 'corrugated',upper)
+ # Roof with a long skylight band: sun shafts fall across the hall floor.
+ solid(Vector3((x0+x1)/2,h+.2,(z0+18)/2),Vector3(x1-x0+.6,.25,18-z0+.3),'corrugated',false)
+ solid(Vector3((x0+x1)/2,h+.2,(21+z1)/2),Vector3(x1-x0+.6,.25,z1-21+.3),'corrugated',false)
+ for x in range(13,33,3):solid(Vector3(x,h+.2,19.5),Vector3(.18,.22,3.0),'steel',false,0,true,false)
+ solid(Vector3((x0+x1)/2,.16,(z0+z1)/2),Vector3(x1-x0-.4,.04,z1-z0-.4),'concrete_floor',false)
+ # Steel portal frames.
+ for z in [15.0,19.5,24.0,28.5]:
+  for x in [x0+.35,x1-.35]:solid(Vector3(x,h/2,z),Vector3(.3,h,.3),'painted_metal',false,0,true,true)
+  solid(Vector3((x0+x1)/2,h-.25,z),Vector3(x1-x0,.35,.3),'painted_metal',false,0,true,false)
+ # East catwalk (3.2 m) along the wall, reached by a steel stair from the south.
+ var cy=3.2
+ solid(Vector3(x1-1.5,cy-.08,25.5),Vector3(2.6,.16,13.0),'walkway',false)
+ for z in [19.4,22.5,25.5,28.5,31.6]:solid(Vector3(x1-2.75,cy/2,z),Vector3(.14,cy,.14),'painted_metal',false,0,true,true)
+ solid(Vector3(x1-2.75,cy+1.0,25.5),Vector3(.06,.06,13.0),'hazard',false,0,true,false)
+ for z in [19.4,22.5,25.5,28.5,31.6]:solid(Vector3(x1-2.75,cy+.5,z),Vector3(.05,1.0,.05),'hazard',false,0,true,false)
+ clip(Vector3(x1-2.8,cy+.6,25.5),Vector3(.1,1.2,13.0))
+ stairs(Vector3(x1-1.5,.17,12.4),Vector3(0,0,1),6.6,cy-.17,1.5,'walkway')
+ # Overhead crane on the portal frames.
+ prop('crane',Vector3((x0+x1)/2,h-.75,22.0),0,false,1.0)
+ # Floor: machinery islands that create cover lines across the hall.
+ prop('compressor',Vector3(17.0,.17,26.5),.4);prop('generator',Vector3(20.5,.17,17.0),1.2)
+ prop('welding_cart',Vector3(14.2,.17,30.6),.3);prop('tool_chest',Vector3(26.0,.17,31.8),PI)
+ prop('crate_military',Vector3(23.5,.17,22.0),.2);prop('crate_military',Vector3(23.6,.6,22.1),.25,true)
+ prop('military_crate',Vector3(16.0,.17,20.5),1.4);prop('barrel_steel',Vector3(13.2,.17,13.4));prop('barrel_steel',Vector3(13.9,.17,13.2))
+ prop('barrel_red',Vector3(13.4,.17,14.1));prop('propane',Vector3(28.6,.17,13.0));prop('lpg_tank',Vector3(29.0,.17,13.4))
+ solid(Vector3(21.0,.75,27.5),Vector3(4.0,1.2,1.6),'steel',true)
+ solid(Vector3(27.0,.6,18.0),Vector3(1.4,.9,4.0),'rust',true)
+ prop('shelves',Vector3(32.4,.17,26.0),-PI/2);prop('metal_rack',Vector3(32.3,cy,20.0),-PI/2)
+ prop('crate_wood',Vector3(31.8,cy,24.5),.1);prop('ammo_box',Vector3(31.6,cy+.32,24.5),.3,false)
+ for x in [16.5,22.5,28.5]:
+  for z in [16.0,27.0]:
+   prop('lamp_hanging',Vector3(x,h-.1,z),0,false,1.0);lamp(Vector3(x,h-1.62,z),1.8,11.0,Color('#ffdcae'),x==22.5)
+ # Pipes running along the north wall.
+ for x in range(14,32,2):prop('pipe_straight',Vector3(x+.98,5.6,z1-.45),0,false).rotation=Vector3(0,0,PI/2)
+
+func container(pos: Vector3, yaw: float, key: String, doors_end: bool=true):
+ var size=Vector3(6.06,2.59,2.44)
+ solid(pos+Vector3.UP*size.y/2,size,key,true,yaw)
+ var b=Basis(Vector3.UP,yaw)
+ # Corner posts, top rails and locking bars make the box read as a real ISO container.
+ for sx in [-1,1]:
+  for sz in [-1,1]:solid(pos+b*Vector3(sx*2.96,1.295,sz*1.15),Vector3(.16,2.6,.16),'steel',false,yaw,true,false)
+  solid(pos+b*Vector3(sx*3.04,1.3,0),Vector3(.06,2.45,2.2),key,false,yaw,true,false)
+ for sz in [-1,1]:solid(pos+b*Vector3(0,2.55,sz*1.16),Vector3(6.0,.1,.1),'steel',false,yaw,true,false)
+ if doors_end:
+  for i in range(4):solid(pos+b*Vector3(3.09,1.3,-.85+i*.57),Vector3(.04,2.3,.05),'steel',false,yaw,true,false)
+
+func build_container_yard():
+ # SE yard: container lanes, a loading dock and a guard post.
+ var reds=['container_red','container_blue','container_tan','container_green']
+ var layout=[[Vector3(15.5,.15,-15.5),0.0],[Vector3(15.5,.15,-31.0),0.0],[Vector3(21.0,.15,-23.5),PI/2],
+  [Vector3(27.5,.15,-38.0),0.0],[Vector3(14.0,.15,-40.5),PI/2+.06],[Vector3(25.0,.15,-14.5),.08]]
+ for i in range(layout.size()):container(layout[i][0],layout[i][1],reds[i%4])
+ container(Vector3(15.5,2.74,-31.0),.03,'container_blue',false)
+ container(Vector3(27.5,2.74,-38.0),-.04,'container_red',false)
+ # Loading dock along the east wall with stairs at its north end.
+ var dy=1.25
+ solid(Vector3(31.5,dy/2,-26.0),Vector3(5.0,dy,16.0),'concrete_panel',true)
+ solid(Vector3(28.95,dy-.05,-26.0),Vector3(.1,.12,16.0),'hazard',false,0,true,false)
+ stairs(Vector3(31.5,.15,-15.0),Vector3(0,0,-1),3.0,dy-.15,2.4,'concrete')
+ for z in [-31.0,-24.5,-20.0]:prop('crate_wood_long',Vector3(32.2,dy,z),PI/2+.1)
+ prop('military_crate',Vector3(30.6,dy,-28.0),.3);prop('barrel_blue',Vector3(33.4,dy,-33.0))
+ prop('barrel_blue',Vector3(32.8,dy,-33.4));prop('hand_truck',Vector3(30.0,dy,-22.5),.8,false)
+ # Covered vehicles and barrels between the lanes.
+ prop('covered_car',Vector3(22.0,.15,-33.0),PI/2+.15)
+ for p in [Vector3(19.5,.15,-19.5),Vector3(19.0,.15,-19.0),Vector3(26.6,.15,-27.5)]:prop('barrel_red',p,randf()*TAU)
+ prop('tyre',Vector3(24.4,.45,-30.2),0,false).rotation=Vector3(PI/2,0,0)
+ prop('wheel_rim',Vector3(24.0,.35,-29.6),0,false).rotation=Vector3(PI/2,.4,0)
+ prop('crate_military',Vector3(11.8,.15,-24.0),PI/2);prop('pipe_valve',Vector3(33.6,2.6,-36.0),0,false)
+ # Yard fence along the main-street sidewalk with two gaps.
+ for z in [-43.0,-41.0,-39.0,-37.0,-29.0,-27.0,-25.0,-17.0,-15.0,-13.0,-11.0]:
+  prop('fence_double',Vector3(9.6,.15,z),-PI/2,false)
+ for z in [-44.0,-36.0,-30.0,-24.0,-18.0,-10.0]:prop('fence_post',Vector3(9.6,.15,z),0,false)
+ for seg in [[-44.0,-36.0],[-30.0,-24.0],[-18.0,-10.0]]:
+  var mid=(seg[0]+seg[1])/2;solid(Vector3(9.6,1.25,mid),Vector3(.12,2.4,seg[1]-seg[0]),'steel',false,0,false,true)
+ for p in [Vector3(30.0,6.0,-14.0),Vector3(30.0,6.0,-38.0)]:
+  prop('security_light',p,PI,false)
+
+func build_streets():
+ # Main street: parked/abandoned cars, a barricade checkpoint at the crossing.
+ prop('covered_car',Vector3(-4.3,0,-20.0),.04);prop('covered_car',Vector3(4.2,0,-27.0),PI+.08)
+ prop('covered_car',Vector3(4.3,0,20.5),PI-.05);prop('covered_car',Vector3(-4.2,0,31.0),-.1)
+ prop('covered_car',Vector3(-20.0,0,-3.6),PI/2+.04);prop('covered_car',Vector3(22.0,0,3.5),-PI/2-.06)
+ # Jersey barrier chicanes on the approaches and a ring checkpoint at the centre.
+ for p in [[Vector3(-2.5,0,-12.0),.05],[Vector3(2.4,0,-14.5),-.1],[Vector3(2.6,0,12.0),PI+.1],[Vector3(-2.2,0,14.4),PI-.05],
+  [Vector3(-2.2,0,-1.8),PI/2],[Vector3(2.2,0,1.8),PI/2],[Vector3(-.4,0,2.6),.1],[Vector3(.5,0,-2.6),.05],
+  [Vector3(-13.0,0,1.6),PI/2+.1],[Vector3(13.0,0,-1.5),PI/2-.08],[Vector3(-27.5,0,-1.2),PI/2],[Vector3(27.0,0,1.0),PI/2]]:
+  prop('jersey_barrier' if randi()%2==0 else 'jersey_barrier_plain',p[0],p[1])
+ prop('military_crate',Vector3(1.2,0,.4),.6);prop('crate_military',Vector3(-1.0,0,-.6),.2)
+ prop('ammo_box',Vector3(-.8,.42,-.5),1.0,false);prop('jerrycan',Vector3(1.6,0,-.6),.3)
+ # Street furniture along both sidewalks.
+ for z in [-38.0,-22.0,-9.5,9.5,22.0,38.0]:
+  prop('power_pole' if int(z)%2==0 else 'power_pole_b',Vector3(-8.3,.15,z),PI/2,false)
+  prop('power_pole_b' if int(z)%2==0 else 'power_pole',Vector3(8.3,.15,z),-PI/2,false)
+  for x in [-8.3,8.3]:solid(Vector3(x,3.0,z),Vector3(.24,6.0,.24),'steel',false,0,false,true)
+ for p in [Vector3(-8.2,.15,-30.0),Vector3(8.2,.15,28.5),Vector3(-15.5,.15,6.6)]:prop('hydrant',p,randf()*TAU)
+ for p in [Vector3(-7.3,.15,-15.0),Vector3(-7.2,.15,-14.3),Vector3(7.3,.15,16.0),Vector3(-7.3,.15,27.5),Vector3(17.0,.15,-7.2)]:
+  prop('trash_can',p,randf()*TAU)
+ for p in [Vector3(7.4,.15,-6.8),Vector3(-25.0,.15,6.4),Vector3(30.0,.15,-6.7)]:prop('utility_box_wide' if p.x>0 else 'utility_box',p,0 if p.z<0 else PI)
+ for p in [Vector3(0,.01,-24.0),Vector3(0,.01,24.0),Vector3(-15.0,.01,0.0),Vector3(16.0,.01,0)]:prop('manhole',p,randf()*TAU,false)
+ for p in [Vector3(-7.0,.15,-26.0),Vector3(7.0,.15,24.0),Vector3(-7.4,.15,17.5)]:prop('trashbag',p,randf()*TAU)
+ # Cross street: rubble and a sandbag-style cement wall at the east end.
+ for i in range(5):prop('cement_bag',Vector3(9.0+i*.62,.15,-5.6),randf_range(-.1,.1),true)
+ for i in range(4):prop('cement_bag',Vector3(9.3+i*.62,.33,-5.6),randf_range(-.1,.1),false)
+ rubble(Vector3(-4.0,0,-36.0),2.0);rubble(Vector3(3.5,0,37.0),2.2);rubble(Vector3(31.0,.15,6.5),1.6);rubble(Vector3(-31.0,.15,-6.5),1.6)
+
+func rubble(center: Vector3, radius: float):
+ for i in range(18):
+  var size=Vector3(randf_range(.2,.7),randf_range(.1,.35),randf_range(.2,.6))
+  var p=center+Vector3(randf_range(-radius,radius),size.y*.4,randf_range(-radius*.7,radius*.7))
+  var m=MeshInstance3D.new();m.mesh=Ruins.fragment(size,hash(p)+i);m.material_override=Surfaces.get_material('concrete' if i%3 else 'brick');structure.add_child(m);m.position=p;m.rotation=Vector3(randf_range(-.3,.3),randf()*TAU,randf_range(-.3,.3))
+ solid(center+Vector3(0,.25,0),Vector3(radius*1.4,.5,radius),'concrete',true,0,false,true)
+
+func build_west_alley():
+ # Service alley behind the two west buildings: dumpster cover and a fence gate.
+ for p in [Vector3(-28.0,.15,18.0),Vector3(-27.2,.15,18.3),Vector3(-30.5,.15,-18.0),Vector3(-29.8,.15,-17.6)]:prop('trash_can',p,randf()*TAU)
+ for p in [Vector3(-27.6,.15,13.0),Vector3(-31.5,.15,-22.0),Vector3(-28.5,.15,-29.0)]:prop('trashbag',p,randf()*TAU)
+ container(Vector3(-31.0,.15,27.5),PI/2+.05,'container_green')
+ container(Vector3(-32.5,.15,-36.0),.02,'container_red')
+ prop('aircon',Vector3(-24.35,1.6,15.5),-PI/2,false);prop('aircon',Vector3(-24.35,4.4,20.5),-PI/2,false)
+ prop('aircon',Vector3(-27.35,1.6,-15.0),-PI/2,false)
+ for z in [19.5,-19.0]:
+  for i in range(3):prop('gutter_pipe',Vector3(-24.2 if z>0 else -27.2,1.0+i*2.0,z),0,false)
+ for p in [Vector3(-30.0,.15,4.0),Vector3(-26.0,.15,32.0),Vector3(-14.0,.15,33.0)]:prop('crate_wood_long',p,randf()*TAU)
+ prop('compressor',Vector3(-20.0,.15,31.0),.2);prop('welding_cart',Vector3(-17.5,.15,29.2),1.4)
+ # Courtyard fence and gate north of Ashline House.
+ for x in [-35.0,-33.0,-31.0,-29.0]:prop('fence_double',Vector3(x,.15,36.0),0,false)
+ prop('fence_gate',Vector3(-26.5,.15,36.0),0,false)
+ solid(Vector3(-32.0,1.25,36.0),Vector3(8.0,2.4,.12),'steel',false,0,false,true)
+ # Parking yard (SW) with covered cars.
+ prop('covered_car',Vector3(-31.0,.15,-29.0),.05);prop('covered_car',Vector3(-24.5,.15,-41.0),PI/2+.1)
+ prop('covered_car',Vector3(-22.0,.15,-33.5),PI/2-.1)
+
+func build_spawn_zones():
+ # Aegis (south) and Ember (north) deploy behind field barricades at the street ends.
  for team in range(2):
-  for x in [-27,-18,-3,3,18,27]:spawns[team].append(Vector3(x,.2,-29 if team==0 else 29))
- grid.region=Rect2i(-31,-31,63,63);grid.cell_size=Vector2.ONE;grid.diagonal_mode=AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES;grid.update()
- for x in range(-31,32):
-  for z in range(-31,32):
-   for r in obstacles:
-    if r.has_point(Vector2(x,z)):grid.set_point_solid(Vector2i(x,z));break
- # Height-aware links prevent ground routes from entering the raised ramp
- # through its solid sides. The deck is reached through the actual stair run.
- for x in range(-31,32):
-  for z in range(-31,32):
-   if not grid.is_point_solid(Vector2i(x,z)):
-    navigation.add_point(nav_id(x,z),Vector3(x,nav_height(x,z),z))
- for x in range(-31,32):
-  for z in range(-31,32):
-   var id=nav_id(x,z)
-   if not navigation.has_point(id):continue
-   for direction in [Vector2i(1,0),Vector2i(0,1),Vector2i(1,1),Vector2i(1,-1)]:
-    var other=Vector2i(x,z)+direction
-    if not grid.is_in_boundsv(other):continue
-    var next=nav_id(other.x,other.y)
-    if not navigation.has_point(next):continue
-    var rise=absf(navigation.get_point_position(id).y-navigation.get_point_position(next).y)
-    if rise>.42:continue
-    # A sloped ascent is walkable; entering its raised side is a vertical step.
-    var crossing_side=(x<24.5 and other.x>=24.5) or (x<=27.5 and other.x>27.5)
-    if crossing_side and rise>.24:continue
-    if direction.x!=0 and direction.y!=0:
-     if grid.is_point_solid(Vector2i(x,other.y)) or grid.is_point_solid(Vector2i(other.x,z)):continue
-     if absf(nav_height(x,other.y)-nav_height(other.x,z))>.42:continue
-    navigation.connect_points(id,next)
-func nav_id(x: int,z: int) -> int:return (x+31)*63+z+31
-func nav_height(x: float,z: float) -> float:
- if x>=22.5 and x<=29.5 and z>=-12.5 and z<=-5.5:return 2.25
- if x>=24.5 and x<=27.5 and z>=-20.05 and z< -12.5:return maxf(0,(z+20.0)*2.275/7.8+.065)
- return 0.0
-func nearest_open(point: Vector2i, physical: Vector3) -> Vector2i:
- point.x=clampi(point.x,-30,30);point.y=clampi(point.y,-30,30)
- if not grid.is_point_solid(point):return point
- var best=point;var dist=999.0
- for dx in range(-4,5):
-  for dz in range(-4,5):
-   var c=point+Vector2i(dx,dz)
-   if grid.is_in_boundsv(c) and not grid.is_point_solid(c) and Vector2(dx,dz).length()<dist:
-    var destination=Vector3(c.x,physical.y+.85,c.y)
-    var query=PhysicsRayQueryParameters3D.create(physical+Vector3.UP*.85,destination,1)
-    if get_world_3d().direct_space_state.intersect_ray(query).is_empty():
-     best=c;dist=Vector2(dx,dz).length()
- return best
+  var s=-1.0 if team==0 else 1.0
+  for x in [-30.0,-20.0,-4.0,4.0,20.0,30.0]:spawns[team].append(Vector3(x,.3,s*41.5))
+  for x in [-12.0,12.0]:spawns[team].append(Vector3(x,.3,s*39.0))
+  prop('jersey_barrier',Vector3(-3.5,0,s*35.0),0);prop('jersey_barrier_plain',Vector3(3.0,0,s*34.5),.1)
+  prop('military_crate',Vector3(6.6,.15,s*40.0),.2);prop('crate_military',Vector3(-6.8,.15,s*42.0),1.6)
+  prop('generator',Vector3(-27.0,.15,s*43.5),PI);prop('jerrycan',Vector3(-26.0,.15,s*43.3),.3)
+
+func backdrop(x0: float, z0: float, x1: float, z1: float, floors: int, face: String):
+ # Out-of-bounds apartment blocks: full facade on the play-facing side only.
+ var plan={};var upper={}
+ for side in ['n','s','e','w']:
+  var length=int(round(((x1-x0) if side in ['n','s'] else (z1-z0))/3.0))
+  var g='';var u=''
+  for i in range(length):
+   g+=['-','S','d','W','-','o','w'][(i*3+floors+hash(side))%7]
+   u+=['L','M','L','X','L','-'][(i+floors)%6]
+  plan[side]=g;upper[side]=u
+ building(x0,z0,x1,z1,floors,plan,upper,0)
+
+func build_perimeter():
+ # West boundary: three facade blocks; east boundary: warehouse walls.
+ backdrop(-48,-30,-36,-6,4,'e');backdrop(-48,6,-36,30,3,'e')
+ backdrop(-48,-48,-36,-33,3,'e');backdrop(-48,33,-36,48,4,'e')
+ backdrop(36,-48,48,-24,3,'w');backdrop(36,9,48,48,4,'w')
+ backdrop(-30,45,-9,57,4,'s');backdrop(9,45,33,57,3,'s')
+ backdrop(-30,-57,-9,-45,3,'n');backdrop(9,-57,30,-45,4,'n')
+ # Street ends are closed by heavy barricades and razor fencing.
+ for s in [-1.0,1.0]:
+  for x in [-7.0,-5.0,-3.0,-1.0,1.0,3.0,5.0,7.0]:prop('fence_double',Vector3(x+1.0,0,s*45.6),0 if s>0 else PI,false)
+  for x in [-6.0,-2.4,1.2,4.8]:prop('jersey_barrier',Vector3(x,0,s*44.6),randf_range(-.1,.1))
+ # Cross street ends east/west.
+ for s in [-1.0,1.0]:
+  for z in [-5.0,-3.0,-1.0,1.0,3.0]:prop('fence_double',Vector3(s*36.6,0,z+1.0),PI/2 if s>0 else -PI/2,false)
+ # Concrete wall between the gaps of the east side.
+ solid(Vector3(36.4,2.0,-15.0),Vector3(.5,4.0,18.0),'concrete_panel',false)
+ solid(Vector3(36.4,2.0,7.5),Vector3(.5,4.0,3.0),'concrete_panel',false)
+ # Invisible play boundary.
+ for b in [[Vector3(0,10,BOUNDS.end.y+.5),Vector3(BOUNDS.size.x+4,20,1)],[Vector3(0,10,BOUNDS.position.y-.5),Vector3(BOUNDS.size.x+4,20,1)],
+  [Vector3(BOUNDS.end.x+.5,10,0),Vector3(1,20,BOUNDS.size.y+4)],[Vector3(BOUNDS.position.x-.5,10,0),Vector3(1,20,BOUNDS.size.y+4)]]:
+  clip(b[0],b[1])
+ # Second ring of facade blocks closes every sightline, then low distant mass.
+ backdrop(-66,-30,-54,0,5,'e');backdrop(-66,6,-54,36,4,'e');backdrop(54,-36,66,-6,4,'w');backdrop(54,0,66,30,5,'w')
+ backdrop(-24,63,0,75,5,'s');backdrop(6,63,30,75,4,'s');backdrop(-30,-75,-6,-63,4,'n');backdrop(3,-75,27,-63,5,'n')
+ for i in range(18):
+  var angle=i*TAU/18+randf_range(-.06,.06);var r=randf_range(120,150)
+  var h=randf_range(14,30);var w=randf_range(16,28)
+  var p=Vector3(cos(angle)*r,h/2,sin(angle)*r*1.05)
+  solid(p,Vector3(w,h,randf_range(14,22)),'facade_far',false,-angle,true,false)
+ for p in [Vector3(-60,0,-70),Vector3(-52,0,-74),Vector3(70,0,60)]:
+  var stack=MeshInstance3D.new();var c=CylinderMesh.new();c.top_radius=1.6;c.bottom_radius=2.2;c.height=46;stack.mesh=c;stack.material_override=Surfaces.get_material('brick');add_child(stack);stack.position=p+Vector3.UP*23
+
+func build_patrol():
+ patrol.assign([Vector3(0,0,0),Vector3(-4,0,-18),Vector3(4,0,18),Vector3(-12,.2,15),Vector3(-12,3.2,14),Vector3(-20,3.2,20),
+  Vector3(-20,.2,18),Vector3(-14,.2,-18),Vector3(-22,.2,-15),Vector3(-30,.2,0),Vector3(-30,.2,22),Vector3(-30,.2,-24),
+  Vector3(16,.2,22),Vector3(24,.2,26),Vector3(31.5,3.2,22),Vector3(28,.2,15),Vector3(18,.2,-23),Vector3(24,.2,-31),
+  Vector3(31.5,1.3,-28),Vector3(26,.2,-19),Vector3(14,.2,-36),Vector3(20,.2,0),Vector3(-20,.2,0),Vector3(30,.2,8)])
+
+# ---------------------------------------------------------------- navigation
+func build_navigation():
+ # Sample walkable surfaces from physics so stairs, catwalks and upper floors
+ # are navigable exactly where players can stand.
+ var space=get_world_3d().direct_space_state
+ var capsule=CapsuleShape3D.new();capsule.radius=.28;capsule.height=1.6
+ var query=PhysicsShapeQueryParameters3D.new();query.shape=capsule;query.collision_mask=1|CLIP_LAYER
+ var id=0;var started=Time.get_ticks_msec()
+ for x in range(int(BOUNDS.position.x)+1,int(BOUNDS.end.x)):
+  for z in range(int(BOUNDS.position.y)+1,int(BOUNDS.end.y)):
+   var top=14.0;var levels=[]
+   for k in range(4):
+    var ray=PhysicsRayQueryParameters3D.create(Vector3(x,top,z),Vector3(x,-1,z),1)
+    var hit=space.intersect_ray(ray)
+    if hit.is_empty():break
+    if hit.normal.y>.65:
+     query.transform=Transform3D(Basis.IDENTITY,hit.position+Vector3.UP*.9)
+     if space.intersect_shape(query,1).is_empty():
+      navigation.add_point(id,hit.position);levels.append([id,hit.position.y]);id+=1
+    top=hit.position.y-.08
+   if not levels.is_empty():nav_columns[Vector2i(x,z)]=levels
+ for key in nav_columns:
+  for entry in nav_columns[key]:
+   var a=navigation.get_point_position(entry[0])
+   # Two-cell cardinal links bridge thresholds where the wall line itself has no node.
+   for d in [Vector2i(1,0),Vector2i(0,1),Vector2i(1,1),Vector2i(1,-1),Vector2i(2,0),Vector2i(0,2)]:
+    var other=key+d
+    if not nav_columns.has(other):continue
+    var skip=absi(d.x)==2 or absi(d.y)==2
+    if skip and column_has(key+d/2,a.y):continue
+    for e2 in nav_columns[other]:
+     var b=navigation.get_point_position(e2[0])
+     if absf(a.y-b.y)>(.6 if skip else .46):continue
+     if d.x!=0 and d.y!=0 and not (column_has(key+Vector2i(d.x,0),a.y) and column_has(key+Vector2i(0,d.y),a.y)):continue
+     # Walk the floor profile: no step between samples may exceed what a player can climb.
+     if not floor_profile_ok(space,a,b):continue
+     var knee=PhysicsRayQueryParameters3D.create(a+Vector3.UP*.45,b+Vector3.UP*.45,1|CLIP_LAYER)
+     if not space.intersect_ray(knee).is_empty():continue
+     var chest=PhysicsRayQueryParameters3D.create(a+Vector3.UP*1.3,b+Vector3.UP*1.3,1|CLIP_LAYER)
+     if not space.intersect_ray(chest).is_empty():continue
+     navigation.connect_points(entry[0],e2[0])
+ nav_ready=true
+ print('NAV_READY points=',navigation.get_point_count(),' ms=',Time.get_ticks_msec()-started)
+
+func floor_profile_ok(space: PhysicsDirectSpaceState3D, a: Vector3, b: Vector3) -> bool:
+ var previous=a.y;var top=maxf(a.y,b.y)+.55;var bottom=minf(a.y,b.y)-.6
+ for i in range(1,6):
+  var p=a.lerp(b,i/5.0)
+  var hit=space.intersect_ray(PhysicsRayQueryParameters3D.create(Vector3(p.x,top,p.z),Vector3(p.x,bottom,p.z),1))
+  if hit.is_empty():return false
+  if absf(hit.position.y-previous)>.3:return false
+  previous=hit.position.y
+ return absf(previous-b.y)<.3
+
+func column_has(c: Vector2i, y: float) -> bool:
+ if not nav_columns.has(c):return false
+ for e in nav_columns[c]:
+  if absf(e[1]-y)<.5:return true
+ return false
+
 func route(from: Vector3, to: Vector3) -> PackedVector2Array:
- var a=nearest_open(Vector2i(roundi(from.x),roundi(from.z)),from)
- var b=nearest_open(Vector2i(roundi(to.x),roundi(to.z)),to)
- if navigation.get_point_count()==0:return PackedVector2Array()
- var start=navigation.get_closest_point(from);var end=navigation.get_closest_point(to)
- # Obstacle projection still resolves destinations inside walls.
- if grid.is_point_solid(Vector2i(roundi(from.x),roundi(from.z))):start=nav_id(a.x,a.y)
- if grid.is_point_solid(Vector2i(roundi(to.x),roundi(to.z))):end=nav_id(b.x,b.y)
  var result=PackedVector2Array()
+ if not nav_ready or navigation.get_point_count()==0:return result
+ var start=navigation.get_closest_point(from+Vector3.UP*.1);var end=navigation.get_closest_point(to+Vector3.UP*.1)
  for point in navigation.get_point_path(start,end):result.append(Vector2(point.x,point.z))
  return result
+
+func random_patrol() -> Vector3:return patrol.pick_random()

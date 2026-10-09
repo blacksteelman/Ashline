@@ -1,0 +1,49 @@
+{
+  "failures": 0,
+  "results": [
+    {
+      "check": "Navigation sampled from physics (7586 points)",
+      "ok": true
+    },
+    {
+      "check": "Both teams have spawn points",
+      "ok": true
+    },
+    {
+      "check": "Every spawn point is free of collision",
+      "ok": true
+    },
+    {
+      "check": "Route from Aegis spawn to apartment first floor",
+      "ok": true
+    },
+    {
+      "check": "Route from Aegis spawn to foundry catwalk",
+      "ok": true
+    },
+    {
+      "check": "Route from Aegis spawn to loading dock",
+      "ok": true
+    },
+    {
+      "check": "Route from Aegis spawn to market shop",
+      "ok": true
+    },
+    {
+      "check": "Route from Aegis spawn to west alley",
+      "ok": true
+    },
+    {
+      "check": "Bot climbs the Ashline House stairwell to the first floor",
+      "ok": true
+    },
+    {
+      "check": "Bot climbs the foundry stair onto the catwalk",
+      "ok": true
+    },
+    {
+      "check": "Bot climbs onto the loading dock",
+      "ok": true
+    }
+  ]
+}

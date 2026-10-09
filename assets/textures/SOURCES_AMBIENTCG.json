@@ -1,0 +1,288 @@
+{
+ "asphalt_patch": {
+  "archive_sha256": "55674756668d69657b9b4d13d8aeea02a1519161671304cb41d73d077067c980",
+  "asset": "Asphalt025C",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "asphalt_patch_albedo.jpg": "97c867f6ca886463a903808ce09f20e5f196a8031f14522a1303782a795576e7",
+   "asphalt_patch_normal.jpg": "08a03b35eab92a5b0626f808216e1bd0c4f38bfb2710cffb3e751384e434d079",
+   "asphalt_patch_orm.jpg": "87c45a3713f21a1c03601ae346d264f26fb222cf7a218d4134f1da7c08d3c8f7"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Asphalt025C"
+ },
+ "brick_block": {
+  "archive_sha256": "e222fb95833a62de538ff2251cad13055ca459a3145b824cfd4344673aead9ab",
+  "asset": "Bricks066",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "brick_block_albedo.jpg": "abc593bc0b723b596e0864783223c009761e83cf5a78ef685e19b2bafec7ee3d",
+   "brick_block_normal.jpg": "1510267b67235f80d584211d2c911f9c4010ad1d3817303b9ae7a501ea057388",
+   "brick_block_orm.jpg": "751fc06ee770f735b72467d0535c6a8cf4f552a2288505a6f730a35849ee3428"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Bricks066"
+ },
+ "brick_red": {
+  "archive_sha256": "d27fbc435e459e29d74e5fe61b210addee2031ba57125dbb05ff51b7d3b179e4",
+  "asset": "Bricks085",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "brick_red_albedo.jpg": "9848dcb772cc3fdfaa6961ce05124055c2e9aa092bb00a8d24b1f9ea082685e0",
+   "brick_red_normal.jpg": "ae9e673bb6282b6fb5d90d6e8500c2c9514287e710be9734bd1e6f79f5e4b160",
+   "brick_red_orm.jpg": "08bb9ea6f4644696e284549357171261372f1f646590577d634da5517bcea65c"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 2048px colour/normal and 1024px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Bricks085"
+ },
+ "concrete_floor": {
+  "archive_sha256": "1cca909b833c5d91ce7bb446296756141d130c08059e896d4c439a35c25c9c6d",
+  "asset": "Concrete044D",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "concrete_floor_albedo.jpg": "987ced6878810837279b0c7119f785155fe0bfbd9f46ba27b3101e75659db643",
+   "concrete_floor_normal.jpg": "7ea431eb4dd26faefa28eeef1640e8019b81539dea3cfc81fd7885bcd5710e08",
+   "concrete_floor_orm.jpg": "1617cefc2b96d54725dd53da28c05e15bd0f3c3e1c8d54affb474cce039414b1"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 2048px colour/normal and 1024px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Concrete044D"
+ },
+ "concrete_panel": {
+  "archive_sha256": "a346866352d749ff36a298d2d8d783354ba80be4a03b7bf0370d92c89c5d7e56",
+  "asset": "Concrete031",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "concrete_panel_albedo.jpg": "7baa93e0c26b0b35c13fb484b06b8ff96d321dd19cbf8afaee3dcf0b04c5b989",
+   "concrete_panel_normal.jpg": "6e6aae0246045f482852f6acf8f14684661063649806ad75483e0bbe5e324c96",
+   "concrete_panel_orm.jpg": "568f0aac78ac56be3a816224a956b74bdfdf3d8cf698191dc737b31d160f41e5"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 2048px colour/normal and 1024px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Concrete031"
+ },
+ "concrete_smooth": {
+  "archive_sha256": "6dfa046e23c907a509e4078b85819380ffb67ab950d7f8d302689b83140ec1fa",
+  "asset": "Concrete042A",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "concrete_smooth_albedo.jpg": "0349477c84936e82ae4bb2067e95f9cec25d24e2f0983f78f4c9baf9d46b965b",
+   "concrete_smooth_normal.jpg": "6f7398a4137d307993f35008505234289de95090cfc52eff062a30ab2fd67c2e",
+   "concrete_smooth_orm.jpg": "ae867ce480e8d65dc3f7dc488a9257f4c25cd7a572803e8372c6e3efca2110a4"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Concrete042A"
+ },
+ "corrugated": {
+  "archive_sha256": "e971510c3c2c187a3d2c9eebee408184acac8c326383006170c2dd43e0e9bef0",
+  "asset": "CorrugatedSteel007A",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "corrugated_albedo.jpg": "be966647d42bea0be0b84cf0d532997e5588299d6e614e37ab4d890639015b67",
+   "corrugated_normal.jpg": "d1f812d38815efa03082339f163b51131e2b8f5db69aeaf67111f4d37e27e3b9",
+   "corrugated_orm.jpg": "fa9c4a91d555a8c6701759ca17a724aaca672a88c3d1fd8d4d33a4c4b473e600"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=CorrugatedSteel007A"
+ },
+ "corrugated_green": {
+  "archive_sha256": "83f2c9478750a0a383e693c7b6102e476b3744dd429a79d12c7869d25ff8ed96",
+  "asset": "CorrugatedSteel006A",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "corrugated_green_albedo.jpg": "a8fefbe33e3aa2d0b62030b3dc41b598464c7b39b63cb9aaa0f861a5a25d670d",
+   "corrugated_green_normal.jpg": "2cff35f7d3e287906709df44c16ec475a0c7cdd4600c1044bee36abba2c9152d",
+   "corrugated_green_orm.jpg": "084c2be2bcf0b3635035c3eedd81389c736816b6e621ec4abbe397d3d2f78b6e"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=CorrugatedSteel006A"
+ },
+ "dirt": {
+  "archive_sha256": "defa9f880ec692eb3ef5435fd7bc7b8721c0d577f7824ea18ac68537f01ab65b",
+  "asset": "Ground037",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "dirt_albedo.jpg": "6237d3fdb1b184ceb2f499025e030b7db0c9e73c447f54addb628777327cdc31",
+   "dirt_normal.jpg": "3809db5bdb5d7767cd84477a94b6ad8239a3493f9b23e2ffd54bad4b51cb6173",
+   "dirt_orm.jpg": "61af05adc4c6441aed0489977415f1a7120bb825252b426d7a9a441e54ae9942"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Ground037"
+ },
+ "facade_windows": {
+  "archive_sha256": "8cee41a9b44f031bdfb1820e8824ca90d9d329256fb1e0267d12b8dd61aedf0b",
+  "asset": "Facade018A",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "facade_windows_albedo.jpg": "9c91b5c91bf48730e406a2e7020e2ba25a6bf9f271568d2f8291091ed76d6b7f",
+   "facade_windows_normal.jpg": "de936bae3535474b5fe865580677cf100ad0076f1f15a0044d5fc78dedc2dcfe",
+   "facade_windows_orm.jpg": "5f11ba91464c01b7be976af2e79854d5c13ed2ffbfd8edd47e054afd5d1ac27a"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Facade018A"
+ },
+ "gravel": {
+  "archive_sha256": "a6dd0aea7bcda95d6373c823734eda0cfa066e34c0eea9e1e07023926021bab5",
+  "asset": "Gravel023",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "gravel_albedo.jpg": "9553aa2dfd15e6b6f208dd401ab87e6a0a3ebb39771c4ca00b282360eac5ef37",
+   "gravel_normal.jpg": "41c2b09a4b523a2ac817f3d8f042993b97fc5a836acaf0728cc857eae9296f74",
+   "gravel_orm.jpg": "ffe23624d56b1874531e89531131eed79948493681ff58e5839259df1fbdcbec"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Gravel023"
+ },
+ "hazard": {
+  "archive_sha256": "df345892071638ecf2b046e30e156447361fb3f71d9d7b846116af92bedd93d4",
+  "asset": "PaintedMetal016",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "hazard_albedo.jpg": "25aa8e35658deedb1154573830c5c02fc89826ef6bd7bb8fe79177aa95fd7868",
+   "hazard_normal.jpg": "355cb45d65b9def2b66771eb84a2b6b0b796510511f1dd2321efec28b2c190e7",
+   "hazard_orm.jpg": "4edd6ee28de8009c40d4495d90e12883651fb123db78c6e79069ad4864200400"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=PaintedMetal016"
+ },
+ "metal_plates": {
+  "archive_sha256": "83687a9d4fe9cbba5cfa1898a47bd8c90a0e999d648543fa75e30db597c78cf1",
+  "asset": "MetalPlates013",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "metal_plates_albedo.jpg": "6f4ec3a2a3c1893efe91541f85105f244e8af7a97d542ade3261ebbf3e3a41e9",
+   "metal_plates_normal.jpg": "264f8944176337f36e87692c910ec902bdd7bb6572ad4694f065026837b69b1c",
+   "metal_plates_orm.jpg": "6a5c68c543299908e0a3e7f11164bcf18bcfe3d89e22b6a387bbedf9c5682c3a"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=MetalPlates013"
+ },
+ "painted_metal": {
+  "archive_sha256": "15ab5881fae2def178657d8f861650d33cbcdd6ac82a4dcf05ae8d9c47386a71",
+  "asset": "PaintedMetal006",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "painted_metal_albedo.jpg": "51dd7166ee6b04ecdb4774fa447bc07f0356152f2be409a3dc4d6d65d25bfffe",
+   "painted_metal_normal.jpg": "fa2e11d9835d8465f06a1f64ae67984377f3979eed7c0bb0cc485428a5d23b7f",
+   "painted_metal_orm.jpg": "0100fb20abcf9ab7c137ac2bdf5534f2e77663273d1b095425bd5a4e3175de2d"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=PaintedMetal006"
+ },
+ "paving": {
+  "archive_sha256": "8bec3c2aec7ed721ddb5be3e23713fbe64017d9208e622aa043df616dcf1fcfa",
+  "asset": "PavingStones136",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "paving_albedo.jpg": "d2cf7ce52e32388d0cab5e716d7cd188d611f0e7608f631776f4370cc5251759",
+   "paving_normal.jpg": "9f5265e324e69bfbf419d66601386da0d9f374ba845f5bd4a82d319cf2cfa05b",
+   "paving_orm.jpg": "5c1556a167e445b415b898cf9e376783abd3216c06476c2ef535c8504ea0830c"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=PavingStones136"
+ },
+ "planks": {
+  "archive_sha256": "10b25dd182a8b1bd9ee7b662e1fd2677a717cf7566668e23c1b52b95edefdc83",
+  "asset": "Planks037A",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "planks_albedo.jpg": "b13741795709a6021f5506c5d05a0ae1d09685c5cf854700504741a012d86a35",
+   "planks_normal.jpg": "acaf069c9edf3e798c00c2604cba408deb8199d8e87a22067fc4ae66c3cf231f",
+   "planks_orm.jpg": "3ed0e7db1dab983dd0ca9f892dfa0ae1fbb53bf2e9f2a5be3201ad8ea2faf02b"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Planks037A"
+ },
+ "plaster_clean": {
+  "archive_sha256": "a61330b10b1aa58410f8b60632f667e7a6d84d521bbd85cec4c4de7136d282d2",
+  "asset": "PaintedPlaster017",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "plaster_clean_albedo.jpg": "4b930c0998c7e1ac1fd68e8192e305be0c7baecd4ce57ae6e7181fe85dea617f",
+   "plaster_clean_normal.jpg": "26e3cb38014f11eb934c9b6a7473b91492647c972a8c6c4293d136416b6a1ebb",
+   "plaster_clean_orm.jpg": "5a6e2fb00809b3ea1f895721c8ec6f7173d6f15d33ff34c13ded89990d5ce92f"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=PaintedPlaster017"
+ },
+ "plaster_peel": {
+  "archive_sha256": "000f96231abe04b424889943d0fc0c3eeb8c4459b0bb460468fdf9219ef5c5ff",
+  "asset": "PaintedPlaster016",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "plaster_peel_albedo.jpg": "1217e703f6e329cf49526f487bc288063c0e352a5e124ccd16a32a526060f5d7",
+   "plaster_peel_normal.jpg": "79dadf9fa604b014f40afa95dd510534afe2890c8e55c459d98057662d55dae5",
+   "plaster_peel_orm.jpg": "da56c08e8cd8aea37cd41ffa28cf406ce68a592aec6ca7396e53f96c2bd6f46f"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 2048px colour/normal and 1024px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=PaintedPlaster016"
+ },
+ "road": {
+  "archive_sha256": "957e37e07fa7631c4172fadb2445c0a75ac39b80595b9b7813e81ee0e121eebb",
+  "asset": "Asphalt026C",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "road_albedo.jpg": "c7c7e9032330588d9e8692e7f9aa23328b2985ba2aee148c4d8cca7dd223c858",
+   "road_normal.jpg": "1230837eab8be45fd183f92bf340d9d7fbdd1e6d76fec55ebd4391f7cb584140",
+   "road_orm.jpg": "794bb774c348536bc5c2ba68ae6c32e64e008d2d5438f239ea3c0e69fa369d1e"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 2048px colour/normal and 1024px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Asphalt026C"
+ },
+ "rust": {
+  "archive_sha256": "fd275279dab70e8e8b1acd11d695cc3217e797b4e3007a7ad25a8b9e34c0640c",
+  "asset": "Rust009",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "rust_albedo.jpg": "6e84cec472b46f3f79de559379ca7a57f2da0d779a0031da2057bdc8805a3b00",
+   "rust_normal.jpg": "45ea1efc7ae6a7697ade689d2de262b8842c70e07f4501be4d84f6cb732b72f5",
+   "rust_orm.jpg": "d5867a0bed51fa22f3d176d7fc5622134bb627f91d64c0269a6fd94221c7124b"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Rust009"
+ },
+ "tiles_floor": {
+  "archive_sha256": "fa76887bb33af0972154700126d1f86d01eaed518341ce7411616c1d1202ac55",
+  "asset": "Tiles107",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "tiles_floor_albedo.jpg": "426f30378dc37f6872380e8e638396f0d99be9354047bbcf4e06a8a17c9b9a70",
+   "tiles_floor_normal.jpg": "669bd1724952f63e9cf710a28c5fa1d307547a45d1633514c3e85567b3eb4af0",
+   "tiles_floor_orm.jpg": "95decabb055293ab5271eda47e338d6a6efb48fc796e2f776dfebae30443daf9"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Tiles107"
+ },
+ "walkway": {
+  "archive_sha256": "9dc3d2cb2a57ddc2e994a4fea7fa3d0a51ba6da8a331ae9acfb744d2894110bd",
+  "asset": "MetalWalkway014",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "walkway_albedo.png": "a58f2eaea36a39a0db37ffdda810a9c913f2da1b7bcca3f6bb37ef4e5db0cb5c",
+   "walkway_normal.jpg": "cebfd524566e5864b870a6197a1abfee39160c7a9e6aebced4b0309f87941966",
+   "walkway_orm.jpg": "bd7237b2a07265fd961e429cd909bac7119b825efc904247219d416165b2b30f"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=MetalWalkway014"
+ }
+}

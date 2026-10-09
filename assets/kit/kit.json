@@ -1,0 +1,2761 @@
+{
+ "aircon": {
+  "aabb_max": [
+   0.4003,
+   0.928,
+   0.1872
+  ],
+  "aabb_min": [
+   -0.3997,
+   0.0,
+   -0.1871
+  ],
+  "source": "exterior_aircon_unit",
+  "source_tris": 9493,
+  "tris": 4000
+ },
+ "ammo_box": {
+  "aabb_max": [
+   0.0433,
+   0.1775,
+   0.1289
+  ],
+  "aabb_min": [
+   -0.0433,
+   0.0001,
+   -0.1289
+  ],
+  "source": "ammo_box",
+  "source_tris": 4382,
+  "tris": 2500
+ },
+ "barrel_blue": {
+  "aabb_max": [
+   0.2441,
+   0.88,
+   0.2423
+  ],
+  "aabb_min": [
+   -0.2441,
+   0.0,
+   -0.2423
+  ],
+  "source": "Barrel_02",
+  "source_tris": 2688,
+  "tris": 2688
+ },
+ "barrel_red": {
+  "aabb_max": [
+   0.2815,
+   0.88,
+   0.2815
+  ],
+  "aabb_min": [
+   -0.2815,
+   0.0,
+   -0.2815
+  ],
+  "source": "Barrel_01",
+  "source_tris": 2682,
+  "tris": 2682
+ },
+ "barrel_steel": {
+  "aabb_max": [
+   0.317,
+   0.9305,
+   0.3193
+  ],
+  "aabb_min": [
+   -0.317,
+   0.0,
+   -0.3193
+  ],
+  "source": "barrel_03",
+  "source_tris": 1473,
+  "tris": 1473
+ },
+ "cardboard_box": {
+  "aabb_max": [
+   0.1933,
+   0.3418,
+   0.2579
+  ],
+  "aabb_min": [
+   -0.1937,
+   0.0002,
+   -0.2579
+  ],
+  "source": "cardboard_box_01",
+  "source_tris": 16952,
+  "tris": 2500
+ },
+ "cement_bag": {
+  "aabb_max": [
+   0.2312,
+   0.1799,
+   0.3498
+  ],
+  "aabb_min": [
+   -0.2312,
+   0.0,
+   -0.3498
+  ],
+  "source": "cement_bag",
+  "source_tris": 844,
+  "tris": 844
+ },
+ "compressor": {
+  "aabb_max": [
+   0.3005,
+   1.1791,
+   0.837
+  ],
+  "aabb_min": [
+   -0.3004,
+   0.0003,
+   -0.836
+  ],
+  "source": "old_military_compressor",
+  "source_tris": 79042,
+  "tris": 9000
+ },
+ "covered_car": {
+  "aabb_max": [
+   0.8945,
+   1.4112,
+   2.1901
+  ],
+  "aabb_min": [
+   -0.8945,
+   0.0,
+   -2.1901
+  ],
+  "source": "covered_car",
+  "source_tris": 12592,
+  "tris": 12000
+ },
+ "crane": {
+  "aabb_max": [
+   6.2458,
+   2.5611,
+   2.0
+  ],
+  "aabb_min": [
+   -6.2458,
+   -2.5719,
+   -2.0
+  ],
+  "source": "overhead_crane",
+  "source_tris": 89964,
+  "tris": 16000
+ },
+ "crate_military": {
+  "aabb_max": [
+   0.6206,
+   0.4648,
+   0.2599
+  ],
+  "aabb_min": [
+   -0.6206,
+   0.0001,
+   -0.2599
+  ],
+  "source": "wooden_military_crate",
+  "source_tris": 22986,
+  "tris": 4999
+ },
+ "crate_wood": {
+  "aabb_max": [
+   0.4123,
+   0.3496,
+   0.2045
+  ],
+  "aabb_min": [
+   -0.4123,
+   0.0009,
+   -0.2041
+  ],
+  "source": "wooden_crate_01",
+  "source_tris": 6576,
+  "tris": 3000
+ },
+ "crate_wood_long": {
+  "aabb_max": [
+   0.2646,
+   0.464,
+   0.5832
+  ],
+  "aabb_min": [
+   -0.2646,
+   -0.0001,
+   -0.5832
+  ],
+  "source": "wooden_crate_02",
+  "source_tris": 5176,
+  "tris": 3000
+ },
+ "desk": {
+  "aabb_max": [
+   1.0,
+   0.7875,
+   0.4736
+  ],
+  "aabb_min": [
+   -1.0,
+   -0.0,
+   -0.4736
+  ],
+  "source": "metal_office_desk",
+  "source_tris": 6898,
+  "tris": 6000
+ },
+ "duct_fan": {
+  "aabb_max": [
+   0.2714,
+   0.2716,
+   0.0756
+  ],
+  "aabb_min": [
+   -0.2714,
+   -0.2716,
+   -0.0755
+  ],
+  "source": "modular_airduct_circular_01",
+  "source_tris": 3340,
+  "tris": 1999
+ },
+ "duct_round": {
+  "aabb_max": [
+   0.1852,
+   0.1853,
+   0.711
+  ],
+  "aabb_min": [
+   -0.1852,
+   -0.1853,
+   -0.711
+  ],
+  "source": "modular_airduct_circular_01",
+  "source_tris": 512,
+  "tris": 512
+ },
+ "duct_round_bend": {
+  "aabb_max": [
+   0.1856,
+   0.1885,
+   0.089
+  ],
+  "aabb_min": [
+   -0.1856,
+   -0.1885,
+   -0.089
+  ],
+  "source": "modular_airduct_circular_01",
+  "source_tris": 512,
+  "tris": 512
+ },
+ "duct_square": {
+  "aabb_max": [
+   0.3317,
+   0.2563,
+   0.9
+  ],
+  "aabb_min": [
+   -0.3317,
+   -0.2563,
+   -0.9
+  ],
+  "source": "modular_airduct_rectangular_01",
+  "source_tris": 3176,
+  "tris": 3000
+ },
+ "duct_square_corner": {
+  "aabb_max": [
+   0.4159,
+   0.2563,
+   0.4159
+  ],
+  "aabb_min": [
+   -0.4159,
+   -0.2563,
+   -0.4159
+  ],
+  "source": "modular_airduct_rectangular_01",
+  "source_tris": 3200,
+  "tris": 3000
+ },
+ "duct_vent": {
+  "aabb_max": [
+   0.2761,
+   0.21,
+   0.0302
+  ],
+  "aabb_min": [
+   -0.2761,
+   -0.21,
+   -0.0302
+  ],
+  "source": "modular_airduct_rectangular_01",
+  "source_tris": 390,
+  "tris": 390
+ },
+ "extinguisher": {
+  "aabb_max": [
+   0.1398,
+   0.6588,
+   0.1837
+  ],
+  "aabb_min": [
+   -0.1398,
+   0.0,
+   -0.1837
+  ],
+  "source": "korean_fire_extinguisher_01",
+  "source_tris": 9913,
+  "tris": 2500
+ },
+ "facade": {
+  "pieces": {
+   "base_angled_large_01": {
+    "aabb_max": [
+     0.0,
+     0.75,
+     0.2
+    ],
+    "aabb_min": [
+     -3.2,
+     0.0,
+     -3.0
+    ]
+   },
+   "base_angled_small_01": {
+    "aabb_max": [
+     0.0,
+     0.75,
+     0.2
+    ],
+    "aabb_min": [
+     -2.2,
+     0.0,
+     -2.0
+    ]
+   },
+   "base_corner_large_01": {
+    "aabb_max": [
+     0.0,
+     0.75,
+     0.2
+    ],
+    "aabb_min": [
+     -3.2,
+     -0.0,
+     -3.0
+    ]
+   },
+   "base_corner_large_02": {
+    "aabb_max": [
+     0.0,
+     0.75,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -3.0
+    ]
+   },
+   "base_corner_small_01": {
+    "aabb_max": [
+     0.0,
+     0.75,
+     0.2
+    ],
+    "aabb_min": [
+     -2.2,
+     0.0,
+     -2.0
+    ]
+   },
+   "base_corner_small_02": {
+    "aabb_max": [
+     0.0,
+     0.75,
+     -0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     0.0,
+     -2.0
+    ]
+   },
+   "base_end_01": {
+    "aabb_max": [
+     0.0,
+     0.75,
+     0.2
+    ],
+    "aabb_min": [
+     -0.2,
+     -0.0,
+     -0.0
+    ]
+   },
+   "base_end_02": {
+    "aabb_max": [
+     0.2,
+     0.75,
+     0.2
+    ],
+    "aabb_min": [
+     -0.0,
+     -0.0,
+     -0.0
+    ]
+   },
+   "base_standard_01": {
+    "aabb_max": [
+     0.0,
+     0.75,
+     0.2
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "cornice_end_01": {
+    "aabb_max": [
+     0.0,
+     0.2,
+     0.04
+    ],
+    "aabb_min": [
+     -0.14,
+     -0.0,
+     -0.1
+    ]
+   },
+   "cornice_end_02": {
+    "aabb_max": [
+     0.14,
+     0.2,
+     0.04
+    ],
+    "aabb_min": [
+     0.0,
+     -0.0,
+     -0.1
+    ]
+   },
+   "cornice_pier_angled_01": {
+    "aabb_max": [
+     0.25,
+     0.2,
+     0.1
+    ],
+    "aabb_min": [
+     -0.247,
+     -0.0,
+     -0.177
+    ]
+   },
+   "cornice_pier_corner_01": {
+    "aabb_max": [
+     0.25,
+     0.2,
+     0.1
+    ],
+    "aabb_min": [
+     -0.1,
+     -0.0,
+     -0.25
+    ]
+   },
+   "cornice_pier_corner_02": {
+    "aabb_max": [
+     0.0,
+     0.2,
+     0.35
+    ],
+    "aabb_min": [
+     -0.35,
+     -0.0,
+     0.0
+    ]
+   },
+   "cornice_pier_standard_01": {
+    "aabb_max": [
+     0.175,
+     0.2,
+     0.1
+    ],
+    "aabb_min": [
+     -0.175,
+     -0.0,
+     -0.0
+    ]
+   },
+   "cornice_standard_angled_large_01": {
+    "aabb_max": [
+     0.0,
+     0.2,
+     0.04
+    ],
+    "aabb_min": [
+     -3.04,
+     -0.0,
+     -3.0
+    ]
+   },
+   "cornice_standard_angled_small_01": {
+    "aabb_max": [
+     0.0,
+     0.2,
+     0.04
+    ],
+    "aabb_min": [
+     -2.04,
+     -0.0,
+     -2.0
+    ]
+   },
+   "cornice_standard_corner_large_01": {
+    "aabb_max": [
+     0.0,
+     0.2,
+     0.04
+    ],
+    "aabb_min": [
+     -3.04,
+     -0.0,
+     -3.0
+    ]
+   },
+   "cornice_standard_corner_large_02": {
+    "aabb_max": [
+     0.0,
+     0.2,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -3.0
+    ]
+   },
+   "cornice_standard_corner_small_01": {
+    "aabb_max": [
+     0.0,
+     0.2,
+     0.04
+    ],
+    "aabb_min": [
+     -2.04,
+     -0.0,
+     -2.0
+    ]
+   },
+   "cornice_standard_corner_small_02": {
+    "aabb_max": [
+     0.0,
+     0.2,
+     -0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     -0.0,
+     -2.0
+    ]
+   },
+   "cornice_standard_standard_01": {
+    "aabb_max": [
+     0.0,
+     0.2,
+     0.04
+    ],
+    "aabb_min": [
+     -3.0,
+     -0.0,
+     -0.0
+    ]
+   },
+   "crown_end_01": {
+    "aabb_max": [
+     0.0,
+     0.75,
+     0.33
+    ],
+    "aabb_min": [
+     -0.43,
+     0.0,
+     -0.1
+    ]
+   },
+   "crown_end_02": {
+    "aabb_max": [
+     0.43,
+     0.75,
+     0.33
+    ],
+    "aabb_min": [
+     0.0,
+     0.0,
+     -0.1
+    ]
+   },
+   "crown_pier_angled_01": {
+    "aabb_max": [
+     0.446,
+     0.78,
+     0.424
+    ],
+    "aabb_min": [
+     -0.626,
+     -0.055,
+     -0.401
+    ]
+   },
+   "crown_pier_corner_01": {
+    "aabb_max": [
+     0.43,
+     0.78,
+     0.425
+    ],
+    "aabb_min": [
+     -0.425,
+     -0.055,
+     -0.43
+    ]
+   },
+   "crown_pier_corner_02": {
+    "aabb_max": [
+     0.1,
+     0.78,
+     0.53
+    ],
+    "aabb_min": [
+     -0.53,
+     -0.055,
+     -0.1
+    ]
+   },
+   "crown_pier_pedestal_01": {
+    "aabb_max": [
+     0.355,
+     0.78,
+     0.425
+    ],
+    "aabb_min": [
+     -0.355,
+     -0.055,
+     -0.1
+    ]
+   },
+   "crown_standard_angled_large_01": {
+    "aabb_max": [
+     -0.0,
+     0.75,
+     0.33
+    ],
+    "aabb_min": [
+     -3.33,
+     0.0,
+     -3.0
+    ]
+   },
+   "crown_standard_angled_small_01": {
+    "aabb_max": [
+     0.0,
+     0.75,
+     0.33
+    ],
+    "aabb_min": [
+     -2.33,
+     0.0,
+     -2.0
+    ]
+   },
+   "crown_standard_corner_large_01": {
+    "aabb_max": [
+     -0.0,
+     0.75,
+     0.33
+    ],
+    "aabb_min": [
+     -3.33,
+     0.0,
+     -3.0
+    ]
+   },
+   "crown_standard_corner_large_02": {
+    "aabb_max": [
+     0.1,
+     0.75,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -3.1
+    ]
+   },
+   "crown_standard_corner_small_01": {
+    "aabb_max": [
+     -0.0,
+     0.75,
+     0.33
+    ],
+    "aabb_min": [
+     -2.33,
+     -0.0,
+     -2.0
+    ]
+   },
+   "crown_standard_corner_small_02": {
+    "aabb_max": [
+     0.1,
+     0.75,
+     -0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     -0.0,
+     -2.1
+    ]
+   },
+   "crown_standard_standard_01": {
+    "aabb_max": [
+     -0.0,
+     0.75,
+     0.33
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.1
+    ]
+   },
+   "dado_door_angled_large_01": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -3.04,
+     0.0,
+     -3.0
+    ]
+   },
+   "dado_door_angled_small_01": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -2.04,
+     0.0,
+     -2.0
+    ]
+   },
+   "dado_door_centered_large_01": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.04
+    ]
+   },
+   "dado_door_centered_small_01": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.04
+    ]
+   },
+   "dado_door_centered_small_02": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.04
+    ]
+   },
+   "dado_door_offset_small_01": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.04
+    ]
+   },
+   "dado_door_offset_small_02": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.04
+    ]
+   },
+   "dado_door_window_small_01": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.04
+    ]
+   },
+   "dado_end_01": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -0.14,
+     0.0,
+     -0.04
+    ]
+   },
+   "dado_end_02": {
+    "aabb_max": [
+     0.14,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -0.0,
+     0.0,
+     -0.04
+    ]
+   },
+   "dado_pier_angled_01": {
+    "aabb_max": [
+     0.28,
+     0.54,
+     0.13
+    ],
+    "aabb_min": [
+     -0.29,
+     -0.0,
+     -0.219
+    ]
+   },
+   "dado_pier_corner_01": {
+    "aabb_max": [
+     0.28,
+     0.54,
+     0.13
+    ],
+    "aabb_min": [
+     -0.13,
+     0.0,
+     -0.28
+    ]
+   },
+   "dado_pier_corner_02": {
+    "aabb_max": [
+     0.0,
+     0.54,
+     0.38
+    ],
+    "aabb_min": [
+     -0.38,
+     0.0,
+     0.0
+    ]
+   },
+   "dado_pier_pedestal_01": {
+    "aabb_max": [
+     0.2,
+     0.54,
+     0.13
+    ],
+    "aabb_min": [
+     -0.2,
+     0.0,
+     0.0
+    ]
+   },
+   "dado_standard_angled_large_01": {
+    "aabb_max": [
+     -0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -3.04,
+     0.0,
+     -3.0
+    ]
+   },
+   "dado_standard_angled_small_01": {
+    "aabb_max": [
+     -0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -2.04,
+     0.0,
+     -2.0
+    ]
+   },
+   "dado_standard_corner_large_01": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -3.04,
+     0.0,
+     -3.0
+    ]
+   },
+   "dado_standard_corner_large_02": {
+    "aabb_max": [
+     -0.0,
+     0.5,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -3.0
+    ]
+   },
+   "dado_standard_corner_small_01": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -2.04,
+     0.0,
+     -2.0
+    ]
+   },
+   "dado_standard_corner_small_02": {
+    "aabb_max": [
+     -0.0,
+     0.5,
+     -0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     0.0,
+     -2.0
+    ]
+   },
+   "dado_standard_standard_01": {
+    "aabb_max": [
+     0.0,
+     0.5,
+     0.04
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "door_angled_large_01": {
+    "aabb_max": [
+     -1.095,
+     2.81,
+     -0.126
+    ],
+    "aabb_min": [
+     -2.874,
+     0.0,
+     -1.905
+    ]
+   },
+   "door_angled_small_01": {
+    "aabb_max": [
+     -0.807,
+     2.81,
+     0.162
+    ],
+    "aabb_min": [
+     -2.162,
+     0.0,
+     -1.193
+    ]
+   },
+   "door_centered_large_01": {
+    "aabb_max": [
+     -0.46,
+     2.81,
+     0.2
+    ],
+    "aabb_min": [
+     -2.54,
+     0.0,
+     -0.24
+    ]
+   },
+   "door_centered_small_01": {
+    "aabb_max": [
+     -0.76,
+     2.81,
+     0.2
+    ],
+    "aabb_min": [
+     -2.24,
+     0.0,
+     -0.24
+    ]
+   },
+   "door_centered_small_02": {
+    "aabb_max": [
+     -0.94,
+     2.26,
+     0.03
+    ],
+    "aabb_min": [
+     -2.06,
+     0.0,
+     -0.2
+    ]
+   },
+   "door_offset_small_01": {
+    "aabb_max": [
+     -0.19,
+     2.26,
+     0.03
+    ],
+    "aabb_min": [
+     -1.31,
+     0.0,
+     -0.2
+    ]
+   },
+   "door_offset_small_02": {
+    "aabb_max": [
+     -1.69,
+     2.26,
+     0.03
+    ],
+    "aabb_min": [
+     -2.81,
+     0.0,
+     -0.2
+    ]
+   },
+   "door_offset_small_03": {
+    "aabb_max": [
+     -0.01,
+     2.81,
+     0.2
+    ],
+    "aabb_min": [
+     -1.49,
+     0.0,
+     -0.24
+    ]
+   },
+   "door_offset_small_04": {
+    "aabb_max": [
+     -1.51,
+     2.81,
+     0.2
+    ],
+    "aabb_min": [
+     -2.99,
+     0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_01": {
+    "aabb_max": [
+     -0.19,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.81,
+     -0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_010": {
+    "aabb_max": [
+     -0.33,
+     2.26,
+     0.04
+    ],
+    "aabb_min": [
+     -2.81,
+     0.0,
+     -0.214
+    ]
+   },
+   "door_window_small_011": {
+    "aabb_max": [
+     -0.01,
+     2.81,
+     0.2
+    ],
+    "aabb_min": [
+     -2.67,
+     0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_012": {
+    "aabb_max": [
+     -0.33,
+     2.81,
+     0.2
+    ],
+    "aabb_min": [
+     -2.99,
+     0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_02": {
+    "aabb_max": [
+     -0.19,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.81,
+     -0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_03": {
+    "aabb_max": [
+     -0.01,
+     2.81,
+     0.199
+    ],
+    "aabb_min": [
+     -2.81,
+     -0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_04": {
+    "aabb_max": [
+     -0.19,
+     2.81,
+     0.199
+    ],
+    "aabb_min": [
+     -2.99,
+     -0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_05": {
+    "aabb_max": [
+     -0.19,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.81,
+     0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_06": {
+    "aabb_max": [
+     -0.19,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.81,
+     0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_07": {
+    "aabb_max": [
+     -0.01,
+     2.81,
+     0.199
+    ],
+    "aabb_min": [
+     -2.81,
+     0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_08": {
+    "aabb_max": [
+     -0.19,
+     2.81,
+     0.199
+    ],
+    "aabb_min": [
+     -2.99,
+     0.0,
+     -0.24
+    ]
+   },
+   "door_window_small_09": {
+    "aabb_max": [
+     -0.19,
+     2.26,
+     0.04
+    ],
+    "aabb_min": [
+     -2.67,
+     0.0,
+     -0.214
+    ]
+   },
+   "wall_door_angled_large_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     -0.0,
+     -3.0
+    ]
+   },
+   "wall_door_angled_small_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     -0.0,
+     -2.0
+    ]
+   },
+   "wall_door_centered_large_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     0.0
+    ]
+   },
+   "wall_door_centered_small_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_centered_small_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_offset_small_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_offset_small_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_offset_small_03": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     -0.0,
+     -0.0
+    ]
+   },
+   "wall_door_offset_small_04": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_window_small_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_window_small_010": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.18
+    ]
+   },
+   "wall_door_window_small_012": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     -0.0,
+     -0.18
+    ]
+   },
+   "wall_door_window_small_013": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.18
+    ]
+   },
+   "wall_door_window_small_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_window_small_03": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     -0.0,
+     -0.0
+    ]
+   },
+   "wall_door_window_small_04": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_window_small_05": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_window_small_06": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_window_small_07": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_window_small_08": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_door_window_small_09": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.18
+    ]
+   },
+   "wall_pier_angled_01": {
+    "aabb_max": [
+     0.2,
+     3.0,
+     0.05
+    ],
+    "aabb_min": [
+     -0.173,
+     0.0,
+     -0.141
+    ]
+   },
+   "wall_pier_corner_01": {
+    "aabb_max": [
+     0.2,
+     3.0,
+     0.05
+    ],
+    "aabb_min": [
+     -0.05,
+     0.0,
+     -0.2
+    ]
+   },
+   "wall_pier_corner_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.3
+    ],
+    "aabb_min": [
+     -0.3,
+     0.0,
+     0.0
+    ]
+   },
+   "wall_pier_standard_01": {
+    "aabb_max": [
+     0.125,
+     3.0,
+     0.05
+    ],
+    "aabb_min": [
+     -0.125,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_standard_angled_large_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     -0.0,
+     -3.0
+    ]
+   },
+   "wall_standard_angled_small_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     -0.0,
+     -2.0
+    ]
+   },
+   "wall_standard_corner_large_01": {
+    "aabb_max": [
+     -0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     -0.0,
+     -3.0
+    ]
+   },
+   "wall_standard_corner_large_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     -0.0,
+     -3.0
+    ]
+   },
+   "wall_standard_corner_small_01": {
+    "aabb_max": [
+     -0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     0.0,
+     -2.0
+    ]
+   },
+   "wall_standard_corner_small_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     0.0,
+     -2.0
+    ]
+   },
+   "wall_standard_standard_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_angled_large_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     -0.0,
+     -3.0
+    ]
+   },
+   "wall_window_angled_large_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     -0.0,
+     -3.0
+    ]
+   },
+   "wall_window_angled_small_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     -0.0,
+     -2.0
+    ]
+   },
+   "wall_window_angled_small_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     -0.0,
+     -2.0
+    ]
+   },
+   "wall_window_centered_double_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_centered_double_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_centered_double_03": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.18
+    ]
+   },
+   "wall_window_centered_large_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_centered_large_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_centered_large_03": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.18
+    ]
+   },
+   "wall_window_centered_small_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_centered_small_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_centered_small_03": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.18
+    ]
+   },
+   "wall_window_offset_small_01": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_offset_small_02": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_offset_small_03": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_offset_small_04": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.0
+    ]
+   },
+   "wall_window_offset_small_05": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.18
+    ]
+   },
+   "wall_window_offset_small_06": {
+    "aabb_max": [
+     0.0,
+     3.0,
+     -0.0
+    ],
+    "aabb_min": [
+     -3.0,
+     0.0,
+     -0.18
+    ]
+   },
+   "window_angled_large_01": {
+    "aabb_max": [
+     -1.081,
+     2.3,
+     -0.147
+    ],
+    "aabb_min": [
+     -2.853,
+     -0.0,
+     -1.919
+    ]
+   },
+   "window_angled_large_02": {
+    "aabb_max": [
+     -1.045,
+     2.3,
+     -0.111
+    ],
+    "aabb_min": [
+     -2.818,
+     0.3,
+     -1.884
+    ]
+   },
+   "window_angled_small_01": {
+    "aabb_max": [
+     -0.934,
+     2.3,
+     -0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     -0.0,
+     -1.066
+    ]
+   },
+   "window_angled_small_02": {
+    "aabb_max": [
+     -0.934,
+     2.3,
+     -0.0
+    ],
+    "aabb_min": [
+     -2.0,
+     0.3,
+     -1.066
+    ]
+   },
+   "window_centered_double_01": {
+    "aabb_max": [
+     -0.19,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.81,
+     -0.0,
+     -0.24
+    ]
+   },
+   "window_centered_double_02": {
+    "aabb_max": [
+     -0.19,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.81,
+     0.3,
+     -0.24
+    ]
+   },
+   "window_centered_double_03": {
+    "aabb_max": [
+     -0.33,
+     2.138,
+     0.04
+    ],
+    "aabb_min": [
+     -2.67,
+     0.453,
+     -0.214
+    ]
+   },
+   "window_centered_large_01": {
+    "aabb_max": [
+     -0.44,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.56,
+     -0.0,
+     -0.24
+    ]
+   },
+   "window_centered_large_02": {
+    "aabb_max": [
+     -0.44,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.56,
+     0.3,
+     -0.24
+    ]
+   },
+   "window_centered_large_03": {
+    "aabb_max": [
+     -0.63,
+     2.138,
+     0.04
+    ],
+    "aabb_min": [
+     -2.37,
+     0.453,
+     -0.164
+    ]
+   },
+   "window_centered_small_01": {
+    "aabb_max": [
+     -0.94,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.06,
+     -0.0,
+     -0.24
+    ]
+   },
+   "window_centered_small_02": {
+    "aabb_max": [
+     -0.94,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.06,
+     0.3,
+     -0.24
+    ]
+   },
+   "window_centered_small_03": {
+    "aabb_max": [
+     -1.08,
+     2.138,
+     0.04
+    ],
+    "aabb_min": [
+     -1.92,
+     0.453,
+     -0.214
+    ]
+   },
+   "window_offset_small_01": {
+    "aabb_max": [
+     -0.19,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -1.31,
+     -0.0,
+     -0.24
+    ]
+   },
+   "window_offset_small_02": {
+    "aabb_max": [
+     -1.69,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.81,
+     -0.0,
+     -0.24
+    ]
+   },
+   "window_offset_small_03": {
+    "aabb_max": [
+     -0.19,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -1.31,
+     0.3,
+     -0.24
+    ]
+   },
+   "window_offset_small_04": {
+    "aabb_max": [
+     -1.69,
+     2.3,
+     0.15
+    ],
+    "aabb_min": [
+     -2.81,
+     0.3,
+     -0.24
+    ]
+   },
+   "window_offset_small_05": {
+    "aabb_max": [
+     -0.33,
+     2.138,
+     0.04
+    ],
+    "aabb_min": [
+     -1.17,
+     0.453,
+     -0.214
+    ]
+   },
+   "window_offset_small_06": {
+    "aabb_max": [
+     -1.83,
+     2.138,
+     0.04
+    ],
+    "aabb_min": [
+     -2.67,
+     0.453,
+     -0.214
+    ]
+   }
+  },
+  "source": "modular_urban_apartments_facade"
+ },
+ "fence_double": {
+  "aabb_max": [
+   0.957,
+   2.37,
+   0.0243
+  ],
+  "aabb_min": [
+   -0.957,
+   0.0,
+   -0.0243
+  ],
+  "source": "modular_chainlink_fence",
+  "source_tris": 3054,
+  "tris": 3054
+ },
+ "fence_gate": {
+  "aabb_max": [
+   0.9555,
+   2.524,
+   0.0792
+  ],
+  "aabb_min": [
+   -0.9555,
+   0.0,
+   -0.0781
+  ],
+  "source": "modular_chainlink_fence",
+  "source_tris": 25174,
+  "tris": 7999
+ },
+ "fence_post": {
+  "aabb_max": [
+   0.0749,
+   2.5229,
+   0.0749
+  ],
+  "aabb_min": [
+   -0.0747,
+   0.0,
+   -0.0747
+  ],
+  "source": "modular_chainlink_fence",
+  "source_tris": 1134,
+  "tris": 599
+ },
+ "fence_single": {
+  "aabb_max": [
+   0.467,
+   2.37,
+   0.0243
+  ],
+  "aabb_min": [
+   -0.467,
+   0.0,
+   -0.0243
+  ],
+  "source": "modular_chainlink_fence",
+  "source_tris": 3028,
+  "tris": 3028
+ },
+ "fire_escape": {
+  "aabb_max": [
+   3.3306,
+   9.7566,
+   0.7104
+  ],
+  "aabb_min": [
+   -3.3306,
+   0.0,
+   -0.7104
+  ],
+  "source": "modular_fire_escape",
+  "source_tris": 11322,
+  "tris": 11322
+ },
+ "fluorescent": {
+  "aabb_max": [
+   0.4561,
+   0.0177,
+   0.0201
+  ],
+  "aabb_min": [
+   -0.4561,
+   -0.0177,
+   -0.0201
+  ],
+  "source": "mounted_fluorescent_lights",
+  "source_tris": 1496,
+  "tris": 1496
+ },
+ "generator": {
+  "aabb_max": [
+   0.4097,
+   0.5769,
+   0.2835
+  ],
+  "aabb_min": [
+   -0.4096,
+   0.0002,
+   -0.282
+  ],
+  "source": "portable_generator",
+  "source_tris": 26419,
+  "tris": 6000
+ },
+ "gutter_pipe": {
+  "aabb_max": [
+   0.0787,
+   0.5,
+   0.0808
+  ],
+  "aabb_min": [
+   -0.0789,
+   -0.5,
+   -0.0805
+  ],
+  "source": "modular_metal_gutter",
+  "source_tris": 894,
+  "tris": 600
+ },
+ "hand_truck": {
+  "aabb_max": [
+   0.2966,
+   1.4025,
+   0.3461
+  ],
+  "aabb_min": [
+   -0.2966,
+   -0.0016,
+   -0.3472
+  ],
+  "source": "hand_truck",
+  "source_tris": 13220,
+  "tris": 4000
+ },
+ "hydrant": {
+  "aabb_max": [
+   0.1373,
+   0.8002,
+   0.159
+  ],
+  "aabb_min": [
+   -0.1369,
+   -0.0001,
+   -0.1587
+  ],
+  "source": "fire_hydrant",
+  "source_tris": 43158,
+  "tris": 3999
+ },
+ "jerrycan": {
+  "aabb_max": [
+   0.1802,
+   0.5,
+   0.0858
+  ],
+  "aabb_min": [
+   -0.1805,
+   0.0,
+   -0.0858
+  ],
+  "source": "metal_jerrycan_green",
+  "source_tris": 9636,
+  "tris": 3000
+ },
+ "jersey_barrier": {
+  "aabb_max": [
+   0.7725,
+   0.8321,
+   0.3177
+  ],
+  "aabb_min": [
+   -0.7722,
+   -0.0001,
+   -0.3194
+  ],
+  "source": "concrete_road_barrier",
+  "source_tris": 60928,
+  "tris": 5000
+ },
+ "jersey_barrier_plain": {
+  "aabb_max": [
+   0.7817,
+   1.1107,
+   0.2183
+  ],
+  "aabb_min": [
+   -0.7823,
+   -0.0,
+   -0.2208
+  ],
+  "source": "concrete_road_barrier_02",
+  "source_tris": 23822,
+  "tris": 3999
+ },
+ "lamp_hanging": {
+  "aabb_max": [
+   0.2748,
+   -0.0009,
+   0.2748
+  ],
+  "aabb_min": [
+   -0.2748,
+   -1.3578,
+   -0.2753
+  ],
+  "source": "hanging_industrial_lamp",
+  "source_tris": 9530,
+  "tris": 2999
+ },
+ "lamp_wall": {
+  "aabb_max": [
+   0.137,
+   0.215,
+   0.0699
+  ],
+  "aabb_min": [
+   -0.1367,
+   -0.215,
+   -0.0702
+  ],
+  "source": "industrial_wall_lamp",
+  "source_tris": 4446,
+  "tris": 1999
+ },
+ "lpg_tank": {
+  "aabb_max": [
+   0.2047,
+   0.6422,
+   0.2049
+  ],
+  "aabb_min": [
+   -0.2054,
+   -0.0001,
+   -0.2042
+  ],
+  "source": "small_lpg_tank",
+  "source_tris": 15042,
+  "tris": 3000
+ },
+ "manhole": {
+  "aabb_max": [
+   0.3456,
+   0.068,
+   0.3456
+  ],
+  "aabb_min": [
+   -0.3456,
+   0.0,
+   -0.3456
+  ],
+  "source": "water_manhole_cover",
+  "source_tris": 6301,
+  "tris": 2500
+ },
+ "metal_rack": {
+  "aabb_max": [
+   0.4577,
+   1.9,
+   0.3
+  ],
+  "aabb_min": [
+   -0.4577,
+   -0.0,
+   -0.3
+  ],
+  "source": "worn_metal_rack",
+  "source_tris": 6372,
+  "tris": 3000
+ },
+ "military_crate": {
+  "aabb_max": [
+   0.4079,
+   0.3007,
+   0.2688
+  ],
+  "aabb_min": [
+   -0.4077,
+   0.0003,
+   -0.2692
+  ],
+  "source": "old_military_crate",
+  "source_tris": 10476,
+  "tris": 4000
+ },
+ "military_crate_open": {
+  "aabb_max": [
+   0.408,
+   0.2588,
+   0.4879
+  ],
+  "aabb_min": [
+   -0.4077,
+   0.0003,
+   -0.4877
+  ],
+  "source": "old_military_crate",
+  "source_tris": 10476,
+  "tris": 4000
+ },
+ "pipe_bend": {
+  "aabb_max": [
+   0.1784,
+   0.2055,
+   0.1032
+  ],
+  "aabb_min": [
+   -0.1784,
+   -0.2055,
+   -0.1032
+  ],
+  "source": "modular_industrial_pipes_01",
+  "source_tris": 1408,
+  "tris": 1408
+ },
+ "pipe_straight": {
+  "aabb_max": [
+   0.1036,
+   0.9773,
+   0.1032
+  ],
+  "aabb_min": [
+   -0.1036,
+   -0.9773,
+   -0.1032
+  ],
+  "source": "modular_industrial_pipes_01",
+  "source_tris": 648,
+  "tris": 648
+ },
+ "pipe_valve": {
+  "aabb_max": [
+   0.2993,
+   0.6572,
+   0.1032
+  ],
+  "aabb_min": [
+   -0.2993,
+   -0.6572,
+   -0.1032
+  ],
+  "source": "modular_industrial_pipes_01",
+  "source_tris": 984,
+  "tris": 984
+ },
+ "plastic_crate": {
+  "aabb_max": [
+   0.2406,
+   0.2698,
+   0.1338
+  ],
+  "aabb_min": [
+   -0.2408,
+   0.0001,
+   -0.1325
+  ],
+  "source": "plastic_crate_03",
+  "source_tris": 21740,
+  "tris": 2500
+ },
+ "power_box": {
+  "aabb_max": [
+   0.2305,
+   0.5034,
+   0.1997
+  ],
+  "aabb_min": [
+   -0.2307,
+   -0.0002,
+   -0.1997
+  ],
+  "source": "power_box_01",
+  "source_tris": 21272,
+  "tris": 4000
+ },
+ "power_pole": {
+  "aabb_max": [
+   0.6,
+   6.13,
+   0.9786
+  ],
+  "aabb_min": [
+   -0.6,
+   0.0,
+   -0.9785
+  ],
+  "source": "modular_electricity_poles",
+  "source_tris": 31932,
+  "tris": 8999
+ },
+ "power_pole_b": {
+  "aabb_max": [
+   0.6499,
+   6.13,
+   0.4261
+  ],
+  "aabb_min": [
+   -0.6435,
+   -0.0,
+   -0.4261
+  ],
+  "source": "modular_electricity_poles",
+  "source_tris": 35012,
+  "tris": 9000
+ },
+ "propane": {
+  "aabb_max": [
+   0.1687,
+   0.5538,
+   0.1688
+  ],
+  "aabb_min": [
+   -0.1687,
+   -0.0,
+   -0.1675
+  ],
+  "source": "propane_tank",
+  "source_tris": 5238,
+  "tris": 2500
+ },
+ "security_light": {
+  "aabb_max": [
+   0.1611,
+   0.531,
+   0.2085
+  ],
+  "aabb_min": [
+   -0.1614,
+   0.0004,
+   -0.2086
+  ],
+  "source": "security_light",
+  "source_tris": 4668,
+  "tris": 2500
+ },
+ "shelves": {
+  "aabb_max": [
+   0.4625,
+   1.8044,
+   0.2116
+  ],
+  "aabb_min": [
+   -0.4625,
+   0.0,
+   -0.2116
+  ],
+  "source": "steel_frame_shelves_01",
+  "source_tris": 4348,
+  "tris": 3000
+ },
+ "shutter_door": {
+  "aabb_max": [
+   0.54,
+   2.4,
+   0.15
+  ],
+  "aabb_min": [
+   -0.54,
+   0.0,
+   -0.15
+  ],
+  "source": "rollershutter_door",
+  "source_tris": 552,
+  "tris": 552
+ },
+ "shutter_door_graffiti": {
+  "aabb_max": [
+   0.54,
+   2.4,
+   0.15
+  ],
+  "aabb_min": [
+   -0.54,
+   0.0,
+   -0.15
+  ],
+  "source": "rollershutter_door",
+  "source_tris": 552,
+  "tris": 552
+ },
+ "shutter_window": {
+  "aabb_max": [
+   1.05,
+   1.8507,
+   0.15
+  ],
+  "aabb_min": [
+   -1.05,
+   0.0,
+   -0.15
+  ],
+  "source": "rollershutter_window_01",
+  "source_tris": 552,
+  "tris": 552
+ },
+ "shutter_window_graffiti": {
+  "aabb_max": [
+   1.05,
+   1.8507,
+   0.15
+  ],
+  "aabb_min": [
+   -1.05,
+   0.0,
+   -0.15
+  ],
+  "source": "rollershutter_window_01",
+  "source_tris": 552,
+  "tris": 552
+ },
+ "shutter_window_small": {
+  "aabb_max": [
+   0.8,
+   1.5609,
+   0.084
+  ],
+  "aabb_min": [
+   -0.8,
+   0.0,
+   -0.084
+  ],
+  "source": "rollershutter_window_02",
+  "source_tris": 560,
+  "tris": 560
+ },
+ "tool_cart": {
+  "aabb_max": [
+   0.6359,
+   0.9666,
+   0.3768
+  ],
+  "aabb_min": [
+   -0.6369,
+   -0.0001,
+   -0.3776
+  ],
+  "source": "tool_cart",
+  "source_tris": 29394,
+  "tris": 6000
+ },
+ "tool_chest": {
+  "aabb_max": [
+   0.3427,
+   0.6518,
+   0.2036
+  ],
+  "aabb_min": [
+   -0.3427,
+   -0.0,
+   -0.2036
+  ],
+  "source": "metal_tool_chest",
+  "source_tris": 13360,
+  "tris": 4000
+ },
+ "trash_can": {
+  "aabb_max": [
+   0.3865,
+   0.9062,
+   0.2741
+  ],
+  "aabb_min": [
+   -0.3866,
+   0.0,
+   -0.2743
+  ],
+  "source": "metal_trash_can",
+  "source_tris": 7532,
+  "tris": 4000
+ },
+ "trash_can_clean": {
+  "aabb_max": [
+   0.3888,
+   0.9062,
+   0.2777
+  ],
+  "aabb_min": [
+   -0.389,
+   0.0,
+   -0.2777
+  ],
+  "source": "metal_trash_can",
+  "source_tris": 6428,
+  "tris": 4000
+ },
+ "trashbag": {
+  "aabb_max": [
+   0.2602,
+   0.5747,
+   0.232
+  ],
+  "aabb_min": [
+   -0.2644,
+   0.0,
+   -0.2314
+  ],
+  "source": "trashbag",
+  "source_tris": 4482,
+  "tris": 1999
+ },
+ "tyre": {
+  "aabb_max": [
+   0.3001,
+   0.6,
+   0.0825
+  ],
+  "aabb_min": [
+   -0.3001,
+   0.0,
+   -0.0825
+  ],
+  "source": "old_tyre",
+  "source_tris": 2880,
+  "tris": 1998
+ },
+ "utility_box": {
+  "aabb_max": [
+   0.26,
+   1.1203,
+   0.216
+  ],
+  "aabb_min": [
+   -0.26,
+   -0.0,
+   -0.216
+  ],
+  "source": "utility_box_01",
+  "source_tris": 4404,
+  "tris": 2999
+ },
+ "utility_box_wide": {
+  "aabb_max": [
+   0.46,
+   1.1203,
+   0.216
+  ],
+  "aabb_min": [
+   -0.46,
+   -0.0,
+   -0.216
+  ],
+  "source": "utility_box_02",
+  "source_tris": 6268,
+  "tris": 3499
+ },
+ "welding_cart": {
+  "aabb_max": [
+   0.4191,
+   1.5626,
+   0.3281
+  ],
+  "aabb_min": [
+   -0.4191,
+   0.0008,
+   -0.3261
+  ],
+  "source": "portable_welding_cart",
+  "source_tris": 29418,
+  "tris": 6000
+ },
+ "wheel_rim": {
+  "aabb_max": [
+   0.2018,
+   0.4043,
+   0.0771
+  ],
+  "aabb_min": [
+   -0.2018,
+   0.0007,
+   -0.0771
+  ],
+  "source": "rusted_wheel_rim_01",
+  "source_tris": 16440,
+  "tris": 2500
+ }
+}

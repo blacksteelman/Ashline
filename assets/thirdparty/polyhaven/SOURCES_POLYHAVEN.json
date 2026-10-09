@@ -1,0 +1,932 @@
+{
+ "Barrel_01": {
+  "authors": {
+   "Jorge Camacho": "All"
+  },
+  "files": {
+   "Barrel_01.bin": "fe8369c1ac796059b62a091c0db7367dc420aa2cee212672e48f991f4208da98",
+   "Barrel_01.gltf": "e084945dedd6a3379c6f3e97842cac89df7169797707e123a5e5b42c135d6888",
+   "textures/Barrel_01_explosive_arm_1k.jpg": "eab507df7719f0e7a3615bd22bb7bc0c09fed83bfc44e72a51451f8069c2d374",
+   "textures/Barrel_01_explosive_diff_1k.jpg": "a7e5a7b03bbe0c9c56bf1ac09b24121a5d19148428e9e6eac326c803fc297098",
+   "textures/Barrel_01_explosive_nor_gl_1k.jpg": "fa4750d64c6f568c8de3e36bc631348710329cf2d6d9c8c87bd2e47a96bc4fcb"
+  },
+  "license": "CC0-1.0",
+  "name": "Barrel_01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/Barrel_01"
+ },
+ "Barrel_02": {
+  "authors": {
+   "Jorge Camacho": "All"
+  },
+  "files": {
+   "Barrel_02.bin": "a9a848743a7616710e2b3aee0b61c6fb69abc3910a150856ad21776a6089f29a",
+   "Barrel_02.gltf": "82204368af4d7211c440e7ebcd30979f48ba349d4439f3bf0212f86d4ba5d9d8",
+   "textures/Barrel_02_arm_1k.jpg": "bd69aa2c5c069482cb48a14aed1f3a1d079bd868d865247206427df5a53202e3",
+   "textures/Barrel_02_diff_1k.jpg": "2dd828ce25b5b6b0ffc9b7901d1778767f1897be1c8004f4ec047fc91742cf12",
+   "textures/Barrel_02_nor_gl_1k.jpg": "f7029669d04979d20bbe1a80d34e689aff4b1ebe1bcc37a3ee62c8e384229a77"
+  },
+  "license": "CC0-1.0",
+  "name": "Barrel 02",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/Barrel_02"
+ },
+ "ammo_box": {
+  "authors": {
+   "DanKit": "All"
+  },
+  "files": {
+   "ammo_box.bin": "7f7211c643fe5fc4e7ec033e644e4fdea18188e15bc55a27972b72e6ff7e1d03",
+   "ammo_box.gltf": "05dd0a1f2a09d170c1274e7d28d001177920d5c325de6c7460f10d4f314b5638",
+   "textures/ammo_box_arm_1k.jpg": "fc4ce56bc139d7482ea6e59e5410a19f58af07631d02840a6f0bbf08a1b33189",
+   "textures/ammo_box_diff_1k.jpg": "6a21a1ca96526f97bd05b52808986152d3266a056d1dbe90204bf191697f0f56",
+   "textures/ammo_box_nor_gl_1k.jpg": "5fc921d93f97646944b4bacae9e8eed1325091103766a8e6477c54bf199e5579"
+  },
+  "license": "CC0-1.0",
+  "name": "Ammo Box",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/ammo_box"
+ },
+ "barrel_03": {
+  "authors": {
+   "Serhii Khromov": "All"
+  },
+  "files": {
+   "barrel_03.bin": "10f3202e9ac9acf8dd896f1562c64db58311ffef89efb402d8433e03ad486427",
+   "barrel_03.gltf": "80e2faf48b7423bb522b573e459d99c5656a16763285ec8268e957fc7d41f9b8",
+   "textures/barrel_03_arm_1k.jpg": "2cec2338b36d7322bef55e6a1d0884b223c5ed383cf986a58bfa461478c64c7e",
+   "textures/barrel_03_diff_1k.jpg": "62feb27dfa9a0daf3f323fdc1ddc2d8e4a5996cf2c72fe50197b55c2b9cba7f3",
+   "textures/barrel_03_nor_gl_1k.jpg": "ade97c52985047858a4f38226a9b8a888e3a766ba0434700b4618fb25424c4b6"
+  },
+  "license": "CC0-1.0",
+  "name": "Barrel 03",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/barrel_03"
+ },
+ "cardboard_box_01": {
+  "authors": {
+   "Rahul Chaudhary": "All"
+  },
+  "files": {
+   "cardboard_box_01.bin": "7212d43b4cb56459e46d31ab34dc7c310fcfbe170f4a588416dea07ae5628a4b",
+   "cardboard_box_01.gltf": "6038bcc5bba5a08a5f6643a265977e37e3d14553e62981e144c33a89f10b78e1",
+   "textures/cardboard_box_01_arm_1k.jpg": "5db63828d0f904c6a8d9c83afc912260b2a27261c15a28d06360519384574d2b",
+   "textures/cardboard_box_01_diff_1k.jpg": "122c7ba8c5935e289804a730b480677a4bffdf74a45c91970cba682df92e171c",
+   "textures/cardboard_box_01_nor_gl_1k.jpg": "d2d1f529a851966b65411b5094510dd9eba03cd5c0a89921f79325c377a8e8eb"
+  },
+  "license": "CC0-1.0",
+  "name": "Cardboard Box 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/cardboard_box_01"
+ },
+ "cement_bag": {
+  "authors": {
+   "PierreB3D": "All"
+  },
+  "files": {
+   "cement_bag.bin": "6f5bb09b0a706d330b208c5a820b23b03d1ddf535fea8c459de398b55bb9e3b0",
+   "cement_bag.gltf": "60749af5830f8df1bc1388b177763b1ab09b9f40de3577d21a8c88659f6562a7",
+   "textures/cement_bag_arm_1k.jpg": "ab39330e5c00b8d8c3febc58076717394d261daea50faba1c9fa90d8c51f06a4",
+   "textures/cement_bag_diff_1k.jpg": "0f1a45ba37e569b744325976b0a4514bc9e0b073bc12f1adb4d3232f6e90ed3e",
+   "textures/cement_bag_nor_gl_1k.jpg": "4f9b5ff34b029b47744dca27b864d35c167472792073a2141a5f69fc4cb39ddd"
+  },
+  "license": "CC0-1.0",
+  "name": "Cement Bag",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/cement_bag"
+ },
+ "concrete_road_barrier": {
+  "authors": {
+   "Amal Kumar": "All"
+  },
+  "files": {
+   "concrete_road_barrier.bin": "64a4f9bc6e4af64d714a252c3c13428c430a60569deba3d52ca6b7dd3aa70d8c",
+   "concrete_road_barrier.gltf": "9189168735eaf2e91a7d8b9d250f4644f984bf5353a2cc844f8ccef270d743dd",
+   "textures/concrete_road_barrier_arm_2k.jpg": "8c17f77897138a5ee0f80d0b5d194fd00554371e33b9f62f6d7b6a4e640094d6",
+   "textures/concrete_road_barrier_diff_2k.jpg": "51832691e0769a04246b61222e5df1ce7dc22e9c7162f786a314409ac76d643c",
+   "textures/concrete_road_barrier_nor_gl_2k.jpg": "8e48a287ae58a53030635c585d57a2da72660531a907a8e6cd04836bc60bf3a3"
+  },
+  "license": "CC0-1.0",
+  "name": "Concrete Road Barrier",
+  "resolution": "2k",
+  "source": "https://polyhaven.com/a/concrete_road_barrier"
+ },
+ "concrete_road_barrier_02": {
+  "authors": {
+   "Amal Kumar": "All"
+  },
+  "files": {
+   "concrete_road_barrier_02.bin": "254ee05467733e224e127dc76e019e5b5211c0da4248fa3fc75117ec005d7c90",
+   "concrete_road_barrier_02.gltf": "29cc9f5580f4d6413f88ce304bab27253bb6bb5eb5ab94f2026364390e254f11",
+   "textures/concrete_road_barrier_02_arm_2k.jpg": "4d479e15c0ad5e02df48b999b691e17aabf4ebd55b599e571163a2b3b834379e",
+   "textures/concrete_road_barrier_02_diff_2k.jpg": "ca2e3ea67558887b80d113d6b5414f12a37967d4a868600ab23b118acaff11ba",
+   "textures/concrete_road_barrier_02_nor_gl_2k.jpg": "57a9d9448612f0e904964e7c9e01681adb2c3565cf3e47ed60cc152ab7df3b2b"
+  },
+  "license": "CC0-1.0",
+  "name": "Concrete Road Barrier 02",
+  "resolution": "2k",
+  "source": "https://polyhaven.com/a/concrete_road_barrier_02"
+ },
+ "covered_car": {
+  "authors": {
+   "MP": "All"
+  },
+  "files": {
+   "covered_car.bin": "dcbd7bf82d415e30d02c3e7056013b44729de7b712868b5ab9bf29f2b3b8bc57",
+   "covered_car.gltf": "7d53067dc7b60c94e05eebc43c6b956f56d35a57ef3568e7619bb92227ab8a1f",
+   "textures/covered_car_arm_2k.jpg": "09bb2ccf251ddd679dd147673443cd68ccc39db3f42ba037ad4185da1b8f6e1b",
+   "textures/covered_car_diff_2k.jpg": "d482fc7fe8ea8c523e9f29f581a4dd50e14bb060e09779c9633fc55a6473dffb",
+   "textures/covered_car_nor_gl_2k.jpg": "c37a276f7f55e8477e066f0b0bf83a6cf770ab82cdcf3439bad1b939ff762ceb"
+  },
+  "license": "CC0-1.0",
+  "name": "Covered Car",
+  "resolution": "2k",
+  "source": "https://polyhaven.com/a/covered_car"
+ },
+ "exterior_aircon_unit": {
+  "authors": {
+   "Monsta3D": "All"
+  },
+  "files": {
+   "exterior_aircon_unit.bin": "b4b9ad082bdaa8f8b437bc14d9981caeaf318334499d4bf65d616fb2ec0c5ca8",
+   "exterior_aircon_unit.gltf": "f19d85c76948903047c2846068aeaa376d5e956a410675268cb6cb6aac5d97c2",
+   "textures/exterior_aircon_unit_01_arm_1k.jpg": "14671920f716691dc3b8940432f7aba5c469e3b466441ff8ad500de92d3178fb",
+   "textures/exterior_aircon_unit_01_diff_1k.jpg": "2ae5005b4836d2c91d1e712d9acf425c7dcc4973b7c0fc6f23da9afaa6381da6",
+   "textures/exterior_aircon_unit_01_nor_gl_1k.jpg": "e5a6f3c135b942d6efe62a24496c575d03f6a4316188efe65079035d7faf1c38",
+   "textures/exterior_aircon_unit_01_opacity_1k.jpg": "c19feb434c2b01923fbb3e16ace3aa6d9cb16b05c2a5c479ad237759b2d331d6",
+   "textures/exterior_aircon_unit_02_arm_1k.jpg": "1cdfa2d1c938c3af61a5f06510b0d94aeddddd4bdc1832008b3826240dd1535d",
+   "textures/exterior_aircon_unit_02_nor_gl_1k.jpg": "864c0fb1e55aff910d826a8c1f6a2ad459f7db0124b5846445d466cabf0cadf5",
+   "textures/exterior_aircon_unit_rusted_01_arm_1k.jpg": "51c103926b118bf00b902826001db802b15755c6eefa12b00afa24c60d7b341b",
+   "textures/exterior_aircon_unit_rusted_01_diff_1k.jpg": "a8771db98ed7f3d46ce48fd70867f58a74a2530666c339f8dcc14f3e5de86d0b",
+   "textures/exterior_aircon_unit_rusted_01_nor_gl_1k.jpg": "14f105cda9172290be2e8b23b8e895099b65e222619850af3b13105901d922e2",
+   "textures/exterior_aircon_unit_rusted_02_arm_1k.jpg": "6ac4cfca6a8d8bec6ef1ff756652eb1f36b780d1ff7d70d9cb3e0f7fe1faf271",
+   "textures/exterior_aircon_unit_rusted_02_nor_gl_1k.jpg": "3af4716b42812b742577594c7a0a342accd79925f02037c152b1da1c5831bb78",
+   "textures/exterior_aircon_unit_rusted_02_opacity_1k.jpg": "a86bcaf9c4858cf250fd67c9a0ee362504454b9972ff6e1ac44e38bac3213421"
+  },
+  "license": "CC0-1.0",
+  "name": "Exterior Aircon Unit",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/exterior_aircon_unit"
+ },
+ "fire_hydrant": {
+  "authors": {
+   "Gon\u00e7alo Fel\u00edcio": "All"
+  },
+  "files": {
+   "fire_hydrant.bin": "a3c7ed023bc4aff190902764326e7f83ae1a108f6bac2a1b637c38a8e03eb516",
+   "fire_hydrant.gltf": "aaca81b2904e6e5f1fb10a854c7b9a921232624387d1f8757b5c6bdaedcd9eb0",
+   "textures/fire_hydrant_aged_arm_1k.jpg": "9c46b014735a4e8df5a80e4c030ddb321c9aeaa715ad4ea3eb60e6f0909c9d0a",
+   "textures/fire_hydrant_aged_diff_1k.jpg": "3198cabcaf5107e59109bd07dfe8e4c87b3f0533173d10fafdaf86f8024a291e",
+   "textures/fire_hydrant_aged_nor_gl_1k.jpg": "6fadc78fd5d696bf594ff021aaf93a0c6aced761830f9aa6971c51b17c869c35",
+   "textures/fire_hydrant_arm_1k.jpg": "d15bf8fc6389ae48a1060a38057c2093469e62f585c8033d300b80af81d40f9d",
+   "textures/fire_hydrant_diff_1k.jpg": "a3d0b8b6fcd8a39c8d5067f8ef95e3290053131887398f89baf57c1f8d24ab45",
+   "textures/fire_hydrant_nor_gl_1k.jpg": "f6786775276c7b48f0582fdd7c43984b63b15b7a8e0ea0e2f2af8cdab98c06d7"
+  },
+  "license": "CC0-1.0",
+  "name": "Fire Hydrant",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/fire_hydrant"
+ },
+ "hand_truck": {
+  "authors": {
+   "Mutanzom3D": "All"
+  },
+  "files": {
+   "hand_truck.bin": "2a7ca50cdfac207defa68f71600f37e7cdd05d35bc94139df5269ea7d8b7a214",
+   "hand_truck.gltf": "303029ba829f2975ebed80f6f36e38d57cec87379e7214fcfb7d8e6e921c8e58",
+   "textures/hand_truck_arm_1k.jpg": "30ceadb1fa303f36dc0372a5681203e69715546219838e1bc0634c274407204c",
+   "textures/hand_truck_diff_1k.jpg": "a1c528e0c88a03a96b89215eab228083f9dd66a502174936bccc0fe427ce345a",
+   "textures/hand_truck_nor_gl_1k.jpg": "8674bbaa5562c24efceef0ab77f374ffe32fa583ef5dc2a44846305aa0fd8f79"
+  },
+  "license": "CC0-1.0",
+  "name": "Hand Truck",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/hand_truck"
+ },
+ "hanging_industrial_lamp": {
+  "authors": {
+   "Kuutti Siitonen": "All"
+  },
+  "files": {
+   "hanging_industrial_lamp.bin": "12e8293535e816f1e8bebc94e95da092599909d3c1b9b6cc7384d90307db06ca",
+   "hanging_industrial_lamp.gltf": "97e31aac7c350bc40294e78f39f66d5aa998ac2703be1d09b5dab9ae7027876f",
+   "textures/hanging_industrial_lamp_arm_1k.jpg": "888d78437900b43874af5195694c7b867568c9a96ef528846ad7d001f9e096ae",
+   "textures/hanging_industrial_lamp_diff_1k.jpg": "22cafeccd4421495c860f8c522bb9e45eaa19fda6ec3a2365dcb5b1db66aad96",
+   "textures/hanging_industrial_lamp_emissive_1k.jpg": "ebf7fed3b0c1d6104d91b77195c7eb0e3da6927562ec4a612700b8afd7574099",
+   "textures/hanging_industrial_lamp_glass_nor_gl_1k.jpg": "5393af7d78e85689cba7c7b198fafddcee540d3125ebd133799d56f19945d8bf",
+   "textures/hanging_industrial_lamp_nor_gl_1k.jpg": "ef524876a1a4c5b6d7fb4c652d21e55474ee85b50b8896537fd60e82b288b5f0"
+  },
+  "license": "CC0-1.0",
+  "name": "Hanging Industrial Lamp",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/hanging_industrial_lamp"
+ },
+ "industrial_wall_lamp": {
+  "authors": {
+   "Kuutti Siitonen": "All"
+  },
+  "files": {
+   "industrial_wall_lamp.bin": "d0a6a08b5e2e83ff8d6eb61bb5daa74654b4ff8d9c634348c87f83dbda4837a2",
+   "industrial_wall_lamp.gltf": "5a2c0d8bdb52fe168727f4200818ac0c2adbded32f0b9dc09cfe224249f9e266",
+   "textures/industrial_wall_lamp_arm_1k.jpg": "70adef2921bfcf985f951f9f85fca8dbfb63dc84535613c3872684fea65ab025",
+   "textures/industrial_wall_lamp_diff_1k.jpg": "e0f824b7e639fceb7ca5b7b7f67a8168bc53db184b818770126167d16d424b2e",
+   "textures/industrial_wall_lamp_emissive_1k.jpg": "cf80eeeb6fec87499fb8444f554eae62e471ad79f8906d6fd693d7fde53b012f",
+   "textures/industrial_wall_lamp_glass_arm_1k.jpg": "a3ba7f76ff395ada04a804b94f4f2f506bc994336189916d2a414173e2360069",
+   "textures/industrial_wall_lamp_glass_diff_1k.jpg": "215457a5d41ae5d999e94f4ea0f424ff769940e71e1449ce712f35687e33af67",
+   "textures/industrial_wall_lamp_glass_nor_gl_1k.jpg": "73ce4f34d90aee29db9a5e301934c0642bf89136353d7e400f63db1c2f99f345",
+   "textures/industrial_wall_lamp_nor_gl_1k.jpg": "427bafa2f14d9f81a5949507d5d6915bfb4b70a8e5e5076a3a18c7de49b3d78b"
+  },
+  "license": "CC0-1.0",
+  "name": "Industrial Wall Lamp",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/industrial_wall_lamp"
+ },
+ "korean_fire_extinguisher_01": {
+  "authors": {
+   "UM JOORIN": "All"
+  },
+  "files": {
+   "korean_fire_extinguisher_01.bin": "a460dd65b63477bb641196d77393258af0c8a6e2a64728156cb45d92658c86bd",
+   "korean_fire_extinguisher_01.gltf": "565f9e41909165c2bead24b722746e29ba55e8eb5e541f61fe0d1ef7e66d2ecf",
+   "textures/korean_fire_extinguisher_01_body_arm_1k.jpg": "2c8fa0a85d5acc5f4e784ecefd8bfd16e1aafd112e553bfcece0c81c9b129eea",
+   "textures/korean_fire_extinguisher_01_body_diff_1k.jpg": "2d874513cfb6d7485b67e936ee32e7af14992da6a5eedf980dbdfc32a2119987",
+   "textures/korean_fire_extinguisher_01_body_nor_gl_1k.jpg": "b6ba7a7cafa04557c93dc63b44260b635863f0a95f8ba1445b75758dac3443d3",
+   "textures/korean_fire_extinguisher_01_glass_arm_1k.jpg": "412712fddc3654d801949889f78c9ee92d8855624a1fe1057be29a38e766bda0",
+   "textures/korean_fire_extinguisher_01_glass_diff_1k.jpg": "ca7e49959126aa51e2d4ab440aeb9f7ff17a8a6d025b116f6327f2343ee041af",
+   "textures/korean_fire_extinguisher_01_glass_nor_gl_1k.jpg": "3b299c54cb9b6f72d4f79e6ecd2f8cfcc618292c87881de1d17892b5ca668896",
+   "textures/korean_fire_extinguisher_01_paper_arm_1k.jpg": "542b45184bb0ea66cdd2f180792148c45d45862a12f1ac341f798e53029015b9",
+   "textures/korean_fire_extinguisher_01_paper_diff_1k.jpg": "2d56948aa72a9bad6133db3e6b17fa0df1a56cdf25db4b7e21e6ceb21999a038",
+   "textures/korean_fire_extinguisher_01_paper_nor_gl_1k.jpg": "caaa26dd438e827e994c69605091d58ecc6a152813ece776cc561e0b24a8433a"
+  },
+  "license": "CC0-1.0",
+  "name": "Korean Fire Extinguisher 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/korean_fire_extinguisher_01"
+ },
+ "metal_jerrycan_green": {
+  "authors": {
+   "Ulan Cabanilla": "All"
+  },
+  "files": {
+   "metal_jerrycan_green.bin": "386534027d20514402c05d68115f4bff7b466db0b02022f9ab51ac6a576bb3fa",
+   "metal_jerrycan_green.gltf": "7c63c43f9042a08fff0cec69d1d954d029cc10d2546ba63072fcf719d5db49c5",
+   "textures/metal_jerrycan_green_arm_1k.jpg": "5012d95478dc0818e9ad883eee6f4ce5d99523cc190d3c6543c0b5750d954239",
+   "textures/metal_jerrycan_green_diff_1k.jpg": "422b63d79fd360a5d016b75ae110917da64ce682c9e1e97c73ac441a000652e9",
+   "textures/metal_jerrycan_green_nor_gl_1k.jpg": "7af3a6bb717b13cfafaad5b933b40484983a57b3806992b1b349d2fa77eadb6c"
+  },
+  "license": "CC0-1.0",
+  "name": "Metal Jerrycan Green",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/metal_jerrycan_green"
+ },
+ "metal_office_desk": {
+  "authors": {
+   "Ulan Cabanilla": "All"
+  },
+  "files": {
+   "metal_office_desk.bin": "65b558f41a75ad4822e31cc2a97eb34ed359199279a6bfbd650deb27cef78767",
+   "metal_office_desk.gltf": "f07032a5ee89aacceebf10fd9fa192c22775ae81861cfb0bdb1594497179373c",
+   "textures/metal_office_desk_arm_1k.jpg": "752916dd9bf8a163dc7e0d3673900791ee6d558bbe23894263ac92b42387f51b",
+   "textures/metal_office_desk_diff_1k.jpg": "1f02e3e77e8f82a3600664c991bd45c1c187452d61e9ede4336c6f90f7fa3139",
+   "textures/metal_office_desk_nor_gl_1k.jpg": "f57eb004937e46392151b803e0cb1d88983958d01ad11d93df78a82cfcc6c407"
+  },
+  "license": "CC0-1.0",
+  "name": "Metal Office Desk",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/metal_office_desk"
+ },
+ "metal_tool_chest": {
+  "authors": {
+   "John Hutcheson": "Modeling & Texturing",
+   "Yann Kervran": "Rigging"
+  },
+  "files": {
+   "metal_tool_chest.bin": "c2bde4e96af4aad171e57e00ff78f0aa9e3b603286a2c74cd6d7c2a20c487342",
+   "metal_tool_chest.gltf": "2f66fbb723cd52382f73daec184b68d9b36842a488ecaf120e5c3a6354e9dea4",
+   "textures/metal_tool_chest_arm_1k.jpg": "d5552ee63ac9bc53527ee1bf19bcbd31d8424bcc15fe9861f79bba917e857828",
+   "textures/metal_tool_chest_diff_1k.jpg": "da37ba2a8d064637c7206cb091597275986e788ce379bee58a96c949cce06511",
+   "textures/metal_tool_chest_nor_gl_1k.jpg": "bc5a4009a544a9504849b951afd984d6ac7c5adb0d43c5a08c0a834f8e811a01"
+  },
+  "license": "CC0-1.0",
+  "name": "Metal Tool Chest",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/metal_tool_chest"
+ },
+ "metal_trash_can": {
+  "authors": {
+   "GurJas Studios": "All"
+  },
+  "files": {
+   "metal_trash_can.bin": "a9b9f526b655bef865933335f2cfc8c8f0bd1a35fda05b290a93e3061f2b6c8a",
+   "metal_trash_can.gltf": "ccdc55ecfe43db2174c9257891e92551882a874564bb9a7908cafc5268b46c0c",
+   "textures/metal_trash_can_arm_1k.jpg": "b23dcdb2ed40c1c6cfbd2d2779c6f075025b7269bfbbed2a70c6bdb7167e47fb",
+   "textures/metal_trash_can_diff_1k.jpg": "920c895a31b1cd2c000123c0592c70c33d46562752987da98070e7e0eebb662f",
+   "textures/metal_trash_can_nor_gl_1k.jpg": "b977f17aa9d4718ffc91a62868b7171b4479578b8cffd1d32001d92552af81a4",
+   "textures/metal_trash_can_rust_arm_1k.jpg": "31a6269e98a3a8b2a2d6db8f58724e0151d5312b5137e6d59b5a2ba873989159",
+   "textures/metal_trash_can_rust_diff_1k.jpg": "51c44248305b111d978f7e0cbfe4a71ab7f49549968ce37c54b635d74c2cfba1",
+   "textures/metal_trash_can_rust_nor_gl_1k.jpg": "a5497588e00e5e56db72e701457fc8a46d3a1fa7d9dd7bf9d79e02cada09e84b"
+  },
+  "license": "CC0-1.0",
+  "name": "Metal Trash Can",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/metal_trash_can"
+ },
+ "modular_airduct_circular_01": {
+  "authors": {
+   "Riley Queen": "All"
+  },
+  "files": {
+   "modular_airduct_circular_01.bin": "80418c8aed92c97b6149b51124d47ccfa0619a77234449687f29377833293f2d",
+   "modular_airduct_circular_01.gltf": "7087958648acaa201fb3f1900e1ff61c2bfed7372f648346b4dc70d92b618274",
+   "textures/modular_airduct_circular_01_arm_1k.jpg": "98bf68e4768aafc6303ddd1fa69cacad153a074c1b8af189356b41152793f0d6",
+   "textures/modular_airduct_circular_01_diff_1k.jpg": "cff727bb5d96a91e955cc62f800d30d6f717092232358962dcf3ce803ba6cf01",
+   "textures/modular_airduct_circular_01_nor_gl_1k.jpg": "209c47b9e18cd62bc08780a6c684c228d87201e5c2e35809f600c38e40934332"
+  },
+  "license": "CC0-1.0",
+  "name": "Modular Airduct Circular 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/modular_airduct_circular_01"
+ },
+ "modular_airduct_rectangular_01": {
+  "authors": {
+   "James Ray Cock": "All"
+  },
+  "files": {
+   "modular_airduct_rectangular_01.bin": "9cd2aef6a787922571a9b4830dd3fd57ba5b535db88b9980ecf9a255a59aa2a6",
+   "modular_airduct_rectangular_01.gltf": "61468e734df89c1a84f6aa5f2f60ea2d1486d927f640d1912bdc929be7673643",
+   "textures/modular_airduct_rectangular_01_parts01_arm_1k.jpg": "8225a69b7a5cb20e0e091899955b5765c82cdea781ffd28da51d7a5cc3d12ddd",
+   "textures/modular_airduct_rectangular_01_parts01_diff_1k.jpg": "b86936922be53c2a4591bbdd88a0d63fcc7583bb534ce9fc569d5be3fb9306c0",
+   "textures/modular_airduct_rectangular_01_parts01_nor_gl_1k.jpg": "e659e0dbe8ec88e33d2578fdb59af3b5aec308957914a6847ce076fe16e8c3c5",
+   "textures/modular_airduct_rectangular_01_parts02_arm_1k.jpg": "718ee754ffb882cff87d3470b641b94d6c09ed62a51fe81575149321cf104278",
+   "textures/modular_airduct_rectangular_01_parts02_diff_1k.jpg": "e17a732494acf18dc4f1d9518a1297758d1437acad7d98110a4550a537428b17",
+   "textures/modular_airduct_rectangular_01_parts02_nor_gl_1k.jpg": "b41b75e92307d9c37433dd27766eb3328aa09394bf4bf501e6a42da80bbf3010"
+  },
+  "license": "CC0-1.0",
+  "name": "Modular Airduct Rectangular 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/modular_airduct_rectangular_01"
+ },
+ "modular_chainlink_fence": {
+  "authors": {
+   "Amal Kumar": "Fence Wire Material",
+   "James Ray Cock": "All"
+  },
+  "files": {
+   "modular_chainlink_fence.bin": "be9ea1817089fd35b0927a8271358f6abd2ec80b306a085de435613d936fcb9a",
+   "modular_chainlink_fence.gltf": "4204f151f809b4abd41ea0b18b1b6a5d9c23e6bcc0b6a81e44d03690f26604e9",
+   "textures/modular_chainlink_fence_posts_arm_1k.jpg": "1694ecc2746ddaa93951ea5d2f2b830f544adf929f7ac9fae855f8b8fdfbad50",
+   "textures/modular_chainlink_fence_posts_diff_1k.jpg": "ec273fedef04fbcac26460b996beeeceeff3f91c1bea73ed2c6db1d0fdb30b73",
+   "textures/modular_chainlink_fence_posts_nor_gl_1k.jpg": "b43b8214c90a55bb84222d2a27430b31080d68dc14879632b86dbd316cb5f060",
+   "textures/modular_chainlink_fence_wire_arm_1k.jpg": "88af8364890b0645cd730eca11b30e6cd1c7578ad3aa1f012bb84915b9be5a03",
+   "textures/modular_chainlink_fence_wire_diff_1k.jpg": "79253847a00b67a616148d753df8f4e44ba4615f848b82310426618b5a8dd79b",
+   "textures/modular_chainlink_fence_wire_nor_gl_1k.jpg": "5cbf280f80e948de2422f0bb2fe2223a3b6f8e6fc75f54b00cd8d3e070938230"
+  },
+  "license": "CC0-1.0",
+  "name": "Modular Chainlink Fence",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/modular_chainlink_fence"
+ },
+ "modular_electric_cables": {
+  "authors": {
+   "Kuutti Siitonen": "All"
+  },
+  "files": {
+   "modular_electric_cables.bin": "3990f8b60c244ecfc64f80b1242d2a0fef0a3e39288c9ba9fd31becad4734d8a",
+   "modular_electric_cables.gltf": "f9292a9eff5bea32dde06356633da84615c508c9c0ee0246fc96c301cfd71fe8",
+   "textures/modular_electric_cables_arm_1k.jpg": "d8d48ae3499f575be301fe0b9ae91d4e0316a51c1e1234e186e0e0e9409f1a32",
+   "textures/modular_electric_cables_boxes_arm_1k.jpg": "3e1e8f5e854cdae94c5f5eee57241e4679c4198aa95d800873ca2cab87bd6bcc",
+   "textures/modular_electric_cables_boxes_diff_1k.jpg": "7dba8bfdd0a9c46294b5ec4930b4420b102a817469bf002d24136f8c3310c519",
+   "textures/modular_electric_cables_boxes_nor_gl_1k.jpg": "5e3d896e8bceaa8d843b30941c8d6f50779d4fbde534080dd3837f499471af5a",
+   "textures/modular_electric_cables_diff_1k.jpg": "181c8811d6f3d3f5a0ea02497cd6c375868c558aedf70a8221f301d323430c1a",
+   "textures/modular_electric_cables_nor_gl_1k.jpg": "c32eeb9c064afc0265f38b7f133f41bebee559e416d7064d441098c4821c7dcd"
+  },
+  "license": "CC0-1.0",
+  "name": "Modular Electric Cables",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/modular_electric_cables"
+ },
+ "modular_electricity_poles": {
+  "authors": {
+   "James Ray Cock": "All"
+  },
+  "files": {
+   "modular_electricity_poles.bin": "143bc8cd007674c74a6bac784a24fd4181234c07498b3a2bbdbf6abcd8a5897f",
+   "modular_electricity_poles.gltf": "2032fb781809021258ceeb22f163bd9ddca2a9186173ed99ee61130dbb808c62",
+   "textures/modular_electricity_poles_arm_1k.jpg": "4765dd2e76a1191b271b2fb1c93354fe3b9cb12a323bafd7f1661effe88fc441",
+   "textures/modular_electricity_poles_diff_1k.jpg": "da86d0fc97683a99fc2670f8b889b9632dd6da05e9c042c40cc7bf9e4d0b0104",
+   "textures/modular_electricity_poles_nor_gl_1k.jpg": "7c77d694c898139a82a66543e33748b4ab7b1f7cf456cdd453d5509810ae238a",
+   "textures/modular_electricity_poles_pieces_arm_1k.jpg": "4648fab787b80889e54ea90e79fcb3de4c644729c16b8616ae79707b3e5515dd",
+   "textures/modular_electricity_poles_pieces_diff_1k.jpg": "c681efa29ce6b28eb3377cfcdb35d1c88a9265189920e9979419d2d5b4086c1d",
+   "textures/modular_electricity_poles_pieces_nor_gl_1k.jpg": "c78ec7efc67caebc9d43c1c29e5d3972c23bf17e865267cc3acb793774125caa"
+  },
+  "license": "CC0-1.0",
+  "name": "Modular Electricity Poles",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/modular_electricity_poles"
+ },
+ "modular_fire_escape": {
+  "authors": {
+   "Juniix": "All"
+  },
+  "files": {
+   "modular_fire_escape.bin": "5173033f47b33cbfe47fb38fb18ad99e6d78070ab7e1faf6fcc5a002afe98728",
+   "modular_fire_escape.gltf": "f928224d622e2e518ae917ab92fcef341693a2c32a839f6c814b1f8dff531133",
+   "textures/modular_fire_escape_01_arm_2k.jpg": "afabe05d73d27cb7079f9acf8bf05ba21460dd92ecea7b6eca4d2b395644b8e6",
+   "textures/modular_fire_escape_01_diff_2k.jpg": "6890195b554f7d3bc9caa098be30673b7c21d08af8ce49f8379d93e56dd3438a",
+   "textures/modular_fire_escape_01_nor_gl_2k.jpg": "967001955d1a3049ac90e26c87920199c281e709749961bb83838fa0e7cf4614",
+   "textures/modular_fire_escape_02_arm_2k.jpg": "ec1916947900e19706fa06935b9f4ce8f837cf392e01e758b28a60ba1c586770",
+   "textures/modular_fire_escape_02_diff_2k.jpg": "f2dfa6154feec86d2eb9e72a16695614ffa337487af65007915f71e45d703e86",
+   "textures/modular_fire_escape_02_nor_gl_2k.jpg": "8277e70a2695b237c168a332831a1fe0daadb4f9ba300988873e4eb421c9ae04"
+  },
+  "license": "CC0-1.0",
+  "name": "Modular Fire Escape",
+  "resolution": "2k",
+  "source": "https://polyhaven.com/a/modular_fire_escape"
+ },
+ "modular_industrial_pipes_01": {
+  "authors": {
+   "Jorge Camacho": "All"
+  },
+  "files": {
+   "modular_industrial_pipes_01.bin": "2e11e1a7dabd56b1e158364f48b0b388bf316fcab61a01274740db75dbafa448",
+   "modular_industrial_pipes_01.gltf": "455d3a0fe95b7900a08cbebb23cfb2c341672fcb67ae7355d776e53cfa3d0688",
+   "textures/modular_industrial_pipes_01_group01_arm_1k.jpg": "7fff7d4604491eeb7531ad5f7520517015c72ec7316d1e865d62f23f976dfed6",
+   "textures/modular_industrial_pipes_01_group01_diff_1k.jpg": "c0233f66b18e3374dfbbb8c8078a41f6571a0809d3eb14dd9d3c332265cfde7b",
+   "textures/modular_industrial_pipes_01_group01_nor_gl_1k.jpg": "ed4728fde567efe420e3a6e1bdc4238b26c2782218737c7e2de88eeca1e91fb2",
+   "textures/modular_industrial_pipes_01_group02_arm_1k.jpg": "4c65dcb651a3d345517fa93ad7c6e48f2388f4e8bb347446f70317c16049867b",
+   "textures/modular_industrial_pipes_01_group02_diff_1k.jpg": "ef8a75c402a8871903dcaa147b023d57c640d0de4c7a8acdfdee822861656a92",
+   "textures/modular_industrial_pipes_01_group02_nor_gl_1k.jpg": "84a43ca11a4f1ac84f7fc8336a4e9b7b333d30c13e540f3ff42e662dc6f91b53"
+  },
+  "license": "CC0-1.0",
+  "name": "Modular Industrial Pipes 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/modular_industrial_pipes_01"
+ },
+ "modular_metal_gutter": {
+  "authors": {
+   "Maxim Domnin": "All"
+  },
+  "files": {
+   "modular_metal_gutter.bin": "f0b31f937f4295182e0b0920c43d1f925d411461aa53a85d125c1c770d2eca05",
+   "modular_metal_gutter.gltf": "882a6a1a6c4c86f4c7394c8577697159939b532f7403db30d54ba908be4d8087",
+   "textures/modular_metal_gutter_arm_1k.jpg": "8501be1fc4f6092caed475fc08a31f69699f44fb28760734fd69ae2df2818277",
+   "textures/modular_metal_gutter_diff_1k.jpg": "458152e55e2256477b62088515e40fa17e5cc7dd050e99f959535943b9ba2b58",
+   "textures/modular_metal_gutter_nor_gl_1k.jpg": "83bd6f51d1ed46991f4cfffae0e7f73b683b3f49daf1456831b7f2d47e637c19"
+  },
+  "license": "CC0-1.0",
+  "name": "Modular Metal Gutter",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/modular_metal_gutter"
+ },
+ "modular_urban_apartments_facade": {
+  "authors": {
+   "James Ray Cock": "All"
+  },
+  "files": {
+   "modular_urban_apartments_facade.bin": "f041e71b6bd31864f20dd64d3a82519454a603c300686161e0349ff44f838bf2",
+   "modular_urban_apartments_facade.gltf": "ce1ef4af29b37ca558ca05c29f0b1cc65d5a51dd66627f9d979b5ffc948b5333",
+   "textures/modular_urban_apartments_facade_objects_arm_2k.jpg": "8573bb7a15e809f635aa71fb0348355f93195394f1788bf05ea68ca4daa2e887",
+   "textures/modular_urban_apartments_facade_objects_diff_2k.jpg": "0fe0a7ef75c49a7f4f16699b6bfe99f8455f384aefe256d5d0f568fd730c4a26",
+   "textures/modular_urban_apartments_facade_objects_nor_gl_2k.jpg": "8c3cfb763c1343eed3082ba5f256f9d9c80775f6199aca9dc6434843e7b7a9dd",
+   "textures/modular_urban_apartments_facade_plaster_arm_2k.jpg": "0658b150074321691cdd81e04d0c42966034f45f4c74b501ec497a29c4144375",
+   "textures/modular_urban_apartments_facade_plaster_diff_2k.jpg": "56189b59a07675924e8c82d2aa963f861c60191fef337e29cca8f09b47767f72",
+   "textures/modular_urban_apartments_facade_plaster_nor_gl_2k.jpg": "582ac0de84d07e45d467ac898d2c14492db2258d06fbeba65644c25a346564ec",
+   "textures/modular_urban_apartments_facade_trim_01_arm_2k.jpg": "c34c3eb081a60a8d5daacc217bdca889c945225be79b272135abd08fb6b8aa85",
+   "textures/modular_urban_apartments_facade_trim_01_diff_2k.jpg": "6446a76c4b45a88101f2ba14723ca53f5f2269721249461fcff4c666914b626a",
+   "textures/modular_urban_apartments_facade_trim_01_nor_gl_2k.jpg": "cecff1160db9801e7c7d7eb2be4cae63cc883f8e1af9e496a0025a0776610813",
+   "textures/modular_urban_apartments_facade_trim_02_arm_2k.jpg": "bab306cc2a40a9f699e5c33fd97e0f3a4ac1817e71afa47518861fb452011e86",
+   "textures/modular_urban_apartments_facade_trim_02_diff_2k.jpg": "9fa34f2f5c1c421f700b16bd21e143d34c0b5e65423b8d7b5203d2b8761594e4",
+   "textures/modular_urban_apartments_facade_trim_02_nor_gl_2k.jpg": "eef1cf6efafd3cb92a23d382d09db5817f51dd3f1c09b5785e192bf4561e70c5"
+  },
+  "license": "CC0-1.0",
+  "name": "Modular Urban Apartments Facade",
+  "resolution": "2k",
+  "source": "https://polyhaven.com/a/modular_urban_apartments_facade"
+ },
+ "mounted_fluorescent_lights": {
+  "authors": {
+   "Ulan Cabanilla": "All"
+  },
+  "files": {
+   "mounted_fluorescent_lights.bin": "587851c1b4e09e4cf3438f3d8bb084d4591f6be3a7bb1b4324b84af97b3c5f03",
+   "mounted_fluorescent_lights.gltf": "7a56f167fe7074f4e4d4f314f72c5aa8b01c191394ee5ecb0b3461a240441b4a",
+   "textures/mounted_fluorescent_lights_arm_1k.jpg": "6bb051b47c5e684f7d981595e7a88c3f41989621dc4b8c9460dba989e6421438",
+   "textures/mounted_fluorescent_lights_diff_1k.jpg": "8e56f625c04198792d8e9e5551137cbbd399072c26fe27827b37734afd584ea1",
+   "textures/mounted_fluorescent_lights_emission_1k.jpg": "185aaca71b4c9d908be69440b807769ce9b2a6472d3a8396755394029196ea59",
+   "textures/mounted_fluorescent_lights_nor_gl_1k.jpg": "3a4504ed0f70061994b37c9ef512e7a2a7e0b7680a977add1643226ae56ea60d"
+  },
+  "license": "CC0-1.0",
+  "name": "Mounted Fluorescent Lights",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/mounted_fluorescent_lights"
+ },
+ "old_military_compressor": {
+  "authors": {
+   "Brian Speight": "All"
+  },
+  "files": {
+   "old_military_compressor.bin": "cb4f99372897713112e468283fa399a4122adf145b8059c8d57b057def4408a3",
+   "old_military_compressor.gltf": "dd43d023cf1005bc4f71fb6e32fc7f28aa648c40221478f570adf8b6341ad6be",
+   "textures/old_military_compressor_arm_1k.jpg": "41a93c81e36e45073de5985de94afde0bcd83ce68c00cea2f5398aafe015e4d2",
+   "textures/old_military_compressor_diff_1k.jpg": "cb02b7b02cee27c7f04187be26b9a9079a58725353c56726c939b051178424a4",
+   "textures/old_military_compressor_nor_gl_1k.jpg": "f7e289152c3edf5c4edd406ac470b9d69412dceb8c700a5d7b3e5e0cb7f6e7b8"
+  },
+  "license": "CC0-1.0",
+  "name": "Old Military Compressor",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/old_military_compressor"
+ },
+ "old_military_crate": {
+  "authors": {
+   "Jack Mava": "All"
+  },
+  "files": {
+   "old_military_crate.bin": "80eb5ad690aaa6f4f401df0f8e323666bf8f3f9943c7cb703eb37002f5084ce1",
+   "old_military_crate.gltf": "ef4b69dca61542c4d724c4807233161129150220695742b5137ed65d8d2e1f24",
+   "textures/old_military_crate_arm_1k.jpg": "7b3a94f18f15783d9940fe4bd25316e8daffd0bdcbdfbe3e234b3cbb636bf5da",
+   "textures/old_military_crate_diff_1k.jpg": "9e74a72787364fee09a450e442db97a687d237051e98f8ed709af516434e895d",
+   "textures/old_military_crate_nor_gl_1k.jpg": "88935171626be79c4a44d0c52a33bc8d88b7b232ae48157d639a9ada0ab6e92b"
+  },
+  "license": "CC0-1.0",
+  "name": "Old Military Crate",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/old_military_crate"
+ },
+ "old_tyre": {
+  "authors": {
+   "MP": "All"
+  },
+  "files": {
+   "old_tyre.bin": "659e7982c2de92ca1d13194c97bf112b6dec22d91daecc88e3912d37ce1b7252",
+   "old_tyre.gltf": "ba7b417eb3dc747c356ac3cd1f125754755684eb664737a9f1fc9e490c0b766e",
+   "textures/old_tyre_arm_1k.jpg": "3bcf192f5b99a7a574f9e21e75927043e6726c601a5da15e3210a31db05e12d4",
+   "textures/old_tyre_diff_1k.jpg": "0e34ce658c0844c0c94022233226d495930d514c917a5fa15ffee4760567439e",
+   "textures/old_tyre_nor_gl_1k.jpg": "34b716e140408985ddbab7d4bf1d8d430edf834cd2fd4639d82b14cb393fa73e"
+  },
+  "license": "CC0-1.0",
+  "name": "Old Tyre",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/old_tyre"
+ },
+ "overhead_crane": {
+  "authors": {
+   "Timothy3D": "All"
+  },
+  "files": {
+   "overhead_crane.bin": "6fcbc59c9b2e563c08206d0d3ff2560872e7697991c33997eecf882315ef9b47",
+   "overhead_crane.gltf": "a1ed11c117f76b5cc2cce7489feed3091d7120cdca78380c4ff65cf269e479e0",
+   "textures/overhead_crane_arm_1k.jpg": "8e9fed5c722536e1a264d80841041b42790b59b37ee6561b15eb4916cf96c73e",
+   "textures/overhead_crane_diff_1k.jpg": "2eadaa0c07a8543ca4ac33133260b1ed315cdff7fb88d7367f60f702937b8423",
+   "textures/overhead_crane_nor_gl_1k.jpg": "10f4409d6fcc62e7a0913cfc5c942249c4870834745a67aa80f8cc3589c896b7",
+   "textures/overhead_crane_trim_arm_1k.jpg": "425d751dd8d92ae715866eebc05abcf85af8cd92c8a744e22ebced6e81caaa2e",
+   "textures/overhead_crane_trim_diff_1k.jpg": "280fe3810a52fd69468f8729012c343fedf9e0129fd5dffc865a0e35713a0e8c",
+   "textures/overhead_crane_trim_nor_gl_1k.jpg": "a1bb588412ecd396b736eeb2b86ac47f9ea22a97c5e223c0b35b81f08413ff21"
+  },
+  "license": "CC0-1.0",
+  "name": "Overhead Crane",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/overhead_crane"
+ },
+ "plastic_crate_03": {
+  "authors": {
+   "Pacific Penguin": "All"
+  },
+  "files": {
+   "plastic_crate_03.bin": "bbe5394d543ab57819e926bd23158e8c00706b929273508d79e3b3230001b33e",
+   "plastic_crate_03.gltf": "cb4629a4ab7e6f7aa5d6ba9d3dcd6affe59553386acc7612cd5a8bb8f263f05f",
+   "textures/plastic_crate_03_arm_1k.jpg": "b102504f012af9f5b8d3e229a106f6cd74df485f3650558e03fad22b33147452",
+   "textures/plastic_crate_03_diff_1k.jpg": "fb7f0b70da651e260aec7ee3506ecdc8aad62e65d2bf9341609e2a18749591bd",
+   "textures/plastic_crate_03_nor_gl_1k.jpg": "a7d01166ab720a51036e9390cb6aa2f8ef057b9d976062bf78205a089100e087"
+  },
+  "license": "CC0-1.0",
+  "name": "Plastic Crate 03",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/plastic_crate_03"
+ },
+ "portable_generator": {
+  "authors": {
+   "James Ray Cock": "All"
+  },
+  "files": {
+   "portable_generator.bin": "fb7dcfedec1331ad541569e4ca8d4157284b2164084b7fe5a97928d4abc0ea2d",
+   "portable_generator.gltf": "d5afe27834f824dfe753391713c45be03479e8100831f320796030531f61b848",
+   "textures/portable_generator_arm_1k.jpg": "10236e967baddd90ec7d4ab68969b06fb419f98782a2796db94edc0249b0dad2",
+   "textures/portable_generator_diff_1k.jpg": "32acc300105a2df2290d872889b24e1b29ff1ca2c56c0a0cf8fbba0c5966a063",
+   "textures/portable_generator_nor_gl_1k.jpg": "8a868edab1a2f5ffa50b2b1680c2c342491b3eeeac443734178c445c7286c25d",
+   "textures/portable_generator_spec_1k.jpg": "acf30e81c367898eb846f353d77e404f6831ac23bf071e0e718fddb8881b86cb"
+  },
+  "license": "CC0-1.0",
+  "name": "Portable Generator",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/portable_generator"
+ },
+ "portable_welding_cart": {
+  "authors": {
+   "Georgii Gorbunov": "All"
+  },
+  "files": {
+   "portable_welding_cart.bin": "b5b073932eeb1d39f9b33893d5b96432e24a067000db8a15e53a0508516700a6",
+   "portable_welding_cart.gltf": "2ee1f60ab9985755bd4a18bd6296bbfa60939909ffce802b6fd0dcbac3e6e113",
+   "textures/portable_welding_cart_arm_1k.jpg": "6b5036f5ff4d8aa1b25da4aeb504a92d1a29373e22299080b3186b6385b6504d",
+   "textures/portable_welding_cart_diff_1k.jpg": "3efec798f2f63c7dc68bd22deee74d12de0453195ee7f568f9e171d848624208",
+   "textures/portable_welding_cart_nor_gl_1k.jpg": "1ed87f8854486f3ba5fd426b1947584cdae3374e27f441ef46ef513fbfbc39a2"
+  },
+  "license": "CC0-1.0",
+  "name": "Portable Welding Cart",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/portable_welding_cart"
+ },
+ "power_box_01": {
+  "authors": {
+   "Rico Cilliers": "Modeling & Texturing",
+   "Yann Kervran": "Rigging"
+  },
+  "files": {
+   "power_box_01.bin": "b46efdf668ec2d4e04ff51604b5f1486caf20df632f442aab62601718058db05",
+   "power_box_01.gltf": "edb54e68fb1229e9f59906459d782c2ddc576f6bd1141cf09ad864f48d7cb93b",
+   "textures/power_box_01_arm_1k.jpg": "4601e901e2f7c1584ab5ecf65e0e192a99a4be86da505527f1622658e1b1e527",
+   "textures/power_box_01_diff_1k.jpg": "845c425ebc0ded263a7d49909e2c26710dd6160da11c0ca44aebd723f4f6f168",
+   "textures/power_box_01_nor_gl_1k.jpg": "199b6fe93776aa0934f7bc36d8c82f1b4db9be9243e82e0cb3727bbcf25d85f1"
+  },
+  "license": "CC0-1.0",
+  "name": "Power Box 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/power_box_01"
+ },
+ "propane_tank": {
+  "authors": {
+   "Slinc": "All"
+  },
+  "files": {
+   "propane_tank.bin": "1e139c9a5a04de7b44a665cb504670c2e899d1f8f62ad84a238165874d4eea6c",
+   "propane_tank.gltf": "b62862832ab6bfb3262563749b9196cf6dd2b011ca86a7ccb1b35f007e5685b5",
+   "textures/propane_tank_arm_1k.jpg": "c56b34618f8d3a2681f559e66bbd4616010ba092b8266ee4249940e1dfecf820",
+   "textures/propane_tank_diff_1k.jpg": "09ae9f12f41ed0c8c7fb8e22f16871727b9b6ed7e06cde98ec9b8052395f46a4",
+   "textures/propane_tank_nor_gl_1k.jpg": "e17827f800150fb069dbe36ff4464eaf9f8c4d2d4608f1cc87a48dea0fe3d8f0"
+  },
+  "license": "CC0-1.0",
+  "name": "Propane Tank",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/propane_tank"
+ },
+ "rollershutter_door": {
+  "authors": {
+   "MP": "All"
+  },
+  "files": {
+   "rollershutter_door.bin": "155cd44e199d4edd19769503c7ed22b0b4007869166d0193a7e2d5e3134dc38d",
+   "rollershutter_door.gltf": "2e577ec6e0cd3535a49039f3ce5dd50e5358fe7475d77b64104a1addb886a673",
+   "textures/rollershutter_door_arm_2k.jpg": "10bdbc409d48981b3acb6616303c0479d10243cedb1890ef8dbe8e1d36afde18",
+   "textures/rollershutter_door_diff_2k.jpg": "1e7c6f6caf3d3cdcdcb3c7ae589ee536cf015c2fc6acfa34a2a08d3f9902dda4",
+   "textures/rollershutter_door_graffiti_diff_2k.jpg": "1639d5c3a620d8557195168900c4e5bdbcea80a047e2f637b4ca072c139b59d3",
+   "textures/rollershutter_door_nor_gl_2k.jpg": "77ad1ba5b657f0d76422dd820eb32301059f00c27087d172d451338d3b6791bc"
+  },
+  "license": "CC0-1.0",
+  "name": "Rollershutter Door",
+  "resolution": "2k",
+  "source": "https://polyhaven.com/a/rollershutter_door"
+ },
+ "rollershutter_window_01": {
+  "authors": {
+   "MP": "All"
+  },
+  "files": {
+   "rollershutter_window_01.bin": "a866c874c77c0f7600cd79b0af502d5f6333257e6ee86a2f00c4752ef50e2fbb",
+   "rollershutter_window_01.gltf": "fc80494f223d65c4c62ff3b163f8e51dd8d4d769ae1ad183383c0b6139495f42",
+   "textures/rollershutter_window_01_arm_1k.jpg": "2b13244dbcfa52dde2475bc6a5b088789ec96600e980d2048504a16cc302844b",
+   "textures/rollershutter_window_01_diff_1k.jpg": "485d89e887227324c40479a7f759d733cfa4206493f3bbe2170e8dfbc69ae1dd",
+   "textures/rollershutter_window_01_graffiti_diff_1k.jpg": "6e8abb45823ad3eb125df82e5d3468151a703aee90a4a812ff34d7e9c32fcb8d",
+   "textures/rollershutter_window_01_nor_gl_1k.jpg": "3acc1e7a93e2dcc8b64fac3a8d6342e4af7ca67b2823178460418a535812ebeb"
+  },
+  "license": "CC0-1.0",
+  "name": "Rollershutter Window 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/rollershutter_window_01"
+ },
+ "rollershutter_window_02": {
+  "authors": {
+   "MP": "All"
+  },
+  "files": {
+   "rollershutter_window_02.bin": "3017fb66482855312d2c05e6cff488cae1e775b4809a5bb24a3efc39c04d30d1",
+   "rollershutter_window_02.gltf": "222014007ce656582b42ab480aa201c1a33bbc5194a980d8675f81c86e066a01",
+   "textures/rollershutter_window_02_arm_1k.jpg": "23ac935794e9f0a11f7dc181b0cd4f18576093d58b882c52445e78aafafe763b",
+   "textures/rollershutter_window_02_diff_1k.jpg": "438cb8b4de91e7feb432494f457d62c81aa45073da4d0aa8def23620839a7c30",
+   "textures/rollershutter_window_02_graffiti_diff_1k.jpg": "1211e055caa3149d34d1f495bd44f3afa3ddc3f650ec2cf3291746cbf75aa03e",
+   "textures/rollershutter_window_02_nor_gl_1k.jpg": "d81b6878b5c73da1e2ff454cddccdd822e687f44f58f0ea519d88ee64be25a79"
+  },
+  "license": "CC0-1.0",
+  "name": "Rollershutter Window 02",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/rollershutter_window_02"
+ },
+ "rusted_wheel_rim_01": {
+  "authors": {
+   "John Hutcheson": "All"
+  },
+  "files": {
+   "rusted_wheel_rim_01.bin": "2dd5797a812d482f432b2a475c78dfddaa1a3e88f27d8d2d2cfebc3852737f5e",
+   "rusted_wheel_rim_01.gltf": "ddbfc1b68e40d0efa8651ef2d62fbcd6d85050aae64fcc7c0ee56dd7e1293a0b",
+   "textures/rusted_wheel_rim_01_arm_1k.jpg": "e3c5ec3531901f2b9901d232afb512bd0922289ba64cc9b9f975d1b4ed46da27",
+   "textures/rusted_wheel_rim_01_diff_1k.jpg": "e533e5d6b7d1526218f3795f5e3694541d3a87e428242645d04783bc3e416e61",
+   "textures/rusted_wheel_rim_01_nor_gl_1k.jpg": "6ec1550711bf462579f27237fab6fa77141dadc2b21dc13e6a37c59f185e7ecd"
+  },
+  "license": "CC0-1.0",
+  "name": "Rusted Wheel Rim 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/rusted_wheel_rim_01"
+ },
+ "security_light": {
+  "authors": {
+   "Maximilian Schuster": "All"
+  },
+  "files": {
+   "security_light.bin": "3d45d473d7ad4ace4ce93790db96dd7d6decbd0180b59a7a2774c690594e70e2",
+   "security_light.gltf": "d82d2191df1e30a75c2f2ce07a8abefcd52b0e8eabc819e2ac854da0f16fba18",
+   "textures/security_light_arm_1k.jpg": "4f8fe251eb31144de0eff820a7aef205d306b3b5dd4a19aff0ad4e87ca50a767",
+   "textures/security_light_diff_1k.jpg": "2e7064d89f03ef51bffda6f78c86baac1edba3346f82f243aa0c33b20fa8b0e5",
+   "textures/security_light_nor_gl_1k.jpg": "7d14ecdf5f6c70152ca6fdfc290c72a28553248f0e5a79e7b77c8f601b00ddc2"
+  },
+  "license": "CC0-1.0",
+  "name": "Security Light",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/security_light"
+ },
+ "small_lpg_tank": {
+  "authors": {
+   "Ulan Cabanilla": "All"
+  },
+  "files": {
+   "small_lpg_tank.bin": "9f79b87d9aa4474f54bfd558075b03d04c9af99fb370170ab1bda0eefd5f9c40",
+   "small_lpg_tank.gltf": "fbe2e6c9c5f9f14d42c34b61f664decdb8a0e1c224776812d3a07a9175a98e05",
+   "textures/small_lpg_tank_arm_1k.jpg": "419ece07a7dd6800e25b38357c0ac55f94664aa4d3253234abf78b3225a094a1",
+   "textures/small_lpg_tank_diff_1k.jpg": "7c998ddf9bf0824d5e7d7e0ba4dc171b2f39c6ac124f583d98dc0e8bb62d4f1b",
+   "textures/small_lpg_tank_nor_gl_1k.jpg": "1e6690a7e7c64da080b2047fb316c5a439cbd3c720729f686f0b07d02ae8122f"
+  },
+  "license": "CC0-1.0",
+  "name": "Small Lpg Tank",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/small_lpg_tank"
+ },
+ "steel_frame_shelves_01": {
+  "authors": {
+   "James Ray Cock": "All"
+  },
+  "files": {
+   "steel_frame_shelves_01.bin": "306d7e72d12a5d3047b8a189f8d0add51075eaf7f51f935286fda4e1c16dd066",
+   "steel_frame_shelves_01.gltf": "4eff8994825d654e337f8dc425e959ed6add7f4773188c87ba64402d9edd9842",
+   "textures/steel_frame_shelves_01_arm_1k.jpg": "858629eeaa8f68ddb4fc1a813afe6ed988ded3d6d49184ec45a14611760f0bb3",
+   "textures/steel_frame_shelves_01_diff_1k.jpg": "85e205b334e15e05bec9b02be1258da6ab949ae908aa57e0bee6b94ba45b4415",
+   "textures/steel_frame_shelves_01_nor_gl_1k.jpg": "2a67ed7dd4f53c3e225396e6381992b768fe58b5261be703d540678e366e46ed"
+  },
+  "license": "CC0-1.0",
+  "name": "Steel Frame Shelves 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/steel_frame_shelves_01"
+ },
+ "tool_cart": {
+  "authors": {
+   "Savva Zakharov": "All"
+  },
+  "files": {
+   "textures/tool_cart_arm_1k.jpg": "2b928779ab242468c90e6074ab72567bc58ecf3e0240fd709e4507b59764aef7",
+   "textures/tool_cart_diff_1k.jpg": "3a3e18efa54d18f2d01ad51cb40f8edd9af76e054a6a9c21324bc14fe49be965",
+   "textures/tool_cart_nor_gl_1k.jpg": "fa995e77eacad81c78f650e28a6d4c1c7b9d6c74a3f314d5f5ebdddf6de510fc",
+   "tool_cart.bin": "3962637a4faec733b10d9970bfeea6696a48b6fd361fda085cc3d122138f6aaa",
+   "tool_cart.gltf": "ba4290f62b37dc08d4f99da2b3c78d8cb584bd229e8805ce586ed3f3b5303759"
+  },
+  "license": "CC0-1.0",
+  "name": "Tool Cart",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/tool_cart"
+ },
+ "trashbag": {
+  "authors": {
+   "Benny Weimer": "All"
+  },
+  "files": {
+   "textures/trashbag_arm_1k.jpg": "95e69ba47bc7b84f342cdbe4385cfab670295827740fb09407b967ea2114c0aa",
+   "textures/trashbag_diff_1k.jpg": "676e01cbeef39b51c9ecd67315c952a605c8db9c11544fbe11e14dcbd00be27f",
+   "textures/trashbag_nor_gl_1k.jpg": "33ddb9711bb3ab2ff1ed19fa361a4251909643fada7e5579a28f6346a58b4daf",
+   "trashbag.bin": "7bfac5b9c39a058af347944b437f712718ec129ec883c16339179862cc155fe2",
+   "trashbag.gltf": "22202e1ec48d924577584dce6751d5ab198fd7c0aee44602e9a7317b5b60a4a7"
+  },
+  "license": "CC0-1.0",
+  "name": "Trashbag",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/trashbag"
+ },
+ "utility_box_01": {
+  "authors": {
+   "James Ray Cock": "All"
+  },
+  "files": {
+   "textures/utility_box_01_arm_1k.jpg": "e65428774e94b6a8aeb7a23802e0af8f1568952ea79e21a7a3475b957e34956b",
+   "textures/utility_box_01_diff_1k.jpg": "6a703a4cdf20c3fc3d0400fa815e5a1834836c96c207bdb57ba9e4a5db3a5532",
+   "textures/utility_box_01_nor_gl_1k.jpg": "1c4e377906c13e864c9c7ffbd31a7d86075f28b948bf54872d6ad3ab38a08124",
+   "utility_box_01.bin": "e4249eb754d7802154eed36bb12070dc24c90fc331f355d60ef7570d61fc0f5c",
+   "utility_box_01.gltf": "5b9f8c45f2640c9dd831dc3450529e45b24c987208ddcf73010fe717ce8c454e"
+  },
+  "license": "CC0-1.0",
+  "name": "Utility Box 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/utility_box_01"
+ },
+ "utility_box_02": {
+  "authors": {
+   "James Ray Cock": "All"
+  },
+  "files": {
+   "textures/utility_box_02_arm_1k.jpg": "f85575f891c97354d2fff11d5d0e2bc5f7d3aeab853ff3d75100c30c177a9cc5",
+   "textures/utility_box_02_diff_1k.jpg": "78a0c93b1d8d394beee5989c0d3470a9c8c4e902f708acf3c11cd4edafbe08b1",
+   "textures/utility_box_02_nor_gl_1k.jpg": "e7c85b37fa5420591b6fa5dcef7875c927c8dc51f38c39c5844d53284ef37c74",
+   "utility_box_02.bin": "0f0a3f8ecc0358e36e97120aa752c2456a78bf922671e6f77e402b0aa58ecfce",
+   "utility_box_02.gltf": "d3f87ce0852709498602f6a096be99a9e13f0ac2619f99edcebad9e89f9faf00"
+  },
+  "license": "CC0-1.0",
+  "name": "Utility Box 02",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/utility_box_02"
+ },
+ "water_manhole_cover": {
+  "authors": {
+   "Raunox": "All"
+  },
+  "files": {
+   "textures/water_manhole_cover_arm_1k.jpg": "6d5856a467c9286fc993f2bd80bb5c30464fd8a127c8418fc8fc6c34bc54231d",
+   "textures/water_manhole_cover_diff_1k.jpg": "cb78919f60c929125317f19f9ecbba9f21089b7c0d6e0428c68f6fa401e6e720",
+   "textures/water_manhole_cover_nor_gl_1k.jpg": "e2c1eac759b8c7430ffc8c59a45f4db98f890f9a22c3d968605a81e99e92bf43",
+   "water_manhole_cover.bin": "ada713d1f6f879164d3475e2ee18d69b4c4ecc8f100126e3921b7b3ea42c9267",
+   "water_manhole_cover.gltf": "9d692740cb6e70cee977a6ccb54a270271b81250b47468e9ef6387bd58215cf9"
+  },
+  "license": "CC0-1.0",
+  "name": "Water Manhole Cover",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/water_manhole_cover"
+ },
+ "wooden_crate_01": {
+  "authors": {
+   "James Ray Cock": "All"
+  },
+  "files": {
+   "textures/wooden_crate_01_arm_1k.jpg": "cd0b031c3924905e16ffd78ead062c2cc274148c4104d09635310097738b4679",
+   "textures/wooden_crate_01_diff_1k.jpg": "16653f4abaf4c1d9bca94bde3bd8c54d0ea9a5298d1648abcf57de1f7ecc34cc",
+   "textures/wooden_crate_01_nor_gl_1k.jpg": "f4ea44c7dc1686123d337039cb713d74e8a2dbc6d1bd2beeac276d06f5df3fab",
+   "wooden_crate_01.bin": "85f381f8035f7a6f2f3b848640894c6d3333b261946dd8a338c0fe19e0bea21e",
+   "wooden_crate_01.gltf": "fd9c6073acfc671e12b64666053f2805ae33aff5d3dbbcfe5c97c08c06644927"
+  },
+  "license": "CC0-1.0",
+  "name": "Wooden Crate 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/wooden_crate_01"
+ },
+ "wooden_crate_02": {
+  "authors": {
+   "James Ray Cock": "modeling",
+   "Jurita Burger": "graphic design"
+  },
+  "files": {
+   "textures/wooden_crate_02_arm_1k.jpg": "a76af97005a66fe8c7cdcabf20174f06813e6a6d5cd9502157c93a57f3c89d5a",
+   "textures/wooden_crate_02_diff_1k.jpg": "a6e57123110d2899af9493c22b1918174f1c96c707e7126ac67738d98ee10c07",
+   "textures/wooden_crate_02_nor_gl_1k.jpg": "59342f730c9f336950f796ef5e4c3b8c794ce5adbd54d98a2ecb679a7e4ae5e8",
+   "wooden_crate_02.bin": "e68e272641f704e5241e4108894f0b97363d511944db8b991a48787d0160ea5e",
+   "wooden_crate_02.gltf": "e90985d317664668988cb95ce707784c94ab0ccc6d13c980ca789fa69a5cf7b6"
+  },
+  "license": "CC0-1.0",
+  "name": "Wooden Crate 02",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/wooden_crate_02"
+ },
+ "wooden_military_crate": {
+  "authors": {
+   "Prabhjinder Singh": "All"
+  },
+  "files": {
+   "textures/wooden_military_crate_arm_1k.jpg": "fe27fa628a9134f81958413c1a11deea8074fe40424c1a8a48ec459f2dde7955",
+   "textures/wooden_military_crate_diff_1k.jpg": "aa6ace45bef9947586c07283cd11a2d737fe0783a18df69a76f77f59d4fb776d",
+   "textures/wooden_military_crate_nor_gl_1k.jpg": "89cc5ad94dd7ce425f2b9b04f37f2266778923369c77d8945101456f47579cf3",
+   "wooden_military_crate.bin": "cf6fd469a476d834f9724f8b8f762630040d8e785e8697c5d7994ae3e840e727",
+   "wooden_military_crate.gltf": "e8d8d21d112fef04c8e9fd05a62dc7c94260bc230a43d86d0e1f4b5a888a9499"
+  },
+  "license": "CC0-1.0",
+  "name": "Wooden Military Crate",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/wooden_military_crate"
+ },
+ "worn_metal_rack": {
+  "authors": {
+   "Luca B": "All"
+  },
+  "files": {
+   "textures/worn_metal_rack_arm_1k.jpg": "b3523f947b3ebd960d508361bb323cec5a959d0b7043a8a7118ffab781925a65",
+   "textures/worn_metal_rack_diff_1k.jpg": "295c2d48ad55289fed76b7438513520cadd94516639ab8ffd8790ffe7c903dbb",
+   "textures/worn_metal_rack_nor_gl_1k.jpg": "3222c47e6fac0d103afec06b8a53476828777f5282d6703266010ecf587ad49e",
+   "worn_metal_rack.bin": "b8cfa4138b7c0e0e69738c6f24dec7fecdc2f336f524312db48167816776fd13",
+   "worn_metal_rack.gltf": "e757448bd448460ecb6c7218e7857c8d071f271e3cdc2bd013ca63d824c0c308"
+  },
+  "license": "CC0-1.0",
+  "name": "Worn Metal Rack",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/worn_metal_rack"
+ }
+}
