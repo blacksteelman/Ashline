@@ -19,7 +19,7 @@ Seed607: 3 матча, 1443 выстрелов, 0 recovery events; ранних 
 
 Следующий приоритет: художественная переработка модели солдата/оружия и наполнения интерьеров, контакты кистей во всех клипах, strafe blending и точная посадка прицелов. Остались ранние смерти после spawn; не объявлять карту сбалансированной. Проверить движение ботов с deck в полноценном бою, добавить height layers/navmesh при расширении геометрии, не расширять эту hardcoded высотную таблицу бесконечно. Публичная сеть требует lag compensation/loss tests и hardening.
 
-Запуск: `XDG_DATA_HOME=$PWD/.runtime/data godot --headless --path . --script tests/regression_v6.gd`. Рендер: Xorg :103, `tests/xorg.conf`, DISPLAY=:103, VK_DRIVER_FILES=$PWD/.runtime/vulkan/lvp.json, --audio-driver Dummy. Процессы Xorg между сессиями могут исчезнуть. Не запускать одновременно графические клиенты с захватом мыши. Исходники/ZIP и proof скачивания публиковать в main/tag v0.6.0-alpha и отдельную ветку builds/v0.6.0-alpha; приватному репозиторию нужен вход в GitHub.
+Запуск: `XDG_DATA_HOME=$PWD/.runtime/data godot --headless --path . --script tests/regression_v6.gd`. Рендер: Xorg :103, `tests/xorg.conf`, DISPLAY=:103, VK_DRIVER_FILES=$PWD/.runtime/vulkan/lvp.json, --audio-driver Dummy. Процессы Xorg между сессиями могут исчезнуть. Не запускать одновременно графические клиенты с захватом мыши. Исходники/ZIP и proof скачивания публиковать в main/tag v0.6.0-alpha-build1 и отдельную ветку builds/v0.6.0-alpha; приватному репозиторию нужен вход в GitHub.
 
 # Предыдущий этап 0.5
 
