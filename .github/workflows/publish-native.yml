@@ -1,0 +1,56 @@
+name: Publish verified native build
+on:
+  workflow_dispatch:
+    inputs:
+      build_branch:
+        description: Branch containing verified build files and ASSEMBLY.json
+        required: true
+        type: string
+      tag:
+        description: Existing source tag matching RELEASE.json
+        required: true
+        type: string
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.build_branch }}
+          path: payload
+      - name: Validate source identity and reassemble archives
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          python3 - <<'PY'
+          import json,os,subprocess
+          from pathlib import Path
+          release=json.loads(Path('payload/RELEASE.json').read_text())
+          assert release['tag']==os.environ['RELEASE_TAG']
+          subprocess.run(['git','fetch','origin','tag',release['tag']],check=True)
+          commit=subprocess.check_output(['git','rev-list','-n','1',release['tag']],text=True).strip()
+          assert commit==release['commit'],'Source tag differs from tested build'
+          PY
+          python3 tools/assemble_release.py payload assembled
+          cp payload/ASHLINE-*-SHA256.json assembled/
+      - name: Publish downloadable PC release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --verify-tag --prerelease --title "ASHLINE $RELEASE_TAG — native PC alpha" --notes-file payload/RELEASE-NOTES.md
+          fi
+          gh release upload "$RELEASE_TAG" assembled/*.zip assembled/*-SHA256.json --clobber
+      - name: Preserve a fallback download in Actions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-native-archives
+          path: assembled/
+          compression-level: 0
+          if-no-files-found: error
