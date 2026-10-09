@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dcma1jby7txsm"
-path="res://.godot/imported/weapon_0_cloth_normal.png-55f74c15467ad2d95b0ee6e01ebc237c.ctex"
+path.bptc="res://.godot/imported/weapon_0_cloth_normal.png-55f74c15467ad2d95b0ee6e01ebc237c.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "ddb6f191f2fbce6a8b036a8db274b774"
@@ -14,17 +15,17 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/weapon_0_cloth_normal.png"
-dest_files=["res://.godot/imported/weapon_0_cloth_normal.png-55f74c15467ad2d95b0ee6e01ebc237c.ctex"]
+dest_files=["res://.godot/imported/weapon_0_cloth_normal.png-55f74c15467ad2d95b0ee6e01ebc237c.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
-compress/normal_map=0
+compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1

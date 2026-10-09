@@ -12,7 +12,7 @@ func run():
  check(ray(Vector3(-17,3,-23.5),Vector3(-14,3,-23.5)).is_empty(),'Window opening admits bullets through physical wall')
  check(not ray(Vector3(-17,1.5,-23.5),Vector3(-14,1.5,-23.5)).is_empty(),'Window sill wall retains physical cover')
  check(not ray(Vector3(-17,3,-25.425),Vector3(-14,3,-25.425)).is_empty(),'Window jamb retains physical cover')
- var gun=Art.weapon(game,0)
+ var gun=Art.weapon(game,1)
  var skeletons=gun.find_children('*','Skeleton3D',true,false)
  check(skeletons.size()>=2,'Both first-person gloves have deforming skeletons')
  var player=gun.find_child('AnimationPlayer',true,false)
@@ -28,7 +28,7 @@ func run():
  var p=game.player;var previous=p.gun
  p.weapon_id=3;p.build_gun()
  check(previous.get_parent()==null and not previous.visible,'Weapon switch removes old viewmodel before the next render')
- p.weapon_id=0;p.build_gun();p.start_reload();p.reload_left*=.5;p.view.update(p,.016)
+ p.weapon_id=1;p.build_gun();p.start_reload();p.reload_left*=.5;p.view.update(p,.016)
  var rest_arm: Transform3D=p.view.rest[p.view.sleeve.get_instance_id()]
  var shift=p.view.support.position-p.view.rest[p.view.support.get_instance_id()].origin
  var wrist=Vector3(-.067,-.066,-.213)+shift

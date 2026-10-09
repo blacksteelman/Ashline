@@ -60,7 +60,8 @@ func update(owner: Fighter, dt: float):
  var aim=owner.ads and not owner.sprinting and owner.reload_left<=0
  aim_blend=move_toward(aim_blend,1 if aim else 0,dt*(7.5 if aim else 10.0))
  var smooth_aim=smoothstep(0,1,aim_blend)
- var position=Vector3(.185,-.185,-.38).lerp(Vector3(0,[-.102,-.102,-.126,-.085][owner.weapon_id],-.36 if owner.weapon_id==0 else -.29),smooth_aim)
+ var aim_offset=gun.get_meta('aim_offset',Vector3(0,[-.102,-.102,-.126,-.085][owner.weapon_id],-.36 if owner.weapon_id==0 else -.29))
+ var position=Vector3(.185,-.185,-.38).lerp(aim_offset,smooth_aim)
  var angles=Vector3.ZERO
  position=position.lerp(Vector3(.18,-.26,-.31),owner.sprint_blend);angles=Vector3(-.08,-.40,-.30)*owner.sprint_blend
  var movement=clampf(Vector2(owner.velocity.x,owner.velocity.z).length()/5,0,1)

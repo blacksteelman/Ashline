@@ -289,7 +289,7 @@ func local_fire_feedback(w: Dictionary, direction: Vector3):
  pitch=clampf(pitch+rise,-1.45,1.45);yaw+=lateral
  recoil_return+=Vector2((pitch-previous_pitch)*.65,lateral);shot_age=0
  game.muzzle(gun.to_global(gun.get_meta('muzzle')),direction,weapon_id)
- game.shell(gun.to_global(Vector3(.049,.016,-.12)),gun.global_basis.x)
+ game.shell(gun.to_global(gun.get_meta('ejector',Vector3(.049,.016,-.12))),gun.global_basis.x)
 func hurt(amount: float, attacker: Fighter, zone: String):
  if dead or not game.authority() or game.state!='match':return
  if local_player and game.showcase:return

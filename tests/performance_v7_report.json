@@ -1,0 +1,18 @@
+{
+  "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+  "cpu_threads": 3,
+  "draw_calls_median": 1268.0,
+  "graphics_profile": 1,
+  "median_ms": 1551.71,
+  "msaa": 2,
+  "nodes": 1290.0,
+  "note": "Software llvmpipe rendering. This does not predict performance on a gaming GPU.",
+  "p95_ms": 1628.328,
+  "renderer": "forward_plus",
+  "resolution": [
+    1280,
+    720
+  ],
+  "sample_frames": 30
+}

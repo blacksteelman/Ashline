@@ -1,0 +1,172 @@
+{
+  "fighters": [
+    {
+      "deaths": 6,
+      "id": 0,
+      "kills": 6,
+      "position": [
+        -9.08419609069824,
+        0.100234389305115,
+        -12.0018844604492
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 244.891164123081
+    },
+    {
+      "deaths": 9,
+      "id": 1,
+      "kills": 7,
+      "position": [
+        -13.0285062789917,
+        0.100234404206276,
+        -15.9896440505981
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 259.876834163035
+    },
+    {
+      "deaths": 7,
+      "id": 2,
+      "kills": 5,
+      "position": [
+        18.0195980072021,
+        0.000234388746321201,
+        -20.0195980072021
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 275.907566078939
+    },
+    {
+      "deaths": 6,
+      "id": 3,
+      "kills": 6,
+      "position": [
+        18.7127838134766,
+        0.000234388746321201,
+        -21.7127838134766
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 228.593252890278
+    },
+    {
+      "deaths": 6,
+      "id": 4,
+      "kills": 6,
+      "position": [
+        -14.5212984085083,
+        0.100234419107437,
+        -16.8727874755859
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 263.495052564889
+    },
+    {
+      "deaths": 6,
+      "id": 5,
+      "kills": 5,
+      "position": [
+        -9.00361633300781,
+        0.10065920650959,
+        -8.02914237976074
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 250.805933770374
+    },
+    {
+      "deaths": 6,
+      "id": 6,
+      "kills": 5,
+      "position": [
+        -3.93866562843323,
+        0.000619128346443176,
+        4.8497896194458
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 282.278613455128
+    },
+    {
+      "deaths": 6,
+      "id": 7,
+      "kills": 6,
+      "position": [
+        -14.0561637878418,
+        0.100234389305115,
+        15.9161901473999
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 322.330741987564
+    },
+    {
+      "deaths": 4,
+      "id": 8,
+      "kills": 7,
+      "position": [
+        -8.73230648040771,
+        0.000228487886488438,
+        -6.83137178421021
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 280.957881343013
+    },
+    {
+      "deaths": 6,
+      "id": 9,
+      "kills": 11,
+      "position": [
+        3.95017671585083,
+        0.000611331779509783,
+        -5.67463684082031
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 242.489854253829
+    },
+    {
+      "deaths": 7,
+      "id": 10,
+      "kills": 4,
+      "position": [
+        -3.39074230194092,
+        0.000234406441450119,
+        -14.2423391342163
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 288.412539554411
+    },
+    {
+      "deaths": 6,
+      "id": 11,
+      "kills": 7,
+      "position": [
+        -7.98275661468506,
+        0.000156269408762455,
+        2.96101641654968
+      ],
+      "recoveries": 0,
+      "spawn_deaths": 0,
+      "travelled": 306.607792831375
+    }
+  ],
+  "headshots": 49,
+  "matches": 3,
+  "reason": "completed",
+  "recoveries": [],
+  "score": [
+    35,
+    40
+  ],
+  "seed": 708,
+  "shots": 1425,
+  "simulation_seconds": 178.599999999995,
+  "success": true
+}

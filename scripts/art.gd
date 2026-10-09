@@ -48,17 +48,20 @@ static func weapon(parent: Node3D, kind: int, first_person: bool=true) -> Node3D
   var scene=load('res://assets/weapon_'+str(kind)+'.glb').instantiate()
   parent.add_child(scene)
   scene.set_meta('muzzle',Vector3(0,.021,-[.72,.49,.92,.26][kind]*.94))
+  if scene.find_child('ViewmodelArms',true,false):
+   scene.set_meta('muzzle',Vector3(0,.021,-.565));scene.set_meta('ejector',Vector3(.018,.016,-.078));scene.set_meta('aim_offset',Vector3(0,-.073,-.37))
+   scene.set_meta('deforming_arms',true)
   if kind==2:
    var lens=scene.find_child('Lens',true,false)
    if lens:
     var glass=StandardMaterial3D.new();glass.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA;glass.albedo_color=Color(.15,.28,.3,.08);glass.roughness=.1;glass.cull_mode=BaseMaterial3D.CULL_DISABLED;lens.material_override=glass
   if first_person:
-   for geometry in scene.find_children('*','MeshInstance3D',true,false):geometry.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+   for geometry in scene.find_children('*','MeshInstance3D',true,false):geometry.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;geometry.extra_cull_margin=.8
    for part_name in ['Adjustable stock','Recoil pad','Buffer tube']:
     var part=scene.find_child(part_name,true,false)
     if part:part.visible=false
   if not first_person:
-   for part_name in ['LeftHand','LeftSleeve','Trigger hand','Right sleeve','Trigger finger']:
+   for part_name in ['LeftHand','LeftSleeve','Trigger hand','Right sleeve','Trigger finger','ViewmodelArms','OperatorForearm.L','OperatorForearm.R','OperatorUpperArm.L','OperatorUpperArm.R']:
     for part in scene.find_children(part_name+'*','Node3D',true,false):part.visible=false
   return scene
  var root = Node3D.new(); parent.add_child(root)

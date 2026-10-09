@@ -48,11 +48,12 @@ func run():
   p.shoot();expect(enemy.health<100,'Weapon '+str(kind)+' hits and damages')
  # The visible moving pieces are part of the actual imported viewmodel.
  p.weapon_id=0;p.build_gun();p.ammo[0]=12;p.reload_left=0;p.start_reload()
- expect(p.view.magazine!=null and p.view.support!=null,'Reload has articulated magazine and supporting hand')
+ expect(p.view.magazine!=null and p.view.contact_clip!=&'','Reload has articulated magazine and supporting hand')
  var duration=Arsenal.WEAPONS[0].reload*.78
  p.reload_left=duration*.55;p.view.update(p,.016)
  expect(p.view.magazine.position.y<-.1,'Magazine is withdrawn during reload')
- expect(p.view.support.position.y<-.08,'Supporting hand reaches magazine')
+ var arms=p.gun.find_child('Skeleton3D',true,false);arms.force_update_all_bone_transforms()
+ expect(arms.get_bone_global_pose(arms.find_bone('hand.L')).origin.y<-.1,'Supporting hand reaches magazine')
  p.reload_left=0;p.view.update(p,.016)
  expect(p.view.magazine.position.length()<.001,'Magazine returns to its seated pose')
  p.view.fire(0);p.view.spring_step(.016)

@@ -91,7 +91,7 @@ func _ready():
   for z in [37,41]:Art.cylinder(self,Vector3(x,8,z),.15,16,dark)
  Art.cylinder(self,Vector3(26,16,39),3.5,4,metal)
  Art.text(self,Vector3(26,16,35.48),'ASHLINE\nWATER AUTHORITY',40,Color('#dfd1ae'))
- Art.text(self,Vector3(-10,3.15,-26.40),'FOUNDRY / WEST',42,Color('#e1cda4'))
+ Art.text(self,Vector3(-10,3.15,-26.40),'WEST / SERVICE BAY',29,Color('#e1cda4'))
  Art.text(self,Vector3(10,3.15,-26.40),'RELAY / EAST',42,Color('#8bb9bb'))
  # Accessible maintenance deck, stair ramp and partial industrial railings.
  block(Vector3(26,2.1,-9),Vector3(7,.3,7),metal,'metal')
@@ -144,6 +144,7 @@ func _ready():
   for x in range(-60,61,6):Art.cylinder(self,Vector3(x,2,z),.045,4,dark)
   Art.box(self,Vector3(0,4,z),Vector3(120,.04,.04),dark)
  DistrictDetail.build(self)
+ WorkshopArt.build(self)
  if not '--no-batching' in OS.get_cmdline_user_args():StaticBatch.bake(self)
  for team in range(2):
   for x in [-27,-18,-3,3,18,27]:spawns[team].append(Vector3(x,.2,-29 if team==0 else 29))

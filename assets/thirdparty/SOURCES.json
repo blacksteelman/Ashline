@@ -231,5 +231,40 @@
       "modifications": "Mono 44.1 kHz PCM16; 65 Hz high-pass; attack extracted with padding; peak normalized to 0.82; tail faded.",
       "duration": 0.52
     }
+  },
+  "models_v7": {
+    "rifle": {
+      "author": "nisu / 3DModelsCC0",
+      "source": "https://opengameart.org/content/m4a1-assault-rifle",
+      "license": "CC0-1.0",
+      "download_sha256": "ed5779ec82718861964227e2aad2a900978ea087081154365d6d86246be62f0d",
+      "download_bytes": 3631284,
+      "modifications": "CC0 M4A1 geometry and PBR maps adapted to AR-41. New authored reload, separate magazine/bolt and game-specific viewmodel transforms.",
+      "download_url": "https://opengameart.org/sites/default/files/m4a1_0.zip",
+      "runtime_import": "Godot VRAM texture compression with high quality; normal maps explicitly marked. Embedded GLB source maps retained at original resolution."
+    },
+    "arms": {
+      "author": "para / MakeHuman team",
+      "source": "https://opengameart.org/content/fps-arms-rigged-only",
+      "license": "CC0-1.0",
+      "download_sha256": "31f6c7bd5caea8856c4aafca8461f38a3c8bfdd3d8f05c898e403b9475e54562",
+      "download_bytes": 1406250,
+      "modifications": "Hand mesh retained and rescaled; source constraints/actions removed. Source forearms replaced with authored skinned field sleeves. Derived glove UV finish, new authored reload and finger poses. Source animations are not used.",
+      "download_url": "https://opengameart.org/sites/default/files/fps%20arms.7z"
+    },
+    "industrial": {
+      "author": "rubberduck; PBR adaptation by a52",
+      "source": "https://opengameart.org/content/pbr-industrial-asset-pack",
+      "license": "CC0-1.0",
+      "download_sha256": "4499f14fa664e83fd2b746c0e88a12249e8143ec9cd2b7ca9dd3d75aad50da47",
+      "download_bytes": 57954847,
+      "modifications": "Six meshes selected from industrial_final_cycles.blend. Source PBR images packed into industrial_selected.blend; centered transforms and maps capped at 1024 for runtime. Placement and workshop additions authored for ASHLINE.",
+      "local_source": {
+        "file": "assets/thirdparty/industrial/industrial_selected.blend",
+        "sha256": "65669b7ed1ff952068270f36bd0b08cd4b412d4dad8993615f5ae7a19fbe9d77"
+      },
+      "download_url": "https://opengameart.org/sites/default/files/oga_industrial_a52_version_0.zip",
+      "runtime_import": "High-quality VRAM-compressed color/normal maps; packed masks use standard block compression. Background-only brick/concrete maps limited to 512px; distant wire/plank/orange-cap maps to 256px. Equipment maps retained at 1024px. Full source maps retained in selected blend and GLB."
+    }
   }
 }

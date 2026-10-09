@@ -1,0 +1,354 @@
+{
+  "version": "0.7",
+  "date": "2026-10-09",
+  "engine": "Godot 4.6.3",
+  "functional": {
+    "failed": 0,
+    "passed": 49,
+    "success": true
+  },
+  "regression": {
+    "failed": 0,
+    "passed": 14,
+    "success": true
+  },
+  "character": {
+    "failed": 0,
+    "passed": 18,
+    "success": true
+  },
+  "weapon_and_navigation": {
+    "failed": 0,
+    "passed": 12,
+    "success": true
+  },
+  "art_v7": {
+    "checks": 14,
+    "failures": 0
+  },
+  "art_regression": {
+    "log": "build/regression_art_v4-v7.log",
+    "script_errors": false,
+    "last_lines": [
+      "PASS: Short flash survives its first slow presentation frame",
+      "PASS: Expired flash is removed after presentation",
+      "ART_REGRESSION_V4 failures=0"
+    ],
+    "passed": 10
+  },
+  "playthrough": {
+    "log": "build/playthrough-v7.log",
+    "script_errors": false,
+    "last_lines": [
+      "CLICK RESUME (795.0, 305.0) rect=[P: (600.0, 281.0), S: (390.0, 48.0)] viewport=[P: (0.0, 0.0), S: (1600.0, 900.0)]",
+      "PASS: Match resumes from the menu",
+      "PLAYTHROUGH OK failures=0"
+    ]
+  },
+  "stairs": {
+    "log": "build/stairs-v7.log",
+    "script_errors": false,
+    "last_lines": [
+      "",
+      "STAIR_POSITION (26.0, 2.250215, -11.9624)",
+      "STAIRS_OK"
+    ]
+  },
+  "assertions_total": 117,
+  "native_network": {
+    "success": true,
+    "clients": [
+      {
+        "client": 0,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 0,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 1,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 8,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 2,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 2,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 3,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 9,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 4,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 1,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 5,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 6,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 6,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 5,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 7,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 4,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 8,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 7,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 9,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 11,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 10,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 3,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 11,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 10,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      }
+    ]
+  },
+  "bot_tests": [
+    {
+      "seed": 707,
+      "success": true,
+      "matches": 3,
+      "shots": 1412,
+      "headshots": 59,
+      "simulation_seconds": 192.399999999994,
+      "recoveries": 0,
+      "early_spawn_deaths_final_round": 2,
+      "minimum_travel_final_round": 242.75995625183
+    },
+    {
+      "seed": 708,
+      "success": true,
+      "matches": 3,
+      "shots": 1425,
+      "headshots": 49,
+      "simulation_seconds": 178.599999999995,
+      "recoveries": 0,
+      "early_spawn_deaths_final_round": 0,
+      "minimum_travel_final_round": 228.593252890278
+    }
+  ],
+  "performance": {
+    "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "cpu_threads": 3,
+    "draw_calls_median": 1268.0,
+    "graphics_profile": 1,
+    "median_ms": 1551.71,
+    "msaa": 2,
+    "nodes": 1290.0,
+    "note": "Software llvmpipe rendering. This does not predict performance on a gaming GPU.",
+    "p95_ms": 1628.328,
+    "renderer": "forward_plus",
+    "resolution": [
+      1280,
+      720
+    ],
+    "sample_frames": 30
+  },
+  "linux_native": {
+    "vulkan": {
+      "log": "build/native-vulkan-v7.log",
+      "script_errors": false,
+      "last_lines": [
+        "     at: initialize (servers/audio/audio_server.cpp:247)",
+        "",
+        "CAPTURE_SAVED"
+      ]
+    },
+    "opengl": {
+      "log": "build/native-opengl-v7.log",
+      "script_errors": false,
+      "last_lines": [
+        "OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)",
+        "",
+        "CAPTURE_SAVED"
+      ]
+    },
+    "screenshots_manually_viewed": true
+  },
+  "screenshots": [
+    {
+      "file": "district-landmark.png",
+      "bytes": 976049,
+      "sha256": "48f662933adee9fa9f7df1954e6055a9c29b0fa40e29fee54974ebe69f24a3d8",
+      "origin": "running Godot project, controlled state with frozen actors",
+      "manually_viewed": true
+    },
+    {
+      "file": "native-combat.png",
+      "bytes": 1262945,
+      "sha256": "d4330f4eeae29a6978d2eb7d7344100f1122218cebdd29c3c7bc88a59833f863",
+      "origin": "exported Linux executable, showcase protected player",
+      "manually_viewed": true
+    },
+    {
+      "file": "native-opengl.png",
+      "bytes": 1424315,
+      "sha256": "dc0a116509d733c8aeabeb3af0627da73a06ceb8b7ba260d99c4a2e010398ac0",
+      "origin": "exported Linux executable, showcase protected player",
+      "manually_viewed": true
+    },
+    {
+      "file": "rifle-ads.png",
+      "bytes": 1154874,
+      "sha256": "403ac4b9d259826139099ff7c74feeea1ac6131fb8e90417e29498eedc5f7223",
+      "origin": "running Godot project, controlled state with frozen actors",
+      "manually_viewed": true
+    },
+    {
+      "file": "rifle-firing.png",
+      "bytes": 1302524,
+      "sha256": "8b6172e142eac17a054550ee72e7d3ad0c593e552f67a2f95136f86752a187c5",
+      "origin": "running Godot project, controlled state with frozen actors",
+      "manually_viewed": true
+    },
+    {
+      "file": "rifle-ready.png",
+      "bytes": 1302888,
+      "sha256": "a9a4d019d4698e55c082a494d6be19fb1b34e29ee37a14db58396350dce59542",
+      "origin": "running Godot project, controlled state with frozen actors",
+      "manually_viewed": true
+    },
+    {
+      "file": "rifle-reload.png",
+      "bytes": 1284045,
+      "sha256": "be6f49d27c76b8b2d1e9cb432ea1bc5c99d4e80cf5a073ab9f156a6d8180e730",
+      "origin": "running Godot project, controlled state with frozen actors",
+      "manually_viewed": true
+    },
+    {
+      "file": "workshop-approach.png",
+      "bytes": 1013347,
+      "sha256": "46b8afad9203a291fcc9dd443e0086de5520e317f79d5942fb6eff7f432daaf7",
+      "origin": "running Godot project, controlled state with frozen actors",
+      "manually_viewed": true
+    },
+    {
+      "file": "workshop-interior.png",
+      "bytes": 1132006,
+      "sha256": "a9c9f659d79b8a722f3b75e513d9729f725c1e156e83b56ef40be368df885de9",
+      "origin": "running Godot project, controlled state with frozen actors",
+      "manually_viewed": true
+    }
+  ],
+  "export": {
+    "linux": {
+      "bytes": 166009304,
+      "sha256": "784b844e24710eaeac98e3e958d953cd8abecdbc2e78ba514a2070bcbd5346ef",
+      "export_log": "build/export-linux-v7.log",
+      "runtime_tested": true
+    },
+    "windows": {
+      "bytes": 199452104,
+      "sha256": "0660f0a01c896326f063a9926ca13e426521cb1765ba14b4de56d6ac617c8bda",
+      "export_log": "build/export-windows-v7.log",
+      "runtime_tested": false
+    }
+  },
+  "art_build": {
+    "log": "build/weapon-art-v7-final5.log",
+    "source_poses_checked": 61,
+    "sampled_wrist_contact_error_metres": {
+      "left": 1.3075715880680267e-07,
+      "right": 1.3575603930867164e-07
+    }
+  },
+  "limits": {
+    "cod4_visual_target_reached": false,
+    "gaming_gpu_performance_tested": false,
+    "audio_output_listened_to": false,
+    "audio_driver": "Dummy",
+    "windows_runtime_tested": false,
+    "public_multiplayer_service_ready": false,
+    "notes": "Rifle/arms/workshop art has improved. Soldiers, the rest of the environment and other weapons remain below the target. Software llvmpipe/lavapipe screenshots do not validate live 60\u2013144 FPS gunfeel. Six bot matches do not establish final spawn/map balance."
+  }
+}
