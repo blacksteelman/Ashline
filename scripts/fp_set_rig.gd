@@ -107,6 +107,11 @@ static func axes_basis(fwd: String, up: String) -> Basis:
  var f: Vector3=axis.call(fwd);var u: Vector3=axis.call(up)
  return Basis(u.cross(-f).normalized(),u,-f)
 
+# Where the eye really is relative to the rig's camera bone (view axes, scene units):
+# cam_offset moves it, cam_rot (degrees, pitch/yaw/roll) turns the view.
+static func eye_fix(c: Dictionary) -> Transform3D:
+ return Transform3D(Basis.from_euler(c.get('cam_rot',Vector3.ZERO)*PI/180.0),c.get('cam_offset',Vector3.ZERO))
+
 func dress(_team: int,_choice: int):pass
 
 func has_clip(clip: String) -> bool:return clips.has(clip)
@@ -187,8 +192,7 @@ func update(owner: Fighter, dt: float):
  # Authored camera -> our camera.
  var s=cfg.get('scale',1.0)
  var cam=bone_in_root(cam_bone);cam.basis=cam.basis.orthonormalized()*view_fix
- # cam_offset: where the eye really is relative to the rig's camera bone (view axes, scene units).
- var align=Transform3D(Basis.IDENTITY.scaled(Vector3.ONE*s),Vector3.ZERO)*Transform3D(Basis.IDENTITY,-cfg.get('cam_offset',Vector3.ZERO))*cam.affine_inverse()
+ var align=Transform3D(Basis.IDENTITY.scaled(Vector3.ONE*s),Vector3.ZERO)*eye_fix(cfg).affine_inverse()*cam.affine_inverse()
  # ADS: sight line (weapon-bone frame) onto the view axis.
  var ads=Transform3D.IDENTITY
  if a>0 and weapon_bone>=0 and cfg.has('rear'):

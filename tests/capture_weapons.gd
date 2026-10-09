@@ -30,5 +30,5 @@ func run():
   p.ads=true;await frames(30);await shot('vm%d-ads' % w);p.ads=false;await frames(25)
   if ads_only:continue
   p.cooldown=0;p.ammo[w]=10;p.shoot();await frames(1);await shot('vm%d-fire' % w);await frames(20)
-  p.ammo[w]=5;p.start_reload();var total=p.reload_left;p.reload_left=total*.45;await frames(2);await shot('vm%d-reload' % w);p.reload_left=0
+  p.ammo[w]=mini(5,Arsenal.WEAPONS[w].mag-1);p.start_reload();var total=p.reload_left;p.reload_left=total*.45;await frames(2);await shot('vm%d-reload' % w);p.reload_left=0
  quit()
