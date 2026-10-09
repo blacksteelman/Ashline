@@ -1,0 +1,22 @@
+{
+  "ASHLINE-0.7-Asset-Sources.zip": {
+    "sha256": "87f76ca9ff55163b8110211428b5bd8a4cd3d70ed49711b3aac487515e4a0b2a",
+    "bytes": 47698647
+  },
+  "ASHLINE-0.7-Linux-x64.zip": {
+    "sha256": "a23102b79f14b8c5b8f6e49cf622cf130bd47acc890cd1b6ea8fd57326b29dfb",
+    "bytes": 95791760
+  },
+  "ASHLINE-0.7-Screenshots.zip": {
+    "sha256": "ba77ec30dab419c1836890ba851da994e73d20277590038c280822b6110779c5",
+    "bytes": 10866690
+  },
+  "ASHLINE-0.7-Source.zip": {
+    "sha256": "b42dadfda95ef5cdcab74d75078522e6d7028f728527f1fd54c4a43bd17ca6cf",
+    "bytes": 103646705
+  },
+  "ASHLINE-0.7-Windows-x64.zip": {
+    "sha256": "76c93c4d0ac66bd51e7bcfea8bd3bbf84def975c52a7b116dd1838cd44979c97",
+    "bytes": 104504211
+  }
+}

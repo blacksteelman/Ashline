@@ -1,0 +1,270 @@
+{
+  "license": "CC0-1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "mirror": "https://github.com/petroulacl/fps-asset-kit",
+  "mirror_commit": "a19b7458a593598211c95ec46ef4eb4b6d1f94d7",
+  "surfaces": {
+    "brick": {
+      "asset": "Bricks097",
+      "author": "ambientCG / Lennart Demes",
+      "source": "https://ambientcg.com/view?id=Bricks097",
+      "license": "CC0-1.0",
+      "modifications": "Converted to JPG maps with maximum dimension 1024; aspect ratio retained. Normal map uses OpenGL convention.",
+      "files": {
+        "brick.jpg": {
+          "sha256": "20fd1cbdd747792882e0aa121c18da49b4e9422dc034c559e15b80d909b00d80",
+          "original_sha256": "5696a29a9f43efa2b3ca3bbc7ba3105a2a72a3343a1eceeaa76400cdef461af7",
+          "original_file": "textures/Bricks097/Bricks097_2K-JPG_Color.jpg"
+        },
+        "brick_normal.jpg": {
+          "sha256": "bec1c5d7d55b425fe69778f22da11c11a4d211b057f14c5ea96e1918f93a67cf",
+          "original_sha256": "eaba442d6178e002467dee661e359e138f3d6ea941d80a4089f52225d09f702b",
+          "original_file": "textures/Bricks097/Bricks097_2K-JPG_NormalGL.jpg"
+        },
+        "brick_roughness.jpg": {
+          "sha256": "2ae64b9a59a04728ace83eb59acddb3f0c5fa527d6db07858665805e90674108",
+          "original_sha256": "89676dd41eb65f749079f5903c124c02ffa7fec887ce96f1c839ae02c82bfe27",
+          "original_file": "textures/Bricks097/Bricks097_2K-JPG_Roughness.jpg"
+        },
+        "brick_ao.jpg": {
+          "sha256": "ac5d5a042905c025b0226bb7668ceed63e48995b9246f72d09b781a699f0a35f",
+          "original_sha256": "6b0e7e227260fbae60ce48f1946484a7601578f204248b8a68cc1f49ac4bbb59",
+          "original_file": "textures/Bricks097/Bricks097_2K-JPG_AmbientOcclusion.jpg"
+        }
+      }
+    },
+    "asphalt": {
+      "asset": "Asphalt023S",
+      "author": "ambientCG / Lennart Demes",
+      "source": "https://ambientcg.com/view?id=Asphalt023S",
+      "license": "CC0-1.0",
+      "modifications": "Converted to JPG maps with maximum dimension 1024; aspect ratio retained. Normal map uses OpenGL convention.",
+      "files": {
+        "asphalt.jpg": {
+          "sha256": "6d79b4dda36f186547e66ddb2334c0cbc39789b9381b5453f363c672394b5b97",
+          "original_sha256": "70ba3c8f0e887bd862efb10a36a80c9ab28ecc4591018624c966e0aa9ee28a87",
+          "original_file": "textures/Asphalt023S/Asphalt023S_2K-JPG_Color.jpg"
+        },
+        "asphalt_normal.jpg": {
+          "sha256": "f8c1aa9b72f6614fa9df96e41d07055a1fcc7344fc3c64ecbb612ce40845928e",
+          "original_sha256": "ff1f3ae0ccd0f4b150355ad45c0794bacf7358e3d06ac768aa57e1116880d34c",
+          "original_file": "textures/Asphalt023S/Asphalt023S_2K-JPG_NormalGL.jpg"
+        },
+        "asphalt_roughness.jpg": {
+          "sha256": "2c0b4ff5b03484ce72ffd32abcc4479bbf4e797c380aa8c26c60ca20d2f031d3",
+          "original_sha256": "ebae14523faefc32050bff11052f1ed246bda24685c63be288390320b8a25e6a",
+          "original_file": "textures/Asphalt023S/Asphalt023S_2K-JPG_Roughness.jpg"
+        },
+        "asphalt_ao.jpg": {
+          "sha256": "ae8d721f9531f2932a7b59ea0eca6d0f5247909136b384cb6676722f647464b2",
+          "original_sha256": "c3d6aa30f47d07fe48cd55cdf5e69b08920320f667cc4c744f41337b54f2d104",
+          "original_file": "textures/Asphalt023S/Asphalt023S_2K-JPG_AmbientOcclusion.jpg"
+        }
+      }
+    },
+    "concrete": {
+      "asset": "Concrete034",
+      "author": "ambientCG / Lennart Demes",
+      "source": "https://ambientcg.com/view?id=Concrete034",
+      "license": "CC0-1.0",
+      "modifications": "Converted to JPG maps with maximum dimension 1024; aspect ratio retained. Normal map uses OpenGL convention.",
+      "files": {
+        "concrete.jpg": {
+          "sha256": "475dac533091587548bc6b593372365c6de53c6edf6926f4caf4a6d9d34e95cf",
+          "original_sha256": "fa27982687596d7aa080db1e9b88c30f48a3c32eb3e50b27a2ea27c431e4cde9",
+          "original_file": "textures/Concrete034/Concrete034_2K-JPG_Color.jpg"
+        },
+        "concrete_normal.jpg": {
+          "sha256": "20bf8963b9bbc8b3c9b0401c9412a521601b8b3f8c61ad9cb1799895a539f5c5",
+          "original_sha256": "b077dfe6b3b8fbe794d82b9014d030fa01984a25ab67d2e21310995e6ea5b881",
+          "original_file": "textures/Concrete034/Concrete034_2K-JPG_NormalGL.jpg"
+        },
+        "concrete_roughness.jpg": {
+          "sha256": "3f5d2c617059f2a821d1674251ab8a2da17761cf13a2a5baba1da0b6ba66c566",
+          "original_sha256": "fd39973b8ef8212d1c99d18b6665595db3ab96f1c124e062fea52b9bda4ffa63",
+          "original_file": "textures/Concrete034/Concrete034_2K-JPG_Roughness.jpg"
+        },
+        "concrete_ao.jpg": {
+          "sha256": "2d4436bc1a86736af16bcf217f37ccb256a7c605949a9a946602394b89509edd",
+          "original_sha256": "fd39973b8ef8212d1c99d18b6665595db3ab96f1c124e062fea52b9bda4ffa63",
+          "original_file": "textures/Concrete034/Concrete034_2K-JPG_Roughness.jpg"
+        }
+      }
+    },
+    "plaster": {
+      "asset": "Plaster007",
+      "author": "ambientCG / Lennart Demes",
+      "source": "https://ambientcg.com/view?id=Plaster007",
+      "license": "CC0-1.0",
+      "modifications": "Converted to JPG maps with maximum dimension 1024; aspect ratio retained. Normal map uses OpenGL convention.",
+      "files": {
+        "plaster.jpg": {
+          "sha256": "c608c15863065a80bc6f671fdca65ea977fb9f9d69576a0cca1d71df698a6ff0",
+          "original_sha256": "8beca526f03dfaa073a806d1adbab4a4134892914a409c023fddafeb6b970b23",
+          "original_file": "textures/Plaster007/Plaster007_2K-JPG_Color.jpg"
+        },
+        "plaster_normal.jpg": {
+          "sha256": "b3f7e7a988cdc851cc30d62336ee168f112fb085a5ef35de3fa67b7dbcb9dcd8",
+          "original_sha256": "632b817ad9bf49ba53be50450cba0cbebd115d7b50588cbffcde7eb0032f89ac",
+          "original_file": "textures/Plaster007/Plaster007_2K-JPG_NormalGL.jpg"
+        },
+        "plaster_roughness.jpg": {
+          "sha256": "86ce1a6deca3da1668f18a39117b2d41a23849d75de8155a7787bf3495f5089e",
+          "original_sha256": "77844313b7f1b67bd86c7c10bc9e53377511812eeedd1e32242a060f4c3b9d86",
+          "original_file": "textures/Plaster007/Plaster007_2K-JPG_Roughness.jpg"
+        },
+        "plaster_ao.jpg": {
+          "sha256": "d90617d57bcdf343bdc553c63a35f016230d6efc5e66094180df7f43a508d432",
+          "original_sha256": "407018b4272f2fc0aaadee7e8d20e8ca3bcc15bb9adce9820cf3ea4a436ed469",
+          "original_file": "textures/Plaster007/Plaster007_2K-JPG_AmbientOcclusion.jpg"
+        }
+      }
+    },
+    "metal": {
+      "asset": "Metal055A",
+      "author": "ambientCG / Lennart Demes",
+      "source": "https://ambientcg.com/view?id=Metal055A",
+      "license": "CC0-1.0",
+      "modifications": "Converted to JPG maps with maximum dimension 1024; aspect ratio retained. Normal map uses OpenGL convention.",
+      "files": {
+        "metal.jpg": {
+          "sha256": "459167a063df2b039ebadc3349c78c6a53007dbbab37c6a16a93fc88177bc713",
+          "original_sha256": "89d22cbcfcb93f99d8a701e3a3c5b0f3f4d1ab94111ab5eff57fee3fdded3c13",
+          "original_file": "textures/Metal055A/Metal055A_2K-JPG_Color.jpg"
+        },
+        "metal_normal.jpg": {
+          "sha256": "35f610e61a6fe1739982e5bbfc2bfd8b8095b887f451f595fb22879b87a628ae",
+          "original_sha256": "58c391df0a2af49b289e21bac5f2b9c14a6b78b0ee8a3aa42aafd2778f2b73d8",
+          "original_file": "textures/Metal055A/Metal055A_2K-JPG_NormalGL.jpg"
+        },
+        "metal_roughness.jpg": {
+          "sha256": "54a08875d5a52ee8542574675b46026316f6597e564771f20c431dab8f604ebd",
+          "original_sha256": "b35d7663ba7a7028d007a667961d72b1ca34a541c10d28d00c833147f3ecebba",
+          "original_file": "textures/Metal055A/Metal055A_2K-JPG_Roughness.jpg"
+        },
+        "metal_ao.jpg": {
+          "sha256": "68683047e59358efd408a8f2b7e90f92cda161561b3cc59dc06600dde2754867",
+          "original_sha256": "b35d7663ba7a7028d007a667961d72b1ca34a541c10d28d00c833147f3ecebba",
+          "original_file": "textures/Metal055A/Metal055A_2K-JPG_Roughness.jpg"
+        }
+      }
+    }
+  },
+  "audio": {
+    "rifle.wav": {
+      "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+      "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "license": "CC0-1.0",
+      "source_file": "AR-15/D_32P.wav",
+      "source_sha256": "acee9d2106b68fe5956225a19d7aedf943d97793817f9bda9d486a2b74b0a812",
+      "sha256": "a1abe412c42385bc9b6133f37adae0172d3b5f2989b64983bb52f63866306991",
+      "modifications": "Mono 44.1 kHz PCM16; 65 Hz high-pass; attack extracted with padding; peak normalized to 0.82; tail faded.",
+      "duration": 0.52
+    },
+    "rifle_alt.wav": {
+      "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+      "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "license": "CC0-1.0",
+      "source_file": "AR-15/D_24P.wav",
+      "source_sha256": "4c6a54ca0583150bbb32b7f658bc64da9ad9ba42fd3aca769c6120b44af8d3f0",
+      "sha256": "2bb466abb189beb39f3dddde20bc46996ac57414410cbe8399ae5a603083a486",
+      "modifications": "Mono 44.1 kHz PCM16; 65 Hz high-pass; attack extracted with padding; peak normalized to 0.82; tail faded.",
+      "duration": 0.52
+    },
+    "smg.wav": {
+      "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+      "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "license": "CC0-1.0",
+      "source_file": "Carl Gustav M45/G_31P.wav",
+      "source_sha256": "5982c6c2fa44545b750ba6217ed57797a6a15c02f5c9943ac0e99e5f3ab2b158",
+      "sha256": "711ae1d6a72d0c4b82b0c31af50c30d2bf690a116a03bfd78c27f1d8422b570b",
+      "modifications": "Mono 44.1 kHz PCM16; 65 Hz high-pass; attack extracted with padding; peak normalized to 0.82; tail faded.",
+      "duration": 0.52
+    },
+    "smg_alt.wav": {
+      "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+      "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "license": "CC0-1.0",
+      "source_file": "Carl Gustav M45/G_20P.wav",
+      "source_sha256": "137630298417203c83f885402f1b5d10913c1b96ca0ad31fde50d30314bf3223",
+      "sha256": "55b2a20b713ccb0c3b4690030f82198d97ea2723c8255a715238a03b6f5477a3",
+      "modifications": "Mono 44.1 kHz PCM16; 65 Hz high-pass; attack extracted with padding; peak normalized to 0.82; tail faded.",
+      "duration": 0.52
+    },
+    "marksman.wav": {
+      "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+      "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "license": "CC0-1.0",
+      "source_file": "Savage 10 .300 Blackout/T_27P.wav",
+      "source_sha256": "92296c320f7854da29ff28d1687da21a110cb1242bb03e5e1e62f6a4e7f79f3b",
+      "sha256": "894a62ff62c33705da94152b58eed51f8c129563fa92c04b2aee23d6a302549f",
+      "modifications": "Mono 44.1 kHz PCM16; 65 Hz high-pass; attack extracted with padding; peak normalized to 0.82; tail faded.",
+      "duration": 0.6999773242630386
+    },
+    "marksman_alt.wav": {
+      "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+      "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "license": "CC0-1.0",
+      "source_file": "Savage 10 .300 Blackout/T_17P.wav",
+      "source_sha256": "73021a3fc6d90372986f14c5db63f80bae10241c263d2911ea68c49f72fafe46",
+      "sha256": "8aabaec1b8e96c4d9dbf21fdd8fca4b3acf6da931a8cdf2ff90ba3044621eccc",
+      "modifications": "Mono 44.1 kHz PCM16; 65 Hz high-pass; attack extracted with padding; peak normalized to 0.82; tail faded.",
+      "duration": 0.6999773242630386
+    },
+    "pistol.wav": {
+      "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+      "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "license": "CC0-1.0",
+      "source_file": "Walther PPQ/X_39P.wav",
+      "source_sha256": "d679a3cd87eae2898d984159f83544392932e6b77526045b672e3aaa9c2dda9f",
+      "sha256": "dc09bb7a7dc40a85eb5c5d081cc436cb1c9991f74973e5dd62c4dd655875e05d",
+      "modifications": "Mono 44.1 kHz PCM16; 65 Hz high-pass; attack extracted with padding; peak normalized to 0.82; tail faded.",
+      "duration": 0.52
+    },
+    "pistol_alt.wav": {
+      "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+      "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "license": "CC0-1.0",
+      "source_file": "Walther PPQ/X_31P.wav",
+      "source_sha256": "b6439228ca46b37c00463265028094559ae5c9896c796b5d40ea4f33247f149c",
+      "sha256": "bdc6c9f344a300d8b20e24da6382a39ac419c7751f22930f9eb110ab2d4b169b",
+      "modifications": "Mono 44.1 kHz PCM16; 65 Hz high-pass; attack extracted with padding; peak normalized to 0.82; tail faded.",
+      "duration": 0.52
+    }
+  },
+  "models_v7": {
+    "rifle": {
+      "author": "nisu / 3DModelsCC0",
+      "source": "https://opengameart.org/content/m4a1-assault-rifle",
+      "license": "CC0-1.0",
+      "download_sha256": "ed5779ec82718861964227e2aad2a900978ea087081154365d6d86246be62f0d",
+      "download_bytes": 3631284,
+      "modifications": "CC0 M4A1 geometry and PBR maps adapted to AR-41. New authored reload, separate magazine/bolt and game-specific viewmodel transforms.",
+      "download_url": "https://opengameart.org/sites/default/files/m4a1_0.zip",
+      "runtime_import": "Godot VRAM texture compression with high quality; normal maps explicitly marked. Embedded GLB source maps retained at original resolution."
+    },
+    "arms": {
+      "author": "para / MakeHuman team",
+      "source": "https://opengameart.org/content/fps-arms-rigged-only",
+      "license": "CC0-1.0",
+      "download_sha256": "31f6c7bd5caea8856c4aafca8461f38a3c8bfdd3d8f05c898e403b9475e54562",
+      "download_bytes": 1406250,
+      "modifications": "Hand mesh retained and rescaled; source constraints/actions removed. Source forearms replaced with authored skinned field sleeves. Derived glove UV finish, new authored reload and finger poses. Source animations are not used.",
+      "download_url": "https://opengameart.org/sites/default/files/fps%20arms.7z"
+    },
+    "industrial": {
+      "author": "rubberduck; PBR adaptation by a52",
+      "source": "https://opengameart.org/content/pbr-industrial-asset-pack",
+      "license": "CC0-1.0",
+      "download_sha256": "4499f14fa664e83fd2b746c0e88a12249e8143ec9cd2b7ca9dd3d75aad50da47",
+      "download_bytes": 57954847,
+      "modifications": "Six meshes selected from industrial_final_cycles.blend. Source PBR images packed into industrial_selected.blend; centered transforms and maps capped at 1024 for runtime. Placement and workshop additions authored for ASHLINE.",
+      "local_source": {
+        "file": "assets/thirdparty/industrial/industrial_selected.blend",
+        "sha256": "65669b7ed1ff952068270f36bd0b08cd4b412d4dad8993615f5ae7a19fbe9d77"
+      },
+      "download_url": "https://opengameart.org/sites/default/files/oga_industrial_a52_version_0.zip",
+      "runtime_import": "High-quality VRAM-compressed color/normal maps; packed masks use standard block compression. Background-only brick/concrete maps limited to 512px; distant wire/plank/orange-cap maps to 256px. Equipment maps retained at 1024px. Full source maps retained in selected blend and GLB."
+    }
+  }
+}
