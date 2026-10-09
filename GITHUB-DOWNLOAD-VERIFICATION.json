@@ -1,0 +1,32 @@
+{
+  "ASHLINE-0.7-Asset-Sources.zip": {
+    "downloaded": true,
+    "sha256_matches": true,
+    "zip_valid": true,
+    "bytes": 47698647
+  },
+  "ASHLINE-0.7-Linux-x64.zip": {
+    "downloaded": true,
+    "sha256_matches": true,
+    "zip_valid": true,
+    "bytes": 95791760
+  },
+  "ASHLINE-0.7-Screenshots.zip": {
+    "downloaded": true,
+    "sha256_matches": true,
+    "zip_valid": true,
+    "bytes": 10866690
+  },
+  "ASHLINE-0.7-Source.zip": {
+    "downloaded": true,
+    "sha256_matches": true,
+    "zip_valid": true,
+    "bytes": 103646705
+  },
+  "ASHLINE-0.7-Windows-x64.zip": {
+    "downloaded": true,
+    "sha256_matches": true,
+    "zip_valid": true,
+    "bytes": 104504211
+  }
+}
