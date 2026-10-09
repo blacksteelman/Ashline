@@ -22,3 +22,4 @@ assets/characters/*.jpg
 assets/characters/*.png
 assets/characters/*.jpg.import
 assets/characters/*.png.import
+assets/thirdparty/sketchfab/*/

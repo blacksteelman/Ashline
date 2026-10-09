@@ -37,3 +37,15 @@ Third-party resources added in 0.8 (see tools/fetch_polyhaven.py, tools/fetch_am
 - Camouflage patterns (tools/camo.py) are generated procedurally for ASHLINE; no third-party camouflage artwork is copied.
 - OCP / Scorpion W2 camouflage swatch: US Army, public domain (PD-USGov-Military-Army), via Wikimedia Commons
   (File:Scorpion W2, Operational Camouflage Pattern (OCP) swatch.png). Made seamless in tools/camo.py.
+
+Sketchfab models (CC BY 4.0, https://creativecommons.org/licenses/by/4.0/), downloaded by tools/fetch_sketchfab.py:
+- First-person sets, rig and animations by ccransh (https://sketchfab.com/ccransh); arms "FP Arms" by DJMaesen (bumstrum):
+  - Animated FPS hands (rifle animation pack) — Adaptive Combat Rifle by doomsentinel
+  - FPS AK-74m animations — AK-74m by creationwasteland
+  - SMG FPS Animations — Masterpiece Arms 30 SST by eNse7en
+  - FPS animations sniper rifle — sniper rifle by Oleg Anufriev (olgnchsart)
+  - FPS pistol animations — Springfield Armory XD Mod.2 by raimeiyonke
+  Textures re-encoded (tools/prepare_fp_sets.py); third-person weapons are baked from these sets at runtime.
+- Soldiers by jeandiz (https://sketchfab.com/jeandiz), built from clothing shared by ErhanMatur, Bzovius, SrGeneroso,
+  shedmon, Albin and Mayess: "S.W.A.T. Operator" (Aegis; uniform recoloured to OCP, gear to coyote, carried rifle
+  removed) and "FSB Operator" (Ember; carried rifle removed). Re-animated in tools/build_soldiers.py.

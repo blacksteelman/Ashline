@@ -37,6 +37,14 @@ from bl_ext.user_default.mpfb.services.locationservice import LocationService
 DATA = LocationService.get_user_data()
 
 TEAMS = {
+    # Sketchfab CC-BY operators by jeandiz (tools/fetch_sketchfab.py), Mixamo rig.
+    'aegis': {'source': 'swat_operator', 'recolor': {'uniform': ('camo', 'ocp', 3.0), 'pouch': ('tint', (0.42, 0.36, 0.26)),
+              'lambert1.003': ('tint', (0.40, 0.34, 0.25)), 'helmet': ('tint', (0.52, 0.46, 0.35)), 'boots': ('tint', (0.36, 0.30, 0.22)),
+              'gloves': ('tint', (0.30, 0.27, 0.21))}},
+    'ember': {'source': 'fsb_operator'},
+}
+# Previous MakeHuman/MPFB2 soldiers (kept for reference; use --makehuman).
+TEAMS_MAKEHUMAN = {
     'aegis': {'camo': 'ocp', 'camo_gain': 0.95, 'vest_tint': (0.50, 0.43, 0.31), 'helmet': 'mindfront_helmet_kz45',
               'helmet_tint': (0.40, 0.36, 0.27), 'mask': None, 'skin': 'young_caucasian_male',
               'macro': {'gender': 1.0, 'age': 0.45, 'muscle': 0.7, 'weight': 0.55, 'height': 0.6, 'proportions': 0.6}},
@@ -168,6 +176,126 @@ def decimate_first(obj, ratio):
     bpy.ops.object.modifier_move_to_index(modifier=mod.name, index=0)
 
 
+SKETCHFAB = os.path.join(ROOT, 'assets', 'thirdparty', 'sketchfab')
+# Mixamo bone -> the CMU-style names this script works with (renamed to the Godot contract later).
+MIXAMO = {'Hips': 'Hips', 'Spine': 'LowerBack', 'Spine1': 'Spine', 'Spine2': 'Spine1', 'Neck': 'Neck', 'Head': 'Head',
+          'LeftShoulder': 'LeftShoulder', 'LeftArm': 'LeftArm', 'LeftForeArm': 'LeftForeArm', 'LeftHand': 'LeftHand',
+          'RightShoulder': 'RightShoulder', 'RightArm': 'RightArm', 'RightForeArm': 'RightForeArm', 'RightHand': 'RightHand',
+          'LeftUpLeg': 'LeftUpLeg', 'LeftLeg': 'LeftLeg', 'LeftFoot': 'LeftFoot', 'LeftToeBase': 'LeftToeBase',
+          'RightUpLeg': 'RightUpLeg', 'RightLeg': 'RightLeg', 'RightFoot': 'RightFoot', 'RightToeBase': 'RightToeBase',
+          'LeftHandIndex1': 'LeftFingerBase', 'LeftHandIndex2': 'LeftHandFinger1', 'LeftHandThumb1': 'LThumb',
+          'RightHandIndex1': 'RightFingerBase', 'RightHandIndex2': 'RightHandFinger1', 'RightHandThumb1': 'RThumb'}
+
+
+def recolor_material(m, how):
+    """Recolour a glTF material's base colour texture in place: ('camo', name, tiles) maps a camouflage
+    pattern through the texture's own shading; ('tint', rgb) keeps the shading in a new colour."""
+    nt = m.node_tree
+    bsdf = next((n for n in nt.nodes if n.type == 'BSDF_PRINCIPLED'), None)
+    tex = None
+    for n in nt.nodes:
+        if n.type == 'TEX_IMAGE' and n.image and 'baseColor' in n.image.name:
+            tex = n
+    if bsdf is None or tex is None:
+        return
+    img = tex.image.copy(); img.name = m.name + '_recolor'
+    w, h = img.size
+    px = np.empty(w * h * 4, np.float32); img.pixels.foreach_get(px); px = px.reshape(h, w, 4)
+    lum = px[..., :3] @ np.array([0.3, 0.59, 0.11], np.float32)
+    shade = np.clip(lum / max(1e-3, float(np.median(lum))), 0.25, 2.2) ** 0.85 * 0.85
+    if how[0] == 'camo':
+        cam = bpy.data.images.load(os.path.join(TEX, 'camo_%s_albedo.jpg' % how[1]))
+        cw, ch = cam.size
+        cp = np.empty(cw * ch * 4, np.float32); cam.pixels.foreach_get(cp); cp = cp.reshape(ch, cw, 4)
+        ys = (np.arange(h) * how[2] * ch / h).astype(int) % ch; xs = (np.arange(w) * how[2] * cw / w).astype(int) % cw
+        pattern = cp[ys][:, xs, :3]
+        px[..., :3] = np.clip(pattern * shade[..., None], 0, 1)
+    else:
+        px[..., :3] = np.clip(np.array(how[1], np.float32)[None, None, :] * shade[..., None], 0, 1)
+    img.pixels.foreach_set(px.ravel()); img.pack()
+    tex.image = img
+    for link in list(bsdf.inputs['Base Color'].links):
+        nt.links.remove(link)
+    nt.links.new(tex.outputs['Color'], bsdf.inputs['Base Color'])
+
+
+def build_sketchfab_body(team, spec):
+    """Import a Mixamo-rigged Sketchfab soldier: drop its own weapon/props, bake the Sketchfab root
+    transforms, rename bones, stand it on z=0 facing -Y."""
+    import re
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    bpy.ops.import_scene.gltf(filepath=os.path.join(SKETCHFAB, spec['source'], 'scene.gltf'))
+    rig = next(o for o in bpy.data.objects if o.type == 'ARMATURE')
+    for o in list(bpy.data.objects):
+        if o.type == 'MESH' and not any(m.type == 'ARMATURE' for m in o.modifiers):
+            bpy.data.objects.remove(o, do_unlink=True)  # carried rifle, patches, helper sphere
+    if rig.animation_data:
+        rig.animation_data_clear()
+    for a in list(bpy.data.actions):
+        bpy.data.actions.remove(a)
+    meshes = [o for o in bpy.data.objects if o.type == 'MESH']
+    # The imported rest pose lies flat; the standing figure is the pose from the glTF nodes.
+    # Bake that deformation into the meshes and make it the rest pose.
+    for o in meshes:
+        bpy.context.view_layer.objects.active = o
+        for m in list(o.modifiers):
+            if m.type == 'ARMATURE':
+                bpy.ops.object.modifier_apply(modifier=m.name)
+    bpy.context.view_layer.objects.active = rig
+    bpy.ops.object.mode_set(mode='POSE'); bpy.ops.pose.select_all(action='SELECT')
+    bpy.ops.pose.armature_apply(selected=False)
+    bpy.ops.object.mode_set(mode='OBJECT')
+    for o in meshes:
+        mod = o.modifiers.new('Armature', 'ARMATURE'); mod.object = rig
+    # Keep the Sketchfab hierarchy (Y-up roots, 0.01 scale); everything here works in world space.
+    top = rig
+    while top.parent:
+        top = top.parent
+    for o in list(bpy.data.objects):
+        if o.type == 'EMPTY' and not any(c == o for c in [top]) and not o.children:
+            bpy.data.objects.remove(o, do_unlink=True)
+    # Bone names.
+    names = {}
+    for b in rig.data.bones:
+        short = re.sub(r'_\d+$', '', b.name.replace('mixamorig:', ''))
+        names[b.name] = MIXAMO.get(short, short)
+    for o in meshes:
+        for g in o.vertex_groups:
+            if g.name in names:
+                g.name = names[g.name]
+    for b in rig.data.bones:
+        b.name = names[b.name]
+    # Face -Y (toes ahead of the ankles) and stand on z=0, via the top-level node.
+    bpy.context.view_layer.update()
+    foot = rig.matrix_world @ rig.data.bones['LeftFoot'].head_local; toe = rig.matrix_world @ rig.data.bones['LeftToeBase'].head_local
+    if (toe - foot).y > 0:
+        top.matrix_world = Matrix.Rotation(math.pi, 4, 'Z') @ top.matrix_world
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    lowest = min((o.evaluated_get(dg).matrix_world @ v.co).z for o in meshes if any(m and m.name == 'boots' for m in o.data.materials) for v in o.evaluated_get(dg).to_mesh().vertices)
+    top.matrix_world = Matrix.Translation((0, 0, -lowest)) @ top.matrix_world
+    bpy.context.view_layer.update()
+    # Godot contract names.
+    for b in rig.data.bones:
+        if b.name in RENAME:
+            b.name = RENAME[b.name]
+    for o in meshes:
+        for g in o.vertex_groups:
+            if g.name in RENAME:
+                g.name = RENAME[g.name]
+    for o in meshes:
+        for m in o.data.materials:
+            if m:
+                for n in m.node_tree.nodes if m.use_nodes else []:
+                    if n.type == 'TEX_IMAGE':
+                        shrink_image(n.image)
+    for m in bpy.data.materials:
+        if m.use_nodes and m.name in spec.get('recolor', {}):
+            recolor_material(m, spec['recolor'][m.name])
+    print('SKETCHFAB BODY', spec['source'], len(meshes), 'meshes, lifted', round(-lowest, 3))
+    return meshes[0], rig
+
+
 def build_body(team, spec):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.preferences.addon_enable(module='bl_ext.user_default.mpfb')
@@ -227,18 +355,23 @@ def build_body(team, spec):
 
 # ------------------------------------------------------------------ rig helpers
 
+def qrot(m):
+    """Rotation of a possibly scaled matrix (Sketchfab rigs carry a 0.01 object scale)."""
+    return m.to_3x3().normalized().to_quaternion()
+
+
 def arm_rest(rig, name):
     return rig.matrix_world @ rig.data.bones[T(name)].matrix_local
 
 
 def rest_quat(rig, name):
-    return arm_rest(rig, name).to_quaternion()
+    return qrot(arm_rest(rig, name))
 
 
 def set_pose(rig, deltas, hips_pos):
     """Pose from world-space rotation deltas (relative to rest) and the hips head position."""
     world = {}
-    rw = rig.matrix_world.to_quaternion()
+    rw = qrot(rig.matrix_world)
     for pb in rig.pose.bones:
         b = pb.bone
         src = next((k for k in deltas if T(k) == b.name), None)
@@ -258,9 +391,9 @@ def set_pose(rig, deltas, hips_pos):
         else:
             local = q_rest.inverted() @ q
         pb.rotation_mode = 'QUATERNION'; pb.rotation_quaternion = local
-        if b.parent is None:
-            head = rig.matrix_world @ b.head_local
-            pb.location = q_rest.to_matrix().inverted() @ (hips_pos - head)
+        if b.name == 'Hips':  # Mixamo rigs have an unanimated root joint above the hips
+            local = rig.matrix_world.inverted() @ hips_pos - b.head_local  # armature space (any object scale)
+            pb.location = b.matrix_local.to_3x3().inverted() @ local
     return world
 
 
@@ -500,6 +633,14 @@ def curl_fingers(rig, side, base, tip, thumb):
             a = b.matrix_local.to_3x3().inverted() @ (hb @ f_l)
         pb = rig.pose.bones[name]; pb.rotation_mode = 'QUATERNION'
         pb.rotation_quaternion = Quaternion(a.normalized(), math.radians(deg))
+    for finger in ('Middle', 'Ring', 'Pinky', 'Index'):
+        for seg, deg in (('1', base), ('2', tip), ('3', tip * 0.7)):
+            b = rig.data.bones.get(s + 'Hand' + finger + seg)
+            if not b or (finger == 'Index' and seg != '3'):
+                continue
+            a = b.matrix_local.to_3x3().inverted() @ axis
+            pb = rig.pose.bones[b.name]; pb.rotation_mode = 'QUATERNION'
+            pb.rotation_quaternion = Quaternion(a.normalized(), math.radians(deg))
 
 
 class Setup:
@@ -590,7 +731,7 @@ class Setup:
         for side, (tgt, knee, ik, cr) in self.leg.items():
             s = 'Left' if side == 'L' else 'Right'
             foot = arm_rest(rig, s + 'Foot')
-            tgt.matrix_world = foot
+            tgt.matrix_world = Matrix.Translation(foot.translation) @ qrot(foot).to_matrix().to_4x4()
             knee.location = arm_rest(rig, s + 'Leg').translation + FWD * 0.6
         set_pose(rig, neutral_deltas(), rest_hips + UP * -0.12)
         for side, (tgt, knee, ik, cr) in self.leg.items():
@@ -648,7 +789,7 @@ def stance_feet(rig, spread=0.06, stagger=0.12, toe_out=10):
         s = 'Left' if side == 'L' else 'Right'
         m = arm_rest(rig, s + 'Foot')
         p = m.translation + Vector((sx * spread * -RIGHT.x, 0, 0)) + FWD * (stagger * 0.5 * -sy if side == 'L' else -stagger * 0.5)
-        r = rot(UP, toe_out * sx * -1) @ m.to_quaternion()
+        r = rot(UP, toe_out * sx * -1) @ qrot(m)
         out[side] = Matrix.Translation(p) @ r.to_matrix().to_4x4()
     return out
 
@@ -686,7 +827,7 @@ def clip_from_mocap(setup, role, clip):
                 s = 'Left' if side == 'L' else 'Right'
                 m = rig.matrix_world @ rig.pose.bones[s + 'Foot'].matrix
                 lateral = Vector((0.05 if side == 'L' else -0.05, 0, 0))
-                fm[side] = Matrix.Translation(m.translation + lateral) @ m.to_quaternion().to_matrix().to_4x4()
+                fm[side] = Matrix.Translation(m.translation + lateral) @ qrot(m).to_matrix().to_4x4()
             feet_track.append(fm)
         setup.legs(True)
     for f, (d, pos) in enumerate(cyc):
@@ -839,7 +980,7 @@ def export_textures(team, limit=1024):
 
 
 def build(team, spec):
-    body, rig = build_body(team, spec)
+    body, rig = build_sketchfab_body(team, spec) if 'source' in spec else build_body(team, spec)
     scn = bpy.context.scene; scn.render.fps = FPS
     rig.animation_data_create()
     setup = Setup(rig)
@@ -919,7 +1060,7 @@ def build(team, spec):
 
 
 os.makedirs('/tmp/claude-0/soldier', exist_ok=True)
-for team, spec in TEAMS.items():
+for team, spec in (TEAMS_MAKEHUMAN if '--makehuman' in ARGS else TEAMS).items():
     if [a for a in ARGS if not a.startswith('--')] and team not in ARGS:
         continue
     build(team, spec)

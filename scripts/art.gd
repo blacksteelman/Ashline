@@ -44,6 +44,15 @@ static func sphere(parent: Node3D, pos: Vector3, scale_v: Vector3, material: Mat
 static func text(parent: Node3D, pos: Vector3, words: String, size: int, color: Color) -> Label3D:
  var l = Label3D.new(); l.text = words; l.font_size = size; l.pixel_size = 0.006; l.outline_size=2;l.font=load('res://assets/interface.ttf');l.shaded=true;l.modulate = color; parent.add_child(l); l.position = pos; l.rotation.y=PI; l.double_sided=false; return l
 static func world_weapon(parent: Node3D, kind: int) -> Node3D:
+ # Third-person copies of the first-person sets, baked offline by tests/bake_world_weapons.gd
+ # (socket space: origin at the grip, muzzle -Z, metres) with the muzzle point in a .cfg beside it.
+ if Arsenal.WEAPONS[kind].has('fp'):
+  var base='res://assets/viewmodels/world_'+Arsenal.WEAPONS[kind].fp.set
+  if ResourceLoader.exists(base+'.res'):
+   var mi=MeshInstance3D.new();mi.name='WorldWeapon';mi.mesh=load(base+'.res');parent.add_child(mi)
+   var meta=ConfigFile.new();meta.load(base+'.cfg')
+   mi.set_meta('muzzle',meta.get_value('weapon','muzzle',Vector3(0,.03,-.6)))
+   return mi
  # Third-person weapon from the viewmodel pipeline: weapon space, origin at the grip, Muzzle marker.
  var path='res://assets/viewmodels/world_'+Arsenal.WEAPONS[kind].model+'.glb'
  if not ResourceLoader.exists(path):return null

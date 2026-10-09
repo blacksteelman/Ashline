@@ -21,11 +21,11 @@ func run():
  p.global_position=Vector3(-4.0,.05,-30.0);p.yaw=PI-.35;p.pitch=-.04;p.velocity=Vector3.ZERO
  g.hud.visible=false
  await frames(40)
- for w in [0,1,2,3]:
+ for w in range(Arsenal.WEAPONS.size()):
   if not only.is_empty() and w not in only:continue
-  if w==3:p.weapon_id=3
-  else:p.load_class(w)
+  p.weapon_id=w;p.ammo=Arsenal.full_ammo();p.reserves=Arsenal.full_reserves()
   p.build_gun();p.view.equip_blend=1.0;p.ads=false;p.reload_left=0
+  if p.view is FPSetRig:p.view.stop_action()
   if not ads_only:await frames(25);await shot('vm%d-idle' % w)
   p.ads=true;await frames(30);await shot('vm%d-ads' % w);p.ads=false;await frames(25)
   if ads_only:continue

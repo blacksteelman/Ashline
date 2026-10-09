@@ -103,6 +103,12 @@ func _ready():
 func build_gun():
  if gun:
   gun.visible=false;gun.get_parent().remove_child(gun);gun.queue_free()
+ if FPSetRig.available(weapon_id):
+  gun=load(FPSetRig.path(weapon_id)).instantiate();rig.add_child(gun)
+  for geometry in gun.find_children('*','GeometryInstance3D',true,false):
+   geometry.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;geometry.extra_cull_margin=2.0
+  ViewmodelMaterial.apply(gun)
+  view=FPSetRig.new();view.bind(gun,weapon_id);return
  if FirstPersonRig.available(weapon_id):
   gun=load(FirstPersonRig.path(weapon_id)).instantiate();rig.add_child(gun)
   for geometry in gun.find_children('*','GeometryInstance3D',true,false):
@@ -116,11 +122,11 @@ func build_gun():
  view.bind(gun)
 
 func muzzle_world() -> Vector3:
- if view is FirstPersonRig:return view.muzzle_position()
+ if view is FirstPersonRig or view is FPSetRig:return view.muzzle_position()
  return gun.to_global(gun.get_meta('muzzle'))
 
 func ejector_world() -> Vector3:
- if view is FirstPersonRig:return view.ejector_position()
+ if view is FirstPersonRig or view is FPSetRig:return view.ejector_position()
  return gun.to_global(gun.get_meta('ejector',Vector3(.049,.016,-.12)))
 func perk(key: String) -> bool:return key in perks
 func reload_time(kind: int) -> float:return Arsenal.WEAPONS[kind].reload*(.75 if perk('sleight') else 1.0)
@@ -291,11 +297,11 @@ func _process(dt: float):
  step_visual=move_toward(step_visual,0,dt*1.6)
  camera.position.y=lerpf(camera.position.y,(1.03 if crouched else 1.62)-step_visual,blend)
  var aiming=ads and not sprinting and reload_left<=0
- camera.fov=lerpf(camera.fov,game.settings.fov*((.52 if weapon_id==2 else .72) if aiming else 1.0),1-exp(-dt*20))
+ camera.fov=lerpf(camera.fov,game.settings.fov*(Arsenal.WEAPONS[weapon_id].get('zoom',.72) if aiming else 1.0),1-exp(-dt*20))
  kick=move_toward(kick,0,dt*.7);landing=move_toward(landing,0,dt*.25);sway=sway.lerp(Vector2.ZERO,1-exp(-dt*10))
  sprint_blend=lerpf(sprint_blend,1.0 if sprinting else 0.0,1-exp(-dt*14))
  view.update(self,dt)
- gun.visible=not (weapon_id==2 and aiming and view.aim_blend>.98)
+ gun.visible=not (Arsenal.scoped(weapon_id) and aiming and view.aim_blend>.98)
 func recover_recoil(dt: float):
  if shot_age<.14:return
  var correction=recoil_return*(1-exp(-dt*8))

@@ -21,7 +21,7 @@ func run():
  p.spawn();expect(p.aim_dir().z>0,'Aegis respawn faces into arena');p.position=Vector3(0,.01,-15);p.yaw=0
  p.ammo[0]=0;p.start_reload();expect(p.reload_left>0,'Reload starts');p.reload_left=.01;p.set_physics_process(true);await physics_frame;await physics_frame;p.set_physics_process(false);expect(p.ammo[0]==30 and p.reserves[0]==90,'Reload transfers reserve')
  p.switch_weapon();expect(p.weapon_id==3,'Pistol switch');p.switch_weapon();expect(p.weapon_id==0,'Return to primary')
- for c in range(3):p.load_class(c);expect(p.weapon_id==c,'Class selects weapon '+str(c))
+ for c in range(3):p.load_class(c);expect(p.weapon_id==Arsenal.CLASSES[c].primary,'Class selects weapon '+str(c))
  # Real player input through the same physics loop as the game.
  p.load_class(0);p.local_player=true;p.bot=false;p.set_physics_process(true);p.position=Vector3(0,.01,-15);p.yaw=0;p.pitch=0;enemy.position=Vector3(0,.01,-22)
  Input.action_press('forward')
@@ -47,18 +47,27 @@ func run():
   p.weapon_id=kind;p.ammo[kind]=10;p.cooldown=0;p.pitch=0;enemy.dead=false;enemy.collision_layer=2;enemy.health=100
   p.shoot();expect(enemy.health<100,'Weapon '+str(kind)+' hits and damages')
  # The visible moving pieces are part of the actual imported viewmodel.
- p.weapon_id=0;p.build_gun();p.ammo[0]=12;p.reload_left=0;p.start_reload()
+ p.weapon_id=0;p.build_gun();p.ammo[0]=12;p.reload_left=0
  var arms: Skeleton3D=p.gun.find_child('Skeleton3D',true,false)
- expect(p.view is FirstPersonRig and arms!=null and arms.find_bone('magazine')>=0,'Viewmodel has a skinned rig with a magazine bone')
- var mag_bone=arms.find_bone('magazine');var hand=arms.find_bone('hand.L')
- var seated=arms.get_bone_global_rest(mag_bone).origin
- var duration=p.reload_left
- p.reload_left=duration*.55;p.view.update(p,.016);p.view.tree.advance(0);arms.force_update_all_bone_transforms()
- var withdrawn=arms.get_bone_global_pose(mag_bone).origin
- expect(withdrawn.y<seated.y-.1,'Magazine is withdrawn during reload')
- expect(arms.get_bone_global_pose(hand).origin.distance_to(withdrawn)<.25,'Supporting hand carries the magazine')
- p.reload_left=0;p.view.update(p,.016);p.view.tree.advance(0);arms.force_update_all_bone_transforms()
- expect(arms.get_bone_global_pose(mag_bone).origin.distance_to(seated)<.005,'Magazine returns to its seated pose')
+ var mag_bone=-1;var hand=-1
+ if arms:
+  for i in arms.get_bone_count():
+   var n=arms.get_bone_name(i)
+   if mag_bone<0 and n.begins_with('Pmag'):mag_bone=i
+   if hand<0 and n.begins_with('Hand_L'):hand=i
+ expect(p.view is FPSetRig and arms!=null and mag_bone>=0,'Viewmodel is the animated first-person set with a magazine bone')
+ p.view.stop_action();p.view.player.advance(1.0);arms.force_update_all_bone_transforms()
+ var seated=arms.get_bone_global_pose(mag_bone).origin
+ p.start_reload();var duration=p.reload_left
+ var travel=0.0;var near=INF
+ for k in range(1,10):
+  p.reload_left=duration*(1.0-k/10.0);p.view.update(p,.016);p.view.player.advance(.1);p.view.update(p,.016);p.view.player.advance(0);arms.force_update_all_bone_transforms()
+  var at=arms.get_bone_global_pose(mag_bone).origin
+  travel=maxf(travel,at.distance_to(seated));near=minf(near,arms.get_bone_global_pose(hand).origin.distance_to(at))
+ expect(travel>.05,'Magazine moves out during reload')
+ expect(near<.6,'Supporting hand works the magazine')
+ p.reload_left=0;p.view.update(p,.016);p.view.player.advance(1.0);arms.force_update_all_bone_transforms()
+ expect(arms.get_bone_global_pose(mag_bone).origin.distance_to(seated)<.02,'Magazine returns to its seated pose')
  p.view.fire(0);p.view.spring_step(.016)
  expect(p.view.recoil_position.z>0,'Spring recoil moves weapon rearward')
  for tick in range(100):p.view.spring_step(.016)

@@ -17,7 +17,7 @@ func _draw():
  if game.menu_open:return
  if game.state not in ['match','results']:return
  var p=game.player
- var scoped=p and not p.dead and p.weapon_id==2 and p.ads and p.reload_left<=0 and p.view.aim_blend>.98
+ var scoped=p and not p.dead and Arsenal.scoped(p.weapon_id) and p.ads and p.reload_left<=0 and p.view.aim_blend>.98
  if scoped:scope_overlay()
  draw_rect(Rect2(660,20,280,56),Color(.025,.04,.045,.65))
  words(Vector2(680,49),'AEGIS',12,teal);words(Vector2(851,49),'EMBER',12,orange)

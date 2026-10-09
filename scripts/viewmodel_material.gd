@@ -28,7 +28,9 @@ static func channel(c: int) -> Vector4:
 
 static func convert_material(source: BaseMaterial3D) -> ShaderMaterial:
  if converted.has(source):return converted[source]
- var m=ShaderMaterial.new();m.shader=load('res://assets/shaders/viewmodel.gdshader')
+ var m=ShaderMaterial.new()
+ var glass=source.transparency==BaseMaterial3D.TRANSPARENCY_ALPHA or source.transparency==BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+ m.shader=load('res://assets/shaders/viewmodel_glass.gdshader' if glass else 'res://assets/shaders/viewmodel.gdshader')
  m.set_shader_parameter('albedo_color',source.albedo_color)
  if source.albedo_texture:m.set_shader_parameter('albedo_tex',source.albedo_texture)
  if source.normal_enabled and source.normal_texture:
@@ -40,7 +42,10 @@ static func convert_material(source: BaseMaterial3D) -> ShaderMaterial:
   m.set_shader_parameter('metallic_tex',source.metallic_texture);m.set_shader_parameter('metallic_channel',channel(source.metallic_texture_channel))
  if source.ao_enabled and source.ao_texture:
   m.set_shader_parameter('use_ao',true);m.set_shader_parameter('ao_tex',source.ao_texture);m.set_shader_parameter('ao_channel',channel(source.ao_texture_channel))
- if source.transparency!=BaseMaterial3D.TRANSPARENCY_DISABLED:m.set_shader_parameter('alpha_scissor',.4)
+ if source.transparency==BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR:m.set_shader_parameter('alpha_scissor',source.alpha_scissor_threshold)
+ if source.emission_enabled:
+  if source.emission_texture:m.set_shader_parameter('emission_tex',source.emission_texture)
+  m.set_shader_parameter('emission_color',source.emission);m.set_shader_parameter('emission_energy',maxf(1.0,source.emission_energy_multiplier)*(4.0 if glass else 1.0))
  m.resource_name=source.resource_name
  converted[source]=m
  return m

@@ -29,7 +29,7 @@ func run():
    var found=''
    for a in player.get_animation_list():
     if String(a).get_file().begins_with(clips[i]):found=a;break
-   if found=='':push_error('missing clip '+clips[i]);failures+=1;continue
+   if found=='':push_error('missing clip '+clips[i]+' in '+str(player.get_animation_list())+' team '+str(team));failures+=1;continue
    player.play(found);player.seek(player.get_animation(found).length*(.95 if clips[i]=='Death' else .3),true);player.pause()
    actors.append(holder)
   await frames(20);await shot(['aegis','ember'][team])

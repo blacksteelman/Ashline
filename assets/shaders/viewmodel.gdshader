@@ -18,6 +18,9 @@ uniform sampler2D ao_tex : hint_default_white, filter_linear_mipmap;
 uniform vec4 ao_channel = vec4(1.0, 0.0, 0.0, 0.0);
 uniform bool use_ao = false;
 uniform float alpha_scissor = 0.0;
+uniform sampler2D emission_tex : source_color, hint_default_black, filter_linear_mipmap;
+uniform vec4 emission_color : source_color = vec4(0.0, 0.0, 0.0, 1.0);
+uniform float emission_energy = 0.0;
 
 void vertex() {
 	mat4 p = PROJECTION_MATRIX;
@@ -38,4 +41,5 @@ void fragment() {
 		NORMAL_MAP_DEPTH = normal_strength;
 	}
 	if (use_ao) { AO = dot(texture(ao_tex, UV), ao_channel); AO_LIGHT_AFFECT = 0.4; }
+	EMISSION = texture(emission_tex, UV).rgb * emission_color.rgb * emission_energy;
 }

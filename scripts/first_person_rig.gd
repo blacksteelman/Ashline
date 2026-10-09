@@ -121,7 +121,7 @@ func update(owner: Fighter, dt: float):
  if not is_instance_valid(gun):return
  spring_step(dt)
  kick_bolt=move_toward(kick_bolt,0.0,dt*18.0)
- bolt_modifier.lock=1.0 if owner.ammo[owner.weapon_id]==0 and owner.reload_left<=0 and owner.weapon_id!=2 else 0.0
+ bolt_modifier.lock=1.0 if owner.ammo[owner.weapon_id]==0 and owner.reload_left<=0 and not Arsenal.WEAPONS[owner.weapon_id].get('bolt',false) else 0.0
  var w=Arsenal.WEAPONS[owner.weapon_id]
  var reload_duration=owner.reload_time(owner.weapon_id)
  # Reload clip follows the authoritative timer, so animation and ammo agree.
