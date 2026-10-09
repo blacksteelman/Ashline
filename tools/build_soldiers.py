@@ -37,10 +37,10 @@ from bl_ext.user_default.mpfb.services.locationservice import LocationService
 DATA = LocationService.get_user_data()
 
 TEAMS = {
-    'aegis': {'camo': 'multicam', 'camo_gain': 0.78, 'vest_tint': (0.50, 0.43, 0.31), 'helmet': 'mindfront_helmet_kz45',
+    'aegis': {'camo': 'ocp', 'camo_gain': 0.95, 'vest_tint': (0.50, 0.43, 0.31), 'helmet': 'mindfront_helmet_kz45',
               'helmet_tint': (0.40, 0.36, 0.27), 'mask': None, 'skin': 'young_caucasian_male',
               'macro': {'gender': 1.0, 'age': 0.45, 'muscle': 0.7, 'weight': 0.55, 'height': 0.6, 'proportions': 0.6}},
-    'ember': {'camo': 'emr', 'camo_gain': 0.72, 'vest_tint': (0.30, 0.34, 0.25), 'helmet': None,
+    'ember': {'camo': 'emr', 'camo_gain': 0.9, 'vest_tint': (0.30, 0.34, 0.25), 'helmet': None,
               'helmet_tint': (0.28, 0.32, 0.24), 'mask': 'gredal_gas_mask', 'skin': 'young_caucasian_male',
               'macro': {'gender': 1.0, 'age': 0.5, 'muscle': 0.65, 'weight': 0.6, 'height': 0.55, 'proportions': 0.55}},
 }

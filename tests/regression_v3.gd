@@ -56,13 +56,13 @@ func run():
  var data=[]
  for f in g.fighters:data.append([f.position,f.yaw,f.pitch,f.health,f.dead,f.kills,f.deaths,f.streak,f.ammo.duplicate(),f.reserves.duplicate(),f.weapon_id,f.respawn_time,f.rewards.duplicate(),f.class_id,f.reload_left,f.crouched,0])
  data[0][8]=[29,36,14,12];data[0][16]=1
- g.snapshot(var_to_bytes(data).compress(FileAccess.COMPRESSION_DEFLATE),[0,0],420,[0,0],g.server_clock)
+ g.snapshot(var_to_bytes(data).compress(FileAccess.COMPRESSION_DEFLATE),[0,0],420,[0,0],g.server_clock,[])
  expect(p.ammo[0]==27 and p.pending_predictions.size()==2,'Delayed snapshot preserves two predicted shots')
  data[0][8][0]=28;data[0][16]=2
- g.snapshot(var_to_bytes(data).compress(FileAccess.COMPRESSION_DEFLATE),[0,0],420,[0,0],g.server_clock)
+ g.snapshot(var_to_bytes(data).compress(FileAccess.COMPRESSION_DEFLATE),[0,0],420,[0,0],g.server_clock,[])
  expect(p.ammo[0]==27 and p.pending_predictions.size()==1,'Partial acknowledgement keeps ammunition stable')
  data[0][8][0]=27;data[0][16]=3
- g.snapshot(var_to_bytes(data).compress(FileAccess.COMPRESSION_DEFLATE),[0,0],420,[0,0],g.server_clock)
+ g.snapshot(var_to_bytes(data).compress(FileAccess.COMPRESSION_DEFLATE),[0,0],420,[0,0],g.server_clock,[])
  expect(p.ammo[0]==27 and p.pending_predictions.is_empty(),'Final acknowledgement reconciles without a duplicate shot')
  g.damage_event(6,0,g.fighters[6].eye(),'HEAD')
  expect(g.hit_time>0 and g.head_time>0,'Authoritative network head hit displays the correct hit marker')

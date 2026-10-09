@@ -862,7 +862,7 @@ def build(name, spec):
     rig, body = load_arms()
     scn = bpy.context.scene; scn.render.fps = FPS
     cut_forearms(rig, body)
-    glove = image_material('Gloves', os.path.join(TEX, 'glove_dark_albedo.jpg'), os.path.join(TEX, 'leather_dark_normal.jpg'), 0.42, normal_strength=0.45)
+    glove = image_material('Gloves', os.path.join(TEX, 'glove_tactical_albedo.jpg'), os.path.join(TEX, 'glove_tactical_normal.jpg'), 0.82, normal_strength=0.8)
     body.data.materials.clear(); body.data.materials.append(glove)
     camo = image_material('Sleeves', os.path.join(TEX, 'sleeve_camo_albedo.jpg'), os.path.join(TEX, 'fabric_canvas_normal.jpg'), 0.9)
     for side in 'LR':

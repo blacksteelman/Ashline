@@ -5,7 +5,7 @@ var fighters: Array[Fighter]=[]
 var player: Fighter
 var state='menu'
 var menu_open=false
-var settings={'sensitivity':1.5,'fov':90.0,'volume':.75,'fullscreen':false,'graphics':2,'vsync':true,'camo':0}
+var settings={'sensitivity':1.5,'fov':90.0,'volume':.75,'fullscreen':false,'graphics':2,'vsync':true,'camo':0,'classes':[],'mode':'tdm'}
 var hud: CanvasLayer
 var ui: Control
 var scores=[0,0]
@@ -64,6 +64,8 @@ func _ready():
  var args=OS.get_cmdline_user_args()
  bot_test='--bot-test' in args;showcase='--showcase' in args
  for a in args:
+  if a.begins_with('--mode='):settings.mode=a.substr(7)
+ for a in args:
   if a.begins_with('--seed='):test_seed=int(a.split('=')[1])
   if a.begins_with('--matches='):test_goal=int(a.split('=')[1])
   if a.begins_with('--capture='):capture_at=float(a.split('=')[1])
@@ -73,7 +75,7 @@ func _ready():
  elif '--server' in args:
   start_host(true)
  elif bot_test:
-  seed(test_seed);score_limit=40;Engine.time_scale=4;Engine.max_physics_steps_per_frame=64;start_match(true)
+  seed(test_seed);Engine.time_scale=4;Engine.max_physics_steps_per_frame=64;start_match(true)
  elif showcase:
   start_match(false);player.global_position=Vector3(0,.2,-15);player.yaw=PI-.16
  else:main_menu()
@@ -86,7 +88,7 @@ func configure_network():
  multiplayer.connection_failed.connect(connection_failed)
  multiplayer.server_disconnected.connect(server_disconnected)
 func server_connected():
- if net_mode=='client':request_slot.rpc_id(1,selected_class)
+ if net_mode=='client':request_slot.rpc_id(1,selected_class,class_loadout(selected_class))
 func connection_failed():
  if net_mode=='client':leave_match();show_error('Connection failed')
 func server_disconnected():
@@ -127,10 +129,10 @@ func panel(pos: Vector2, size_v: Vector2) -> VBoxContainer:
  var v=VBoxContainer.new();p.add_child(v);v.add_theme_constant_override('separation',14);return v
 func label(v: Node, words: String, size_v: int=18, color: Color=Color('#bdc9c8')) -> Label:
  var l=Label.new();l.text=words;l.add_theme_font_override('font',load('res://assets/interface.ttf'));l.add_theme_font_size_override('font_size',size_v);l.add_theme_color_override('font_color',color);v.add_child(l);return l
-func button(v: Node, words: String, action: Callable):
+func button(v: Node, words: String, action: Callable) -> Button:
  var b=Button.new();b.text=words;b.custom_minimum_size=Vector2(0,48);b.alignment=HORIZONTAL_ALIGNMENT_LEFT;b.add_theme_font_override('font',load('res://assets/interface.ttf'));b.add_theme_font_size_override('font_size',18)
  var s=StyleBoxFlat.new();s.bg_color=Color(.065,.09,.095,.85);s.content_margin_left=18;s.border_width_bottom=1;s.border_color=Color('#33474a');b.add_theme_stylebox_override('normal',s)
- var h=s.duplicate();h.bg_color=Color('#2b3d3e');h.border_width_left=3;h.border_color=Color('#a9c9bd');b.add_theme_stylebox_override('hover',h);b.add_theme_stylebox_override('focus',h);b.add_theme_stylebox_override('pressed',h);v.add_child(b);b.pressed.connect(action)
+ var h=s.duplicate();h.bg_color=Color('#2b3d3e');h.border_width_left=3;h.border_color=Color('#a9c9bd');b.add_theme_stylebox_override('hover',h);b.add_theme_stylebox_override('focus',h);b.add_theme_stylebox_override('pressed',h);v.add_child(b);b.pressed.connect(action);return b
 func main_menu():
  state='menu';menu_open=true;Input.mouse_mode=Input.MOUSE_MODE_VISIBLE;clear_ui();menu_camera.current=true
  menu_camera.position=Vector3(1,3.1,-15);menu_camera.look_at(Vector3(-2,3.5,2));menu_camera.fov=65
@@ -142,13 +144,22 @@ func pause_menu():
 func pause_classes():Frontend.classes(self,true)
 func queue_class(c: int):
  selected_class=clampi(c,0,2)
- if net_mode=='client':class_request.rpc_id(1,selected_class)
+ if net_mode=='client':class_request.rpc_id(1,selected_class,class_loadout(selected_class))
  elif player:player.queued_class=selected_class
+# Player-edited loadouts (CREATE A CLASS); slots fall back to the defaults.
+func class_loadout(c: int) -> Dictionary:
+ var custom=settings.get('classes',[])
+ return Arsenal.sanitize(custom[c] if custom is Array and c<custom.size() else null,c)
+func save_class(c: int, loadout: Dictionary):
+ var custom: Array=[]
+ for i in range(3):custom.append(class_loadout(i))
+ custom[c]=Arsenal.sanitize(loadout,c);settings.classes=custom;save_settings()
 @rpc('any_peer','call_remote','reliable')
-func class_request(c: int):
+func class_request(c: int, loadout: Dictionary):
  if not authority():return
  var sender=multiplayer.get_remote_sender_id()
- if peer_slots.has(sender):fighters[peer_slots[sender]].queued_class=clampi(c,0,2)
+ if peer_slots.has(sender):
+  var f=fighters[peer_slots[sender]];f.queued_class=clampi(c,0,2);f.requested_loadout=Arsenal.sanitize(loadout,f.queued_class)
 func resume():menu_open=false;clear_ui();Input.mouse_mode=Input.MOUSE_MODE_CAPTURED
 func settings_menu(in_match: bool):
  clear_ui();Frontend.backdrop(self,true);var v=panel(Vector2(500,95),Vector2(600,700));label(v,'SETTINGS',30)
@@ -161,7 +172,7 @@ func settings_menu(in_match: bool):
  quality.selected=settings.graphics;v.add_child(quality);quality.item_selected.connect(func(value):settings.graphics=value;save_settings())
  label(v,'UNIFORM CAMOUFLAGE',13)
  var camo=OptionButton.new()
- for item in ['TEAM ISSUE','MULTICAM','EMR (DIGITAL FLORA)','MM14']:camo.add_item(item)
+ for item in ['TEAM ISSUE','OCP (SCORPION W2)','EMR (DIGITAL FLORA)','MM14']:camo.add_item(item)
  camo.selected=int(settings.camo);v.add_child(camo);camo.item_selected.connect(apply_camo)
  var sync=CheckButton.new();sync.text='VSync';sync.button_pressed=settings.vsync;v.add_child(sync);sync.toggled.connect(func(value):settings.vsync=value;save_settings())
  var check=CheckButton.new();check.text='Fullscreen';check.button_pressed=settings.fullscreen;v.add_child(check);check.toggled.connect(func(value):settings.fullscreen=value;save_settings())
@@ -172,6 +183,7 @@ func apply_camo(value: int):
  if player and player.local_player:player.build_gun()
 func leave_match():
  clear_combat_effects();net_mode='offline'
+ if domination:domination.queue_free();domination=null
  if multiplayer.has_multiplayer_peer():multiplayer.multiplayer_peer=null
  net_mode='offline';dedicated_server=false;local_id=0;peer_slots.clear()
  for f in fighters:f.queue_free()
@@ -186,7 +198,9 @@ func start_match(all_bots: bool):
  var old_classes=[]
  for actor in fighters:old_classes.append(actor.queued_class if actor.queued_class>=0 else actor.class_id)
  clear_combat_effects()
- clear_ui();menu_open=false;state='match';scores=[0,0];time_left=420;match_number+=1;feed.clear();radar_time=[0.0,0.0]
+ clear_ui();menu_open=false;state='match';scores=[0,0];match_number+=1;feed.clear();radar_time=[0.0,0.0]
+ if net_mode!='client':mode='dom' if settings.get('mode','tdm')=='dom' else 'tdm'
+ setup_mode()
  for f in fighters:f.queue_free()
  fighters.clear();player=null
  for i in range(12):
@@ -197,11 +211,26 @@ func start_match(all_bots: bool):
  if net_mode=='host':
   for peer in peer_slots:
    fighters[peer_slots[peer]].bot=false
-  sync_start.rpc(match_number)
+  sync_start.rpc(match_number,mode)
+func setup_mode():
+ if domination:domination.queue_free();domination=null
+ if mode=='dom':
+  domination=Domination.new();domination.game=self;add_child(domination)
+  time_left=Domination.TIME_LIMIT;match_length=time_left;score_limit=Domination.SCORE_LIMIT if not bot_test else 60
+ else:
+  time_left=420;match_length=time_left;score_limit=75 if not bot_test else 40
+func mode_summary() -> String:
+ if settings.get('mode','tdm')=='dom':return 'Hold A, B and C  /  %d points  /  10 minutes' % Domination.SCORE_LIMIT
+ return '75 eliminations  /  7 minutes  /  fast respawn'
+func zone_event(zone: String, owner: int, team: int, _announce: bool=true):
+ var text=('AEGIS' if owner==0 else 'EMBER')+' SECURED '+zone if owner>=0 else zone+' NEUTRALISED'
+ feed.push_front({'killer':text,'victim':'','team':team,'head':false,'time':4.0,'event':true})
+ if feed.size()>5:feed.pop_back()
+ if player and owner>=0:sound('kill' if owner==player.team else 'hit',player.eye(),true,-9)
 func safe_spawn(team: int) -> Vector3:
  var best: Vector3=arena.spawns[team][0];var best_score=-999.0
  # After opening deployment, switch ends when the original spawn side is under pressure.
- var candidates=arena.spawns[team] if time_left>414 else arena.spawns[team]+arena.spawns[1-team]
+ var candidates=arena.spawns[team] if match_length-time_left<6 else arena.spawns[team]+arena.spawns[1-team]
  for p in candidates:
   var closest=80.0;var score=randf()*3+(7.0 if p in arena.spawns[team] else 0.0)
   for f in fighters:
@@ -226,6 +255,7 @@ func _physics_process(dt):
   # Rotate simulation order so one team never owns every same-tick first shot.
   for actor in fighters:actor.process_physics_priority=-50 if actor.local_player else (actor.id+combat_tick)%12
   time_left-=dt;server_clock+=dt;record_history()
+  if domination:domination.step(dt)
   if bot_test:test_elapsed+=dt
 func _process(dt):
  if '--net-test' in OS.get_cmdline_user_args():
@@ -249,6 +279,7 @@ func _process(dt):
   feed[i].time-=dt
   if feed[i].time<=0:feed.remove_at(i)
  update_fx(dt);update_grenades(dt)
+ if domination:domination.update_visuals(dt)
  if net_mode!='offline':network_tick(dt)
  # Scripted client: time-based so a loaded machine delivering snapshots in bursts still exercises input.
  if '--net-test' in OS.get_cmdline_user_args() and player and snapshot_count>0:
@@ -264,7 +295,7 @@ func _process(dt):
   get_tree().quit()
 func confirm_kill(attacker: Fighter, victim: Fighter, zone: String):
  if state!='match':return
- scores[attacker.team]+=1
+ if mode=='tdm':scores[attacker.team]+=1
  feed.push_front({'killer':callsign(attacker),'victim':callsign(victim),'team':attacker.team,'head':zone=='HEAD','time':5.0})
  if feed.size()>5:feed.pop_back()
  if zone=='HEAD':test_headshots+=1
@@ -410,7 +441,7 @@ func explode(pos: Vector3, owner: Fighter, radius: float, damage: float):
   var d=f.global_position.distance_to(pos)
   if d<radius:
    var q=PhysicsRayQueryParameters3D.create(pos+Vector3.UP*.3,f.eye(),1)
-   if get_world_3d().direct_space_state.intersect_ray(q).is_empty():f.hurt(damage*(1-d/radius)*(.75 if f.class_id==2 else 1),owner,'BLAST')
+   if get_world_3d().direct_space_state.intersect_ray(q).is_empty():f.hurt(damage*(1-d/radius)*(.6 if f.perk('flak') else 1),owner,'BLAST')
 func use_streak(owner: Fighter, tier: int):
  if tier==3:radar_time[owner.team]=20
  elif tier==5:
@@ -447,6 +478,9 @@ func start_client(address: String):
 func show_error(words: String):
  var v=panel(Vector2(550,650),Vector2(650,100));label(v,words,17,Color('#dda07a'))
 var peer_slots: Dictionary={}
+var mode='tdm'
+var match_length=420.0
+var domination: Domination
 # Netcode timing. The host stamps snapshots with its simulation clock and keeps a short
 # position history; clients render remote players INTERP_DELAY behind the newest snapshot
 # and report the clock they were looking at with every shot (lag compensation).
@@ -509,25 +543,25 @@ func peer_joined(_peer: int):pass
 func peer_left(peer: int):
  if peer_slots.has(peer):
   var slot=peer_slots[peer]
-  if slot<fighters.size():fighters[slot].bot=true;fighters[slot].collision_mask=1|8
+  if slot<fighters.size():fighters[slot].bot=true;fighters[slot].collision_mask=1|8;fighters[slot].requested_loadout={}
   peer_slots.erase(peer)
 @rpc('any_peer','call_remote','reliable')
-func request_slot(c: int):
+func request_slot(c: int, loadout: Dictionary):
  if not authority():return
  var sender=multiplayer.get_remote_sender_id();var used=peer_slots.values()
  if not dedicated_server:used.append(0)
  for slot in range(12):
   if slot not in used:
-   peer_slots[sender]=slot;var f=fighters[slot];f.bot=false;f.collision_mask=1|2|8;f.kills=0;f.deaths=0;f.streak=0;f.rewards.clear();f.load_class(clampi(c,0,2));f.spawn();assign_slot.rpc_id(sender,slot,match_number);return
+   peer_slots[sender]=slot;var f=fighters[slot];f.bot=false;f.collision_mask=1|2|8;f.kills=0;f.deaths=0;f.streak=0;f.rewards.clear();f.requested_loadout=Arsenal.sanitize(loadout,c);f.load_class(clampi(c,0,2));f.spawn();assign_slot.rpc_id(sender,slot,match_number,mode);return
  connection_denied.rpc_id(sender)
 @rpc('authority','call_remote','reliable')
 func connection_denied():leave_match();show_error('Server is full')
 @rpc('authority','call_remote','reliable')
-func assign_slot(slot: int, number: int):
- local_id=slot;match_number=number-1;start_match(false)
+func assign_slot(slot: int, number: int, match_mode: String):
+ mode=match_mode;local_id=slot;match_number=number-1;start_match(false)
 @rpc('authority','call_remote','reliable')
-func sync_start(number: int):
- if net_mode=='client':match_number=number-1;start_match(false)
+func sync_start(number: int, match_mode: String):
+ if net_mode=='client':mode=match_mode;match_number=number-1;start_match(false)
 func network_tick(dt: float):
  net_timer+=dt
  if net_timer<.033:return
@@ -537,8 +571,8 @@ func network_tick(dt: float):
   submit_input.rpc_id(1,input)
  elif net_mode=='host':
   var data=[]
-  for f in fighters:data.append([f.position,f.yaw,f.pitch,f.health,f.dead,f.kills,f.deaths,f.streak,f.ammo,f.reserves,f.weapon_id,f.respawn_time,f.rewards,f.class_id,f.reload_left,f.crouched,f.acknowledged_fire])
-  snapshot.rpc(var_to_bytes(data).compress(FileAccess.COMPRESSION_DEFLATE),scores,time_left,radar_time,server_clock)
+  for f in fighters:data.append([f.position,f.yaw,f.pitch,f.health,f.dead,f.kills,f.deaths,f.streak,f.ammo,f.reserves,f.weapon_id,f.respawn_time,f.rewards,f.class_id,f.reload_left,f.crouched,f.acknowledged_fire,[f.loadout.primary,f.loadout.perks]])
+  snapshot.rpc(var_to_bytes(data).compress(FileAccess.COMPRESSION_DEFLATE),scores,time_left,radar_time,server_clock,domination.pack() if domination else [])
 @rpc('any_peer','call_remote','unreliable_ordered')
 func submit_input(input: Dictionary):
  if not authority():return
@@ -567,12 +601,13 @@ func action_request(action: String, sequence: int, aim: Vector2, weapon: int, ge
   'grenade':f.throw_grenade()
   'streak':f.activate_streak()
 @rpc('authority','call_remote','unreliable_ordered')
-func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array, stamp: float):
+func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array, stamp: float, zones: Array=[]):
  var unpacked=packed.decompress_dynamic(65536,FileAccess.COMPRESSION_DEFLATE)
  if unpacked.is_empty():return
  var data=bytes_to_var(unpacked)
  if not data is Array or data.size()!=12 or fighters.size()!=12:return
  snapshot_count+=1;scores=score;time_left=clock;radar_time=radar
+ if domination and not zones.is_empty():domination.unpack(zones)
  # Clock offset tracks the fastest delivery seen, decaying slowly to follow drift.
  var sample=stamp-local_seconds()
  if not clock_synced or sample>clock_offset:clock_offset=sample
@@ -592,7 +627,9 @@ func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array,
    f.net_buffer.append([stamp,s[0],s[1]])
    while f.net_buffer.size()>24:f.net_buffer.pop_front()
    f.network_pose_ready=true;f.yaw=s[1];f.pitch=s[2]
-  f.health=s[3];f.dead=s[4];f.kills=s[5];f.deaths=s[6];f.streak=s[7];f.ammo=s[8];f.reserves=s[9];f.respawn_time=s[11];f.rewards.assign(s[12]);f.class_id=s[13];f.reload_left=s[14];f.crouched=s[15];f.col.shape.height=1.2 if f.crouched else 1.8;f.col.position.y=.6 if f.crouched else .9;f.model.visible=not f.local_player or f.dead;f.model.rotation.x=0 if f.body_motion else (-1.48 if f.dead else 0);f.model.position.y=0 if f.body_motion else (.12 if f.dead else (-.42 if f.crouched else 0));f.collision_layer=0 if f.dead else 2
+  f.health=s[3];f.dead=s[4];f.kills=s[5];f.deaths=s[6];f.streak=s[7];f.ammo=s[8];f.reserves=s[9];f.respawn_time=s[11];f.rewards.assign(s[12]);f.class_id=s[13]
+  if s.size()>17 and (f.loadout.is_empty() or f.loadout.perks!=s[17][1] or f.loadout.primary!=s[17][0]):f.set_loadout({'name':f.loadout.get('name',''),'primary':s[17][0],'perks':s[17][1]})
+  f.reload_left=s[14];f.crouched=s[15];f.col.shape.height=1.2 if f.crouched else 1.8;f.col.position.y=.6 if f.crouched else .9;f.model.visible=not f.local_player or f.dead;f.model.rotation.x=0 if f.body_motion else (-1.48 if f.dead else 0);f.model.position.y=0 if f.body_motion else (.12 if f.dead else (-.42 if f.crouched else 0));f.collision_layer=0 if f.dead else 2
   if f.local_player:
    f.acknowledged_fire=s[16]
    f.pending_predictions=f.pending_predictions.filter(func(shot):return shot.sequence>f.acknowledged_fire)

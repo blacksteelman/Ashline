@@ -9,6 +9,11 @@ var class_id=0
 var queued_class=-1
 var weapon_id=0
 var primary=0
+var loadout: Dictionary={}
+var perks: Array=[]
+var requested_loadout: Dictionary={} # host: loadout a network client asked for
+var max_health=100.0
+var capture_count=0
 var ammo=Arsenal.full_ammo()
 var reserves=Arsenal.full_reserves()
 var health=100.0
@@ -117,8 +122,16 @@ func muzzle_world() -> Vector3:
 func ejector_world() -> Vector3:
  if view is FirstPersonRig:return view.ejector_position()
  return gun.to_global(gun.get_meta('ejector',Vector3(.049,.016,-.12)))
+func perk(key: String) -> bool:return key in perks
+func reload_time(kind: int) -> float:return Arsenal.WEAPONS[kind].reload*(.75 if perk('sleight') else 1.0)
+func set_loadout(value: Dictionary):
+ loadout=Arsenal.sanitize(value,class_id);perks=Arsenal.perk_keys(loadout);max_health=125.0 if perk('juggernaut') else 100.0
 func load_class(c: int):
- class_id=c;primary=Arsenal.CLASSES[c].weapon;weapon_id=primary
+ class_id=clampi(c,0,2)
+ if not requested_loadout.is_empty():set_loadout(requested_loadout)
+ elif local_player:set_loadout(game.class_loadout(class_id))
+ else:set_loadout(Arsenal.CLASSES[class_id])
+ primary=loadout.primary;weapon_id=primary
  ammo=Arsenal.full_ammo();reserves=Arsenal.full_reserves();grenades=2;reload_left=0
  if local_player and rig:build_gun()
  update_world_weapon()
@@ -175,7 +188,7 @@ func _physics_process(dt):
   reload_left-=dt
   if reload_left<=0 and game.authority():
    var need=Arsenal.WEAPONS[weapon_id].mag-ammo[weapon_id];var take=mini(need,reserves[weapon_id]);ammo[weapon_id]+=take;reserves[weapon_id]-=take
- if damage_age>4:health=minf(100,health+dt*24)
+ if damage_age>4:health=minf(max_health,health+dt*24)
  var was_crouched=crouched
  if bot and game.authority():think_bot(dt)
  elif local_player:
@@ -205,7 +218,7 @@ func _physics_process(dt):
    if distance>.05 and distance<.8:direction+=separation.normalized()*(.8-distance)*1.2
   direction=direction.normalized()
  var speed=7.8 if sprinting else (2.5 if crouched else (3.2 if ads else 5.1))
- if sprinting and class_id==1:speed*=1.12
+ if perk('lightweight'):speed*=1.10
  velocity.x=move_toward(velocity.x,direction.x*speed,dt*45);velocity.z=move_toward(velocity.z,direction.z*speed,dt*45)
  col.shape.height=1.2 if crouched else 1.8;col.position.y=.6 if crouched else .9
  var was_floor=is_on_floor()
@@ -290,7 +303,7 @@ func recover_recoil(dt: float):
  if shot_age>.35:recoil_sequence=0
 func start_reload():
  if dead or reload_left>0 or ammo[weapon_id]>=Arsenal.WEAPONS[weapon_id].mag or reserves[weapon_id]<=0:return
- reload_left=Arsenal.WEAPONS[weapon_id].reload*(.78 if class_id==0 else 1.0)
+ reload_left=reload_time(weapon_id)
  recoil_sequence=0
 func shoot():
  if dead or cooldown>0 or reload_left>0 or sprinting:return
@@ -306,7 +319,7 @@ func shoot():
   var predicted_hit=get_world_3d().direct_space_state.intersect_ray(visual_ray)
   if not predicted_hit.is_empty() and not predicted_hit.collider is Fighter:game.impact(predicted_hit.position,predicted_hit.normal,predicted_hit.collider.get_meta('surface','concrete'))
   local_fire_feedback(w,direction);return
- var dir=aim_dir();var spread=w.spread*(.18 if ads else 1.0)*(1.7 if not is_on_floor() else 1.0)
+ var dir=aim_dir();var spread=w.spread*(.18 if ads else (.65 if perk('steady') else 1.0))*(1.7 if not is_on_floor() else 1.0)
  dir=(dir+Vector3(randf_range(-spread,spread),randf_range(-spread,spread),randf_range(-spread,spread))).normalized()
  var origin=eye();var hit=game.trace(origin,origin+dir*140,self)
  if local_player:local_fire_feedback(w,dir)
@@ -319,7 +332,7 @@ func shoot():
     var zone='HEAD' if h>(1.03 if target.crouched else 1.48) else ('LEGS' if h<.72 else 'TORSO')
     var damage=w.damage*(2.4 if zone=='HEAD' else (.72 if zone=='LEGS' else 1.0))
     # Damage falls off past each weapon's effective range.
-    damage*=clampf(1.25-origin.distance_to(hit.position)/(w.range*2.0),.62,1.0)
+    damage*=clampf(1.25-origin.distance_to(hit.position)/(w.range*2.0),.62,1.0)*(1.2 if perk('stopping') else 1.0)
     target.hurt(damage,self,zone);game.impact(hit.position,hit.normal,'flesh')
     if local_player:
      game.hit_time=.16
@@ -359,9 +372,10 @@ func hurt(amount: float, attacker: Fighter, zone: String):
   attacker.kills+=1;attacker.streak+=1
   if attacker.streak in [3,5,7]:attacker.rewards.append(attacker.streak)
   game.confirm_kill(attacker,self,zone)
+  if attacker.perk('scavenger'):attacker.reserves=Arsenal.full_reserves()
 func spawn():
  if death_motion:death_motion.kill()
- dead=false;pending_fire=false;pending_remote_shots.clear();pending_predictions.clear();reload_requested=false;health=100;collision_layer=2;damage_age=0;velocity=Vector3.ZERO;model.rotation=Vector3.ZERO;model.position=Vector3.ZERO;model.visible=not local_player
+ dead=false;pending_fire=false;pending_remote_shots.clear();pending_predictions.clear();reload_requested=false;health=max_health;collision_layer=2;damage_age=0;velocity=Vector3.ZERO;model.rotation=Vector3.ZERO;model.position=Vector3.ZERO;model.visible=not local_player
  global_position=game.safe_spawn(team);yaw=PI if global_position.z<0 else 0;pitch=0;life_age=0;stuck_time=0;cover_time=0;bot_pause=0;bot_burst=0;load_class(queued_class if queued_class>=0 else class_id);queued_class=-1;path.clear();bot_target=null;bot_think=0
  if body_motion:body_motion.reset()
  if local_player:gun.visible=true;recoil_return=Vector2.ZERO;recoil_sequence=0;shot_age=1;sprint_blend=0;view.aim_blend=0
@@ -411,7 +425,8 @@ func think_bot(dt: float):
    else:
     # Push toward the enemy half most of the time, otherwise hold a known position.
     var destination=game.arena.random_patrol()
-    if randf()<.35:
+    if game.domination and randf()<.8:destination=game.domination.objective_for(self)
+    elif randf()<.35:
      var forward=game.arena.patrol.filter(func(p):return p.z*(1.0 if team==0 else -1.0)>4.0)
      if not forward.is_empty():destination=forward.pick_random()
     set_route(destination)

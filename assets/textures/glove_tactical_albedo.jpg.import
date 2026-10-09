@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cntd2818lf6xk"
-path="res://.godot/imported/camo_multicam_albedo.jpg-3cca850976e2d6f5d060c7569cc821c1.ctex"
+uid="uid://qh8hlwrxwj7o"
+path="res://.godot/imported/glove_tactical_albedo.jpg-6133230cb1f391cb14160865096be0bf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/camo_multicam_albedo.jpg"
-dest_files=["res://.godot/imported/camo_multicam_albedo.jpg-3cca850976e2d6f5d060c7569cc821c1.ctex"]
+source_file="res://assets/textures/glove_tactical_albedo.jpg"
+dest_files=["res://.godot/imported/glove_tactical_albedo.jpg-6133230cb1f391cb14160865096be0bf.ctex"]
 
 [params]
 

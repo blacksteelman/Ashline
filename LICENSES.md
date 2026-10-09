@@ -35,3 +35,5 @@ Third-party resources added in 0.8 (see tools/fetch_polyhaven.py, tools/fetch_am
   CC BY licence text: https://creativecommons.org/licenses/by/4.0/
 - Motion capture: CMU Graphics Lab Motion Capture Database (http://mocap.cs.cmu.edu), BVH conversion by Bruce Hahne (cgspeed). The database is free for use, including commercial products. Clips 09_06, 16_46, 143_32, 143_39 are retargeted in tools/build_soldiers.py; the upper body, idle, crouch, jump, reload and death motions are authored procedurally for ASHLINE.
 - Camouflage patterns (tools/camo.py) are generated procedurally for ASHLINE; no third-party camouflage artwork is copied.
+- OCP / Scorpion W2 camouflage swatch: US Army, public domain (PD-USGov-Military-Army), via Wikimedia Commons
+  (File:Scorpion W2, Operational Camouflage Pattern (OCP) swatch.png). Made seamless in tools/camo.py.

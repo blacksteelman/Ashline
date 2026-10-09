@@ -86,16 +86,16 @@ func update(owner: Fighter, dt: float):
   var open=owner.ammo[3]==0 and owner.reload_left<=0
   slide.position.z+=.043*(1.0 if open else cycle)
   if owner.reload_left>0:
-   var progress=1-owner.reload_left/(Arsenal.WEAPONS[3].reload*(.78 if owner.class_id==0 else 1.0))
+   var progress=1-owner.reload_left/(owner.reload_time(3))
    slide.position.z+=.043*(1-smoothstep(.84,.94,progress)) if owner.ammo[3]==0 else 0.0
  if animator and contact_clip!=&"":
   var contact_time=0.0
   if owner.reload_left>0:
-   var reload_duration=Arsenal.WEAPONS[owner.weapon_id].reload*(.78 if owner.class_id==0 else 1.0)
+   var reload_duration=owner.reload_time(owner.weapon_id)
    contact_time=clampf(1-owner.reload_left/reload_duration,0,1)*animator.get_animation(contact_clip).length
   animator.seek(contact_time,true)
  if owner.reload_left>0:
-  var duration=Arsenal.WEAPONS[owner.weapon_id].reload*(.78 if owner.class_id==0 else 1.0)
+  var duration=owner.reload_time(owner.weapon_id)
   var progress=clampf(1-owner.reload_left/duration,0,1)
   var tilt=sin(progress*PI)
   position+=Vector3(-.035,.07,-.02)*tilt;angles+=Vector3(.16,-.16,-.45)*tilt

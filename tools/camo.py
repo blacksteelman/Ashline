@@ -2,7 +2,7 @@
 """Generate ASHLINE camouflage textures (original procedural patterns).
 
 Styles follow the look and palettes of well-known field patterns:
-  multicam  - soft organic blotches over a tan-to-olive gradient with thin dark branches
+  ocp       - OCP / Scorpion W2 (US Army pattern, public domain), palette from the official swatch
   emr       - Russian digital "flora": square pixels, grey-green base, greens and dark brown
   mm14      - Ukrainian pixel pattern: small pixels in slanted streaks, khaki/olive/brown/dark green
 The patterns are generated here; no third-party camo artwork is copied.
@@ -47,27 +47,54 @@ def fabric(res):
     return lum / lum.mean()
 
 
-def save(name, rgb):
-    rgb = rgb * (0.92 + 0.08 * fabric(N))[..., None] * fabric(N)[..., None] ** 0.35
+def save(name, rgb, weave=1.0):
+    f = fabric(N)
+    rgb = rgb * (1 + (f - 1) * 0.12 * weave)[..., None]
     Image.fromarray(np.clip(rgb, 0, 255).astype(np.uint8)).save(os.path.join(TEX, f'camo_{name}_albedo.jpg'), quality=92)
     print('camo', name)
 
 
-def multicam():
-    y = np.linspace(0, 1, N)[:, None] * np.ones((1, N))
-    wave = 0.5 + 0.5 * np.sin(y * np.pi * 2)  # tileable vertical drift
-    base = hexrgb('#b8a77d') * (1 - wave[..., None]) + hexrgb('#8f9466') * wave[..., None]
-    img = base.copy()
-    layers = [('#8a8a5c', 0.58, 11), ('#a6906a', 0.60, 12), ('#66713f', 0.68, 13), ('#6b5038', 0.72, 14), ('#d4c6a0', 0.75, 15)]
-    for color, threshold, seed in layers:
-        field = tile_noise(N, 5, seed, (1.0, 1.4), base=7)
-        mask = np.asarray(Image.fromarray((field > threshold).astype(np.uint8) * 255).filter(ImageFilter.GaussianBlur(1.6)), np.float32) / 255.0
-        img = img * (1 - mask[..., None]) + hexrgb(color) * mask[..., None]
-    # thin dark-brown branches
-    ridge = 1 - np.abs(tile_noise(N, 4, 21, (1.0, 2.2), base=6) - 0.5) * 2
-    branch = np.clip((ridge - 0.955) / 0.03, 0, 1) * (tile_noise(N, 3, 22, base=6) > 0.5)
-    img = img * (1 - branch[..., None] * 0.85) + hexrgb('#3e2f22') * branch[..., None] * 0.85
-    save('multicam', img)
+def soft_mask(field, threshold, blur):
+    m = (field > threshold).astype(np.uint8) * 255
+    return np.asarray(Image.fromarray(m).filter(ImageFilter.GaussianBlur(blur)), np.float32) / 255.0
+
+
+def lay(img, mask, color, strength=1.0):
+    m = mask[..., None] * strength
+    return img * (1 - m) + hexrgb(color) * m
+
+
+OCP_SWATCH = os.path.join(ROOT, 'assets', 'thirdparty', 'camo', 'scorpion_w2_swatch.png')
+OCP_URL = 'https://commons.wikimedia.org/wiki/Special:FilePath/Scorpion_W2,_Operational_Camouflage_Pattern_(OCP)_swatch.png'
+
+
+def seamless(rgb):
+    """Make an image tile: blend it with a half-offset copy under a feathered cross mask."""
+    n = rgb.shape[0]
+    shifted = np.roll(np.roll(rgb, n // 2, 0), n // 2, 1)
+    t = np.abs(np.linspace(-1, 1, n))
+    edge = np.clip((np.maximum(t[:, None], t[None, :]) - 0.55) / 0.4, 0, 1)
+    edge = edge * edge * (3 - 2 * edge)
+    return rgb * (1 - edge[..., None]) + shifted * edge[..., None]
+
+
+def ocp():
+    """OCP / Scorpion W2 from the US Army swatch (public domain, PD-USGov-Military-Army),
+    upscaled and made seamless; the swatch is fetched once into assets/thirdparty/camo."""
+    if not os.path.exists(OCP_SWATCH):
+        os.makedirs(os.path.dirname(OCP_SWATCH), exist_ok=True)
+        os.system(f'curl -sSL -A "AshlineAssetFetch/0.8" -o "{OCP_SWATCH}" "{OCP_URL}"')
+    src = Image.open(OCP_SWATCH).convert('RGB')
+    src = src.crop((4, 4, src.size[0] - 4, src.size[1] - 4))  # the scan has a light border
+    side = min(src.size)
+    sq = src.crop(((src.size[0] - side) // 2, (src.size[1] - side) // 2, (src.size[0] + side) // 2, (src.size[1] + side) // 2))
+    big = np.asarray(sq.resize((N, N), Image.LANCZOS).filter(ImageFilter.UnsharpMask(2, 60, 2)), np.float32)
+    rgb = seamless(big)
+    # The photo is slightly washed out: restore some saturation and contrast.
+    lum = rgb @ np.array([0.3, 0.59, 0.11], np.float32)
+    rgb = lum[..., None] + (rgb - lum[..., None]) * 1.25
+    rgb = (rgb - 118) * 1.1 + 118
+    save('ocp', rgb, weave=0.25)
 
 
 def pixelate(classes, cell):
@@ -76,13 +103,15 @@ def pixelate(classes, cell):
 
 
 def emr():
-    palette = [hexrgb(c) for c in ('#9aa084', '#717e57', '#4a5639', '#2f2a22')]
-    a = tile_noise(N, 5, 31, base=9); b = tile_noise(N, 5, 32, base=9); c = tile_noise(N, 6, 33, base=12)
+    """Russian digital 'Tsifra' summer look: light grey-green field, green, brown and black pixels
+    grouped into blotches (original generation, approximate palette)."""
+    palette = [hexrgb(c) for c in ('#8e9878', '#5d7046', '#4b4232', '#22231d')]
+    a = tile_noise(N, 5, 31, (1.0, 1.3), base=18); b = tile_noise(N, 5, 32, (1.0, 1.3), base=22); c = tile_noise(N, 6, 33, base=28)
     cls = np.zeros((N, N), np.int32)
-    cls[a > 0.55] = 1
-    cls[b > 0.62] = 2
-    cls[(c > 0.66) & (a > 0.4)] = 3
-    cls = pixelate(cls, 8)
+    cls[a > 0.53] = 1
+    cls[(b > 0.60) & (a > 0.45)] = 2
+    cls[(c > 0.70) & (b > 0.5)] = 3
+    cls = pixelate(cls, 4)
     save('emr', np.stack([palette[k] for k in range(4)])[cls])
 
 
@@ -102,5 +131,18 @@ def mm14():
     save('mm14', np.stack([palette[k] for k in range(4)])[cls])
 
 
+def glove():
+    """Tactical glove: coyote synthetic weave, tiled 4x so it reads at hand scale."""
+    src = Image.open(os.path.join(TEX, 'fabric_canvas_albedo.jpg')).convert('L').resize((256, 256))
+    lum = np.tile(np.asarray(src, np.float32) / 255.0, (4, 4))
+    lum = lum / lum.mean()
+    wear = tile_noise(1024, 4, 71, base=3)  # darker, worn patches
+    rgb = hexrgb('#6f604a')[None, None, :] * (0.78 + 0.22 * lum[..., None]) * (0.86 + 0.14 * wear[..., None])
+    Image.fromarray(np.clip(rgb, 0, 255).astype(np.uint8)).save(os.path.join(TEX, 'glove_tactical_albedo.jpg'), quality=92)
+    nrm = Image.open(os.path.join(TEX, 'fabric_canvas_normal.jpg')).resize((256, 256))
+    Image.fromarray(np.tile(np.asarray(nrm), (4, 4, 1))).save(os.path.join(TEX, 'glove_tactical_normal.jpg'), quality=92)
+    print('glove')
+
+
 if __name__ == '__main__':
-    multicam(); emr(); mm14()
+    ocp(); emr(); mm14(); glove()

@@ -4,7 +4,14 @@ extends RefCounted
 # Baked clips (idle, draw, sprint, reload, reload_empty, cycle) run in an
 # AnimationTree; recoil, sway, bob, ADS alignment and wall push are procedural
 # on the scene root so they react at render rate.
-const ADS_DISTANCE=[.105,.115,.075,.20]
+const ADS_DISTANCE=[.17,.17,.075,.26]
+# Iron-sight line per weapon, measured on the meshes (tools: profile of the centre-line vertices):
+# rear aperture/notch centre and front post tip, as offsets from the 'Sight' marker in weapon
+# space (Blender axes: x right, y muzzle, z up). ADS puts the eye on the rear point looking at the front.
+const SIGHTS=[[Vector3(0,-.03,-.0085),Vector3(0,.39,.003)],[Vector3(0,-.03,-.0085),Vector3(0,.39,.003)],[Vector3.ZERO,Vector3(0,1,0)],[Vector3(0,.04,-.008),Vector3(0,.205,-.0053)]]
+# Hip framing per weapon (applied on top of the authored pose, fades out in ADS): the rifle sits
+# closer to the screen centre and the muzzle is turned slightly outward, like CoD4-era hip carry.
+const HIP=[Vector4(-.042,.004,-.012,-4.0),Vector4(-.040,.004,-.012,-4.0),Vector4(-.036,.004,-.010,-3.0),Vector4(-.030,.0,.0,-6.0)]
 var gun: Node3D
 var skeleton: Skeleton3D
 var tree: AnimationTree
@@ -30,10 +37,10 @@ var kick_bolt=0.0
 var last_ammo=-1
 var breath=0.0
 
-const CAMO=['multicam','emr','mm14']
+const CAMO=['ocp','emr','mm14']
 static func camo_texture(team: int, choice: int) -> Texture2D:
- # 0 = team issue (Aegis MultiCam-style, Ember EMR-style), 1..3 explicit pattern.
- var key=CAMO[choice-1] if choice>0 else ('multicam' if team==0 else 'emr')
+ # 0 = team issue (Aegis OCP, Ember EMR-style), 1..3 explicit pattern.
+ var key=CAMO[choice-1] if choice>0 else ('ocp' if team==0 else 'emr')
  return load('res://assets/textures/camo_'+key+'_albedo.jpg')
 
 func dress(team: int, choice: int):
@@ -116,7 +123,7 @@ func update(owner: Fighter, dt: float):
  kick_bolt=move_toward(kick_bolt,0.0,dt*18.0)
  bolt_modifier.lock=1.0 if owner.ammo[owner.weapon_id]==0 and owner.reload_left<=0 and owner.weapon_id!=2 else 0.0
  var w=Arsenal.WEAPONS[owner.weapon_id]
- var reload_duration=w.reload*(.78 if owner.class_id==0 else 1.0)
+ var reload_duration=owner.reload_time(owner.weapon_id)
  # Reload clip follows the authoritative timer, so animation and ammo agree.
  if owner.reload_left>0:
   var clip='reload_empty' if owner.ammo[owner.weapon_id]==0 and has_clip('reload_empty') else 'reload'
@@ -137,7 +144,7 @@ func update(owner: Fighter, dt: float):
  var aim=owner.ads and not owner.sprinting and owner.reload_left<=0 and action==''
  aim_blend=move_toward(aim_blend,1.0 if aim else 0.0,dt*(6.5 if aim else 8.5))
  var a=smoothstep(0,1,aim_blend)
- var ads=Transform3D(Basis.IDENTITY,Vector3(0,0,-ADS_DISTANCE[owner.weapon_id]))*sight_rest.affine_inverse()
+ var ads=Transform3D(Basis.IDENTITY,Vector3(0,0,-ADS_DISTANCE[owner.weapon_id]))*sight_line(owner.weapon_id).affine_inverse()
  # Mouse inertia: the weapon lags behind fast turns and settles with a soft spring.
  var target_inertia=owner.sway*(1.0-a*.7)
  inertia_velocity+=(target_inertia*6.0-inertia)*dt*90.0
@@ -157,9 +164,16 @@ func update(owner: Fighter, dt: float):
   var push=1-owner.eye().distance_to(hit.position)/.75
   offset+=Vector3(0,-.03,.12)*push;rot+=Vector3(.35,.0,.15)*push*(1-a)
  var procedural=Transform3D(Basis.from_euler(rot),offset)
- gun.transform=Transform3D.IDENTITY.interpolate_with(ads,a)*procedural
+ var h=HIP[owner.weapon_id]
+ var hip=Transform3D(Basis(Vector3.UP,deg_to_rad(h.w)),Vector3(h.x,h.y,h.z))
+ gun.transform=hip.interpolate_with(ads,a)*procedural
  # Viewmodel field of view narrows slightly when aiming.
  ViewmodelMaterial.update_projection(lerpf(52.0,44.0,a),owner.camera.fov)
+
+func sight_line(kind: int) -> Transform3D:
+ var to_local=func(v: Vector3):return Vector3(v.x,v.z,-v.y)
+ var rear=sight_rest*to_local.call(SIGHTS[kind][0]);var front=sight_rest*to_local.call(SIGHTS[kind][1])
+ return Transform3D(Basis.looking_at(front-rear,sight_rest.basis.y),rear)
 
 func sounds(owner: Fighter):
  # Mechanical sounds at the authored contact points of each clip.

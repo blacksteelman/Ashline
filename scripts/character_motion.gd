@@ -97,7 +97,7 @@ func update(dt: float):
  reload_blend=move_toward(reload_blend,1.0 if actor.reload_left>0 and not actor.dead else 0.0,dt*12)
  tree.set('parameters/Service/blend_amount',reload_blend)
  if actor.reload_left>0:
-  var duration=Arsenal.WEAPONS[actor.weapon_id].reload*(.78 if actor.class_id==0 else 1.0)
+  var duration=actor.reload_time(actor.weapon_id)
   tree.set('parameters/ReloadClock/seek_request',clampf(1-actor.reload_left/duration,0,1)*2.0)
  if actor.dead:
   if not was_dead:death_age=0
@@ -106,5 +106,5 @@ func update(dt: float):
  if actor.world_gun:
   var magazine=actor.world_gun.find_child('MagazineRig',true,false)
   if magazine:
-   var t=clampf(1-actor.reload_left/(Arsenal.WEAPONS[actor.weapon_id].reload*(.78 if actor.class_id==0 else 1.0)),0,1)
+   var t=clampf(1-actor.reload_left/(actor.reload_time(actor.weapon_id)),0,1)
    magazine.position.y=-sin(PI*t)*.07 if actor.reload_left>0 else 0.0

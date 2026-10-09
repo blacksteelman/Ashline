@@ -23,9 +23,12 @@ func _draw():
  words(Vector2(680,49),'AEGIS',12,teal);words(Vector2(851,49),'EMBER',12,orange)
  words(Vector2(741,62),str(game.scores[0]),25,ivory,true);words(Vector2(818,62),str(game.scores[1]),25,ivory,true)
  var seconds=maxi(0,int(game.time_left));words(Vector2(776,40),'%02d:%02d' % [seconds/60,seconds%60],12,ivory,true)
- words(Vector2(693,92),'TDM / '+str(game.score_limit)+'   ·   FOUNDRY',12,muted)
+ words(Vector2(693,92),('DOM / ' if game.mode=='dom' else 'TDM / ')+str(game.score_limit)+'   ·   FOUNDRY',12,muted)
+ if game.domination:zones_overlay()
  for i in range(mini(game.feed.size(),5)):
-  var f=game.feed[i];words(Vector2(1170,110+i*24),f.killer+'  '+('◇' if f.head else '›')+'  '+f.victim,14,teal if f.team==0 else orange)
+  var f=game.feed[i]
+  if f.get('event',false):words(Vector2(1170,110+i*24),'◆  '+f.killer,14,teal if f.team==0 else orange)
+  else:words(Vector2(1170,110+i*24),f.killer+'  '+('◇' if f.head else '›')+'  '+f.victim,14,teal if f.team==0 else orange)
  if not p:return
  # Minimap: scripts/minimap.gd (child control, clipped and rotating).
  if game.radar_time[p.team]>0:words(Vector2(28,212),'RECON  '+str(int(game.radar_time[p.team]))+'s',12,teal)
@@ -50,12 +53,30 @@ func _draw():
  words(Vector2(1290,875),'G  '+str(p.grenades)+' FRAG',11,muted,true)
  if p.reload_left>0:words(Vector2(730,564),'RELOADING',14,ivory)
  elif p.ammo[p.weapon_id]<6:words(Vector2(729,564),'R  /  RELOAD',14,orange)
- words(Vector2(36,839),Arsenal.CLASSES[p.class_id].name+' / '+Arsenal.CLASSES[p.class_id].perk,13,muted)
- draw_rect(Rect2(36,855,100,3),Color(.2,.25,.25));draw_rect(Rect2(36,855,p.health,3),teal if p.health>35 else orange)
+ words(Vector2(36,839),p.loadout.get('name','')+' / '+Arsenal.perk_names(p.loadout),13,muted)
+ draw_rect(Rect2(36,855,100,3),Color(.2,.25,.25));draw_rect(Rect2(36,855,p.health/p.max_health*100,3),teal if p.health>35 else orange)
  words(Vector2(146,862),str(int(p.health)),13,muted,true)
  words(Vector2(36,886),'STREAK  '+str(p.streak)+'  /  '+('3 RECON' if p.streak<3 else ('5 MORTAR' if p.streak<5 else '7 OVERWATCH')),11,muted,true)
  if not p.rewards.is_empty():words(Vector2(620,770),'3  /  '+{3:'RECON',5:'MORTAR',7:'OVERWATCH'}[p.rewards[0]]+' AVAILABLE',18,teal)
 
+# Domination: A/B/C under the score panel and a capture bar while standing in a zone.
+func zones_overlay():
+ var p=game.player
+ for i in range(game.domination.zones.size()):
+  var zone=game.domination.zones[i];var pos=Vector2(740+i*44,104)
+  var c=Domination.COLORS[zone.owner] if zone.owner>=0 else Color(.55,.58,.56)
+  draw_rect(Rect2(pos,Vector2(36,26)),Color(.025,.04,.045,.75));draw_rect(Rect2(pos,Vector2(36,26)),c,false,2)
+  if zone.owner<0 and absf(zone.progress)>.02:draw_rect(Rect2(pos+Vector2(2,22),Vector2(32*absf(zone.progress),3)),Domination.COLORS[0 if zone.progress<0 else 1])
+  words(pos+Vector2(12,19),zone.name,15,c)
+ if not p or p.dead:return
+ var zone=game.domination.zone_at(p)
+ if zone==null:return
+ var mine=-1.0 if p.team==0 else 1.0
+ var share=clampf((zone.progress*mine+1.0)*.5,0,1)
+ var contested=zone.present[0]>0 and zone.present[1]>0
+ var title='CONTESTED  '+zone.name if contested else ('HOLDING  '+zone.name if zone.owner==p.team else 'CAPTURING  '+zone.name)
+ words(Vector2(735,618),title,15,ivory)
+ draw_rect(Rect2(700,628,200,6),Color(.02,.03,.03,.8));draw_rect(Rect2(700,628,200*share,6),teal if p.team==0 else orange)
 func scoreboard():
  draw_rect(Rect2(390,165,820,550),Color(.025,.045,.05,.94));words(Vector2(425,207),'FOUNDRY / TEAM DEATHMATCH',25,ivory)
  words(Vector2(425,245),'CALLSIGN                     TEAM          K     D     STREAK',14,muted,true)
