@@ -1,0 +1,11 @@
+{
+  "version": "0.6",
+  "commit": "8b3ac9b7f3f8207d9d58d22b2118380a69038484",
+  "tag": "v0.6.0-alpha-build1",
+  "engine": "Godot 4.6.3",
+  "verification": "verification_v6.json",
+  "windows_runtime_tested": false,
+  "gpu_hardware_tested": false,
+  "audio_output_tested": false,
+  "assets": "Pinned CC0 ambientCG PBR and Free Firearm Sound Library recordings; see ASSET-SOURCES.json and LICENSES.md."
+}
