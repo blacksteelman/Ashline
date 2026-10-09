@@ -336,18 +336,20 @@ func smoke_sprite(pos: Vector3, scale_v: float, life: float, velocity: Vector3, 
  var sprite=Sprite3D.new();sprite.texture=load('res://assets/smoke.png');sprite.billboard=BaseMaterial3D.BILLBOARD_ENABLED;sprite.pixel_size=.01;sprite.modulate=tint;sprite.no_depth_test=false
  sprite.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
  add_child(sprite);sprite.position=pos;sprite.scale=Vector3.ONE*scale_v;add_fx(sprite,life,velocity)
-func muzzle(pos: Vector3, _dir: Vector3):
+func muzzle(pos: Vector3, direction: Vector3, kind: int=0):
  if bot_test or dedicated_server or DisplayServer.get_name()=='headless':return
- var flash=Sprite3D.new();flash.texture=load('res://assets/muzzle.png');flash.billboard=BaseMaterial3D.BILLBOARD_ENABLED;flash.pixel_size=.002;flash.shaded=false
+ var flash=Sprite3D.new();flash.texture=load('res://assets/muzzle.png');flash.billboard=BaseMaterial3D.BILLBOARD_ENABLED;flash.pixel_size=.002*[1.0,.8,1.25,.65][clampi(kind,0,3)];flash.shaded=false
  flash.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
  add_child(flash);flash.position=pos;flash.rotation.z=randf()*TAU;add_fx(flash,.035)
  if fx.size()<160:
   var light=OmniLight3D.new();add_child(light);light.position=pos;light.light_color=Color('#ffa659');light.omni_range=3;light.light_energy=1.6;add_fx(light,.065)
-  smoke_sprite(pos,.12,.24,Vector3.UP*.3,Color('#b0ada0'))
-func shell(pos: Vector3):
+  smoke_sprite(pos,.09,.24,Vector3.UP*.25+direction*.35,Color('#b0ada0'))
+func shell(pos: Vector3, direction: Vector3=Vector3.RIGHT):
  if bot_test or dedicated_server or DisplayServer.get_name()=='headless':return
  var m=Art.cylinder(self,pos,.005,.028,Art.mat('brass',Color('#b49357'),.8))
- var right=Vector3.RIGHT.rotated(Vector3.UP,player.yaw if player else 0)
+ m.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+ m.rotation=Vector3(randf()*PI,randf()*PI,randf()*PI)
+ var right=direction.normalized()
  add_fx(m,3,right*randf_range(1.7,2.6)+Vector3(0,1.4,randf_range(-.5,.5)),true)
 func impact(pos: Vector3, normal: Vector3, material: String):
  if bot_test or dedicated_server or DisplayServer.get_name()=='headless':return
@@ -560,7 +562,7 @@ func shot_event(who: int, origin: Vector3, dir: Vector3):
  f.last_shot=.4
  sound(Arsenal.WEAPONS[f.weapon_id].sound,origin,f.local_player,-3)
  if f.local_player:f.view.fire(f.weapon_id);f.kick+=.038;f.pitch+=deg_to_rad(Arsenal.WEAPONS[f.weapon_id].recoil);muzzle(f.gun.to_global(f.gun.get_meta('muzzle')),dir)
- else:muzzle(origin+dir*.55,dir)
+ else:muzzle(origin+dir*.55,dir,f.weapon_id)
 @rpc('authority','call_remote','reliable')
 func kill_event(killer: int, victim: int, zone: String, score: Array):
  if fighters.size()!=12 or state!='match':return

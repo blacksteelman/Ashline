@@ -2,6 +2,7 @@ class_name Arena
 extends Node3D
 var obstacles: Array[Rect2] = []
 var grid = AStarGrid2D.new()
+var navigation = AStar3D.new()
 var spawns = [[],[]]
 func block(pos: Vector3, size: Vector3, m: Material, surface: String='concrete', damaged: bool=true) -> MeshInstance3D:
  var visual=Art.box(self,pos,size,m,true,surface,damaged)
@@ -151,6 +152,35 @@ func _ready():
   for z in range(-31,32):
    for r in obstacles:
     if r.has_point(Vector2(x,z)):grid.set_point_solid(Vector2i(x,z));break
+ # Height-aware links prevent ground routes from entering the raised ramp
+ # through its solid sides. The deck is reached through the actual stair run.
+ for x in range(-31,32):
+  for z in range(-31,32):
+   if not grid.is_point_solid(Vector2i(x,z)):
+    navigation.add_point(nav_id(x,z),Vector3(x,nav_height(x,z),z))
+ for x in range(-31,32):
+  for z in range(-31,32):
+   var id=nav_id(x,z)
+   if not navigation.has_point(id):continue
+   for direction in [Vector2i(1,0),Vector2i(0,1),Vector2i(1,1),Vector2i(1,-1)]:
+    var other=Vector2i(x,z)+direction
+    if not grid.is_in_boundsv(other):continue
+    var next=nav_id(other.x,other.y)
+    if not navigation.has_point(next):continue
+    var rise=absf(navigation.get_point_position(id).y-navigation.get_point_position(next).y)
+    if rise>.42:continue
+    # A sloped ascent is walkable; entering its raised side is a vertical step.
+    var crossing_side=(x<24.5 and other.x>=24.5) or (x<=27.5 and other.x>27.5)
+    if crossing_side and rise>.24:continue
+    if direction.x!=0 and direction.y!=0:
+     if grid.is_point_solid(Vector2i(x,other.y)) or grid.is_point_solid(Vector2i(other.x,z)):continue
+     if absf(nav_height(x,other.y)-nav_height(other.x,z))>.42:continue
+    navigation.connect_points(id,next)
+func nav_id(x: int,z: int) -> int:return (x+31)*63+z+31
+func nav_height(x: float,z: float) -> float:
+ if x>=22.5 and x<=29.5 and z>=-12.5 and z<=-5.5:return 2.25
+ if x>=24.5 and x<=27.5 and z>=-20.05 and z< -12.5:return maxf(0,(z+20.0)*2.275/7.8+.065)
+ return 0.0
 func nearest_open(point: Vector2i, physical: Vector3) -> Vector2i:
  point.x=clampi(point.x,-30,30);point.y=clampi(point.y,-30,30)
  if not grid.is_point_solid(point):return point
@@ -167,4 +197,11 @@ func nearest_open(point: Vector2i, physical: Vector3) -> Vector2i:
 func route(from: Vector3, to: Vector3) -> PackedVector2Array:
  var a=nearest_open(Vector2i(roundi(from.x),roundi(from.z)),from)
  var b=nearest_open(Vector2i(roundi(to.x),roundi(to.z)),to)
- return grid.get_point_path(a,b,true)
+ if navigation.get_point_count()==0:return PackedVector2Array()
+ var start=navigation.get_closest_point(from);var end=navigation.get_closest_point(to)
+ # Obstacle projection still resolves destinations inside walls.
+ if grid.is_point_solid(Vector2i(roundi(from.x),roundi(from.z))):start=nav_id(a.x,a.y)
+ if grid.is_point_solid(Vector2i(roundi(to.x),roundi(to.z))):end=nav_id(b.x,b.y)
+ var result=PackedVector2Array()
+ for point in navigation.get_point_path(start,end):result.append(Vector2(point.x,point.z))
+ return result

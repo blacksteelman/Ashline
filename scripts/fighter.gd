@@ -260,7 +260,7 @@ func shoot():
  dir=(dir+Vector3(randf_range(-spread,spread),randf_range(-spread,spread),randf_range(-spread,spread))).normalized()
  var origin=eye();var ray=PhysicsRayQueryParameters3D.create(origin,origin+dir*140,1|2,[get_rid()]);var hit=get_world_3d().direct_space_state.intersect_ray(ray)
  if local_player:local_fire_feedback(w,dir)
- else:game.sound(w.sound,origin,false,-3);game.muzzle(eye()+dir*.55,dir)
+ else:game.sound(w.sound,origin,false,-3);game.muzzle(eye()+dir*.55,dir,weapon_id)
  if not hit.is_empty():
   var target=hit.collider
   if target is Fighter:
@@ -288,8 +288,8 @@ func local_fire_feedback(w: Dictionary, direction: Vector3):
  var previous_pitch=pitch
  pitch=clampf(pitch+rise,-1.45,1.45);yaw+=lateral
  recoil_return+=Vector2((pitch-previous_pitch)*.65,lateral);shot_age=0
- game.muzzle(gun.to_global(gun.get_meta('muzzle')),direction)
- game.shell(eye()+Vector3(.25,-.12,-.35).rotated(Vector3.UP,yaw))
+ game.muzzle(gun.to_global(gun.get_meta('muzzle')),direction,weapon_id)
+ game.shell(gun.to_global(Vector3(.049,.016,-.12)),gun.global_basis.x)
 func hurt(amount: float, attacker: Fighter, zone: String):
  if dead or not game.authority() or game.state!='match':return
  if local_player and game.showcase:return
@@ -361,6 +361,7 @@ func think_bot(dt: float):
     var lane=[-20.0,-10.0,0.0,10.0,20.0][(id+randi_range(0,2))%5]
     var destination=Vector3(lane,0,randf_range(-20,20))
     if abs(global_position.z)<12 and randf()<.4:destination.z=20 if team==0 else -20
+    if randf()<.12:destination=Vector3(26,2.25,-9)
     set_route(destination)
  if is_instance_valid(bot_target) and not bot_target.dead:
   var aim=bot_target.position+Vector3(0,bot_aim_height-(.42 if bot_target.crouched else 0.0),0)-eye()

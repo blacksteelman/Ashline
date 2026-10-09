@@ -1,8 +1,31 @@
-# ASHLINE 0.5 — состояние для следующей сессии
+# ASHLINE 0.6 — состояние для следующей сессии
+
+Дата: 9 октября 2026. Продолжать существующий `/workspace/ashline`. Цель — качественный быстрый PC military FPS; визуальный ориентир COD4 пока не достигнут. Не расширять карты/режимы ради количества.
+
+## Последний проход 0.6
+
+- `WeaponView`: отдельный mechanical action_age/cycle_at, затвор возвращается независимо от пружины отдачи. SlideRig пистолета двигает кожух/прицелы, empty hold-open и release .84–.94 reload. Самый первый кадр выстрела получает action pose даже при медленном software render. Это не реальное испытание gunfeel на игровом GPU.
+- `assets/model.py`: новый профилированный Pistol frame и Grip tang устраняют видимый разрыв между кожухом и рукояткой. Frame guide/Frame slide lock неподвижны; SlideRig собирает только подвижные детали. Не объединять их в одну группу при экспорте.
+- `fighter.gd`/`game.gd`: гильза появляется в мировом transform окна выброса (.049,.016,-.12), направление — gun.global_basis.x. Параметр kind у muzzle задаёт размер вспышки; дым движется вдоль ствола; casing не отбрасывает тень.
+- `arena.gd`: AStar3D поверх существующей сетки. Высоты явно заданы только для нынешней лестницы и deck; это не универсальный navmesh. Связи ограничены подъёмом .42м, через бок рампы .24м; диагонали не пересекают углы. Высота пути используется при поиске, Fighter следует x/z и физически идёт по ramp collider. Grid сохранён для obstacle projection. Боты иногда патрулируют deck.
+- `tests/regression_v6.gd`: 12 проверок, включая настоящий подъём и спуск бота без recovery, loaded/empty slide и возврат затвора. `visual_capture_v6.gd` — контролируемые настоящие кадры пистолета и лестницы.
+
+Перед продолжением читать `tests/verification_v6.json`: там только фактически выполненные проверки. Матчи seed606/607 относятся к итоговой навигации; seed605 — ранний диагностический проход. Не переносить старые результаты как новые. Linux-бинарник запускать и просматривать; Windows только экспортируется. Headless тесты не проверяют визуальную оценку или прослушивание.
+
+Итоговые результаты: functional49, regression_v3 14, art_v4 10, character_v5 18, regression_v6 12 — все без failures; playthrough/stairs успешно. Exported dedicated + 12 clients: уникальные slots0..11, по120 snapshots, подтверждённые выстрелы, нет pending predictions. Linux Vulkan/OpenGL запущены и кадры просмотрены.
+
+Seed606: 3 матча, 1440 выстрелов, 0 recovery events; ранних смертей в последнем раунде 3.
+Seed607: 3 матча, 1443 выстрелов, 0 recovery events; ранних смертей в последнем раунде 5.
+
+Следующий приоритет: художественная переработка модели солдата/оружия и наполнения интерьеров, контакты кистей во всех клипах, strafe blending и точная посадка прицелов. Остались ранние смерти после spawn; не объявлять карту сбалансированной. Проверить движение ботов с deck в полноценном бою, добавить height layers/navmesh при расширении геометрии, не расширять эту hardcoded высотную таблицу бесконечно. Публичная сеть требует lag compensation/loss tests и hardening.
+
+Запуск: `XDG_DATA_HOME=$PWD/.runtime/data godot --headless --path . --script tests/regression_v6.gd`. Рендер: Xorg :103, `tests/xorg.conf`, DISPLAY=:103, VK_DRIVER_FILES=$PWD/.runtime/vulkan/lvp.json, --audio-driver Dummy. Процессы Xorg между сессиями могут исчезнуть. Не запускать одновременно графические клиенты с захватом мыши. Исходники/ZIP и proof скачивания публиковать в main/tag v0.6.0-alpha и отдельную ветку builds/v0.6.0-alpha; приватному репозиторию нужен вход в GitHub.
+
+# Предыдущий этап 0.5
 
 Дата: 8 октября 2026. Продолжать `/workspace/ashline`, не начинать заново. Пользователь ждёт качественный native PC FPS; ориентир COD4 пока НЕ достигнут. Не добавлять карты/режимы ради количества. Публикация ZIP в GitHub build branch решает прежний сбой скачивания артефактов.
 
-## Последний проход 0.5 — прочитать первым
+## Изменения 0.5 — исторические сведения
 
 - `assets/biped_pass.py`: оригинальный 17-bone full-body rig, нормализованные skin weights, 11 authored clips. IK ног и левой руки; шаг с неподвижной стопой во второй половине цикла. `_loop` удаляется при импорте: Idle/Forward/Backward/Left/Right/Sprint/CrouchIdle/CrouchWalk/Jump/Reload/Death. Neck переименован в Neck_2 из-за прежнего меша.
 - `scripts/character_motion.gd`: AnimationTree, cadence, crouch/air/death, reload mask только левой руки; Chest BoneAttachment для оружия. Удалённая скорость выводится из сглаженного положения. Local скрытая модель/headless не оценивают дерево, чтобы не тратить CPU. Body AnimationPlayer искать через `motion.tree.get_node(motion.tree.anim_player)`: после прикрепления оружия find_child возвращает AnimationPlayer кистей оружия!

@@ -190,7 +190,13 @@ for kind,length in enumerate([.72,.49,.92,.26]):
   remove=['Receiver contour','Charging handle','Picatinny rail','MLOK slot','Handguard chamfer','Muzzle brake','Brake port','Handguard','Upper receiver','Receiver pin','Recessed fastener','Fastener slot','Rear sight wing','Rear notch','Front post']
   for o in list(bpy.context.scene.objects):
    if any(o.name.startswith(prefix) for prefix in remove):bpy.data.objects.remove(o,do_unlink=True)
-  cube('Slide',(0,.083,.036),(.068,.235,.058),steel,.008)
+  sculpt_mesh.remove(['Receiver','Ejection port','Bolt carrier','Port lower lip'])
+  sculpt_mesh.profile('Pistol frame',[(-.105,.027,-.025,.012),(-.075,.033,-.032,.012),(.0,.032,-.038,.010),(.11,.030,-.030,.008),(.19,.027,-.014,.008)],poly)
+  cube('Grip tang',(0,-.075,-.023),(.056,.061,.04),poly,.008)
+  cube('Slide',(0,.083,.036),(.068,.235,.058),steel,.006)
+  for side in [-1,1]:
+   cube('Frame guide',(side*.029,.032,.006),(.004,.154,.008),bolt,.0015)
+  cube('Frame slide lock',(-.036,-.025,-.006),(.005,.045,.009),bolt,.002)
   cube('Rear sight',(0,-.019,.076),(.045,.018,.024),poly,.003)
   cube('Sight notch',(0,-.030,.081),(.012,.002,.012),paint,.001)
   cube('Front blade',(0,.185,.076),(.006,.012,.018),poly,.002)
@@ -202,6 +208,10 @@ for kind,length in enumerate([.72,.49,.92,.26]):
   hand=bpy.data.objects.get('LeftHand')
   hand.location.y=-.21;hand.location.x=.013
  sculpt_mesh.first_person(kind,glove,sleeve,steel,paint,poly,cube)
+ if kind==3:
+  slide=bpy.data.objects.new('SlideRig',None);bpy.context.collection.objects.link(slide)
+  for part in list(bpy.context.scene.objects):
+   if part.type=='MESH' and any(part.name.startswith(prefix) for prefix in ['Slide','Rear sight','Sight notch','Front blade']):part.parent=slide
  export('weapon_'+str(kind)+'.glb')
 # Burned service vehicle, a compact original environmental prop.
 reset();body=mat('Burned paint',(.12,.15,.14),.6,.8);rust=mat('Heat exposed steel',(.28,.17,.10),.55,.9);rubber=mat('Tire rubber',(.025,.029,.026));glass=mat('Sooted windows',(.055,.074,.075),.4,.22);metal=mat('Wheel hubs',(.23,.25,.24),.9,.4)

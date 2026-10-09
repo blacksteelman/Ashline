@@ -1,15 +1,15 @@
-# ASHLINE — playable PC alpha 0.5
+# ASHLINE — playable PC alpha 0.6
 
 Самостоятельный PC FPS на Godot 4.6.3: оригинальная карта Foundry District, собственные модели, материалы ambientCG и записи оружия из Free Firearm Sound Library (CC0). Это работающая ранняя альфа. Целевое качество современной коммерческой FPS ещё не достигнуто.
 
 ## Скачать готовую игру
 
-Проверенные архивы находятся в [ветке builds/v0.5.0-alpha](https://github.com/blacksteelman/Ashline/tree/builds/v0.5.0-alpha). Откройте нужный ZIP и нажмите **Download raw file** (значок скачивания). Для приватного репозитория требуется вход в GitHub с доступом к нему.
+Проверенные архивы находятся в [ветке builds/v0.6.0-alpha](https://github.com/blacksteelman/Ashline/tree/builds/v0.6.0-alpha). Откройте нужный ZIP и нажмите **Download raw file** (значок скачивания). Для приватного репозитория требуется вход в GitHub с доступом к нему.
 
-- [Windows x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.5.0-alpha/ASHLINE-0.5-Windows-x64.zip)
-- [Linux x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.5.0-alpha/ASHLINE-0.5-Linux-x64.zip)
-- [Исходники](https://github.com/blacksteelman/Ashline/blob/builds/v0.5.0-alpha/ASHLINE-0.5-Source.zip)
-- [Реальные скриншоты](https://github.com/blacksteelman/Ashline/blob/builds/v0.5.0-alpha/ASHLINE-0.5-Screenshots.zip)
+- [Windows x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.6.0-alpha/ASHLINE-0.6-Windows-x64.zip)
+- [Linux x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.6.0-alpha/ASHLINE-0.6-Linux-x64.zip)
+- [Исходники](https://github.com/blacksteelman/Ashline/blob/builds/v0.6.0-alpha/ASHLINE-0.6-Source.zip)
+- [Реальные скриншоты](https://github.com/blacksteelman/Ashline/blob/builds/v0.6.0-alpha/ASHLINE-0.6-Screenshots.zip)
 
 ## Запуск готового билда
 
@@ -38,6 +38,14 @@ LOCAL NETWORK → HOST создаёт сервер UDP 27841 с ботами н�
 Dedicated автоматически начинает следующий раунд через 8 секунд. Боты занимают освободившиеся места. Сервер рассчитывает движение, здоровье, попадания, reload, score и respawn. Клиент немедленно воспроизводит выстрел, отдачу и звук; боезапас сверяется с подтверждениями выстрелов, удалённые бойцы сглаживаются между снимками. Состояние передаётся примерно 30 раз/сек, DEFLATE.
 
 Сеть рассчитана на текущую LAN-альфу. Lag compensation, matchmaking, NAT traversal и полноценная защита сетевого сервера не реализованы. Не считать испытание автоматическими клиентами доказательством готовности публичного multiplayer-сервиса.
+
+## Изменения 0.6
+
+Цикл затвора отделён от общей пружины отдачи. Пистолет получил подвижный кожух с прицелами, удержание в открытом положении после последнего патрона и возврат в конце пустой перезарядки. Исправлена геометрия рамки между корпусом и рукояткой. Гильза появляется у окна выброса и летит вправо относительно оружия; размер вспышки зависит от типа оружия, дым движется вперёд от ствола.
+
+Маршруты Foundry теперь учитывают высоту лестницы и технической площадки. Убраны связи через высокий бок подъёма; боты могут патрулировать площадку и возвращаться через лестницу. `tests/regression_v6.gd` проверяет цикл оружия и фактический подъём/спуск бота, а не только наличие пути в графе. Новые результаты матчей и проверок находятся в `tests/verification_v6.json`.
+
+Это доработка существующего боя и навигации. Художественный уровень солдат, оружия и окружения ещё требует большой работы; графика COD4 не достигнута. Windows runtime, реальный звук и игровой GPU в этой среде не проверены.
 
 ## Изменения 0.5
 

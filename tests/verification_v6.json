@@ -1,0 +1,279 @@
+{
+  "version": "0.6",
+  "date": "2026-10-09",
+  "engine": "Godot 4.6.3",
+  "functional": {
+    "failed": 0,
+    "passed": 49,
+    "success": true
+  },
+  "regression": {
+    "failed": 0,
+    "passed": 14,
+    "success": true
+  },
+  "character": {
+    "failed": 0,
+    "passed": 18,
+    "success": true
+  },
+  "weapon_and_navigation": {
+    "failed": 0,
+    "passed": 12,
+    "success": true
+  },
+  "art_regression": {
+    "passed": 10,
+    "failed": 0,
+    "success": true,
+    "log": "build/regression_art_v4-v6.log",
+    "errors": false,
+    "last_lines": [
+      "PASS: Short flash survives its first slow presentation frame",
+      "PASS: Expired flash is removed after presentation",
+      "ART_REGRESSION_V4 failures=0"
+    ]
+  },
+  "playthrough": {
+    "log": "build/playthrough-v6.log",
+    "errors": false,
+    "last_lines": [
+      "CLICK RESUME (795.0, 305.0) rect=[P: (600.0, 281.0), S: (390.0, 48.0)] viewport=[P: (0.0, 0.0), S: (1600.0, 900.0)]",
+      "PASS: Match resumes from the menu",
+      "PLAYTHROUGH OK failures=0"
+    ]
+  },
+  "stairs": {
+    "log": "build/stairs-v6.log",
+    "errors": false,
+    "last_lines": [
+      "",
+      "STAIR_POSITION (26.0, 2.250215, -11.9624)",
+      "STAIRS_OK"
+    ]
+  },
+  "native_network": {
+    "success": true,
+    "clients": [
+      {
+        "client": 0,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 4,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 1,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 10,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 2,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 6,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 3,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 9,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 4,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 2,
+        "actors": 12,
+        "shots": 41,
+        "acknowledged": 41,
+        "pending": 0
+      },
+      {
+        "client": 5,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 1,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 6,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 3,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 7,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 5,
+        "actors": 12,
+        "shots": 29,
+        "acknowledged": 29,
+        "pending": 0
+      },
+      {
+        "client": 8,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 11,
+        "actors": 12,
+        "shots": 26,
+        "acknowledged": 26,
+        "pending": 0
+      },
+      {
+        "client": 9,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 8,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 10,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 0,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      },
+      {
+        "client": 11,
+        "exit_code": 0,
+        "ok": true,
+        "snapshots": 120,
+        "slot": 7,
+        "actors": 12,
+        "shots": 30,
+        "acknowledged": 30,
+        "pending": 0
+      }
+    ]
+  },
+  "native_vulkan": {
+    "executed": true,
+    "screenshot": "build/screenshots-v6/native-combat.png",
+    "device": "Mesa llvmpipe software Vulkan",
+    "log": "build/native-vulkan-v6.log",
+    "errors": false,
+    "last_lines": [
+      "Vulkan 1.4.305 - Forward+ - Using Device #0: Unknown - llvmpipe (LLVM 19.1.7, 256 bits)",
+      "",
+      "CAPTURE_SAVED"
+    ]
+  },
+  "native_opengl": {
+    "executed": true,
+    "screenshot": "build/screenshots-v6/native-opengl.png",
+    "log": "build/native-opengl-v6.log",
+    "errors": false,
+    "last_lines": [
+      "OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)",
+      "",
+      "CAPTURE_SAVED"
+    ]
+  },
+  "windows": {
+    "exported": true,
+    "executed": false
+  },
+  "audio": {
+    "driver": "Dummy",
+    "real_audio_output_verified": false
+  },
+  "assets": {
+    "manifest": "assets/thirdparty/SOURCES.json",
+    "third_party_license": "CC0-1.0",
+    "new_pistol_geometry": "Original authored frame and slide grouping"
+  },
+  "visual_inspection": {
+    "images_viewed": [
+      "pistol-ready",
+      "pistol-firing",
+      "pistol-empty",
+      "pistol-release",
+      "maintenance-access",
+      "native-combat",
+      "native-opengl"
+    ],
+    "retouched": false,
+    "controlled_pose_screenshots": true,
+    "cod4_quality_reached": false
+  },
+  "bot_matches": {
+    "606": {
+      "completed": true,
+      "matches": 3,
+      "scores": [
+        "MATCH_END 1 SCORE [34, 40] HEADSHOTS 19 SHOTS 454",
+        "MATCH_END 2 SCORE [37, 40] HEADSHOTS 38 SHOTS 991",
+        "MATCH_END 3 SCORE [28, 40] HEADSHOTS 56 SHOTS 1440"
+      ],
+      "shots": 1440,
+      "recovery_events": 0,
+      "last_round_spawn_deaths": 3
+    },
+    "607": {
+      "completed": true,
+      "matches": 3,
+      "scores": [
+        "MATCH_END 1 SCORE [40, 28] HEADSHOTS 18 SHOTS 396",
+        "MATCH_END 2 SCORE [37, 40] HEADSHOTS 33 SHOTS 972",
+        "MATCH_END 3 SCORE [40, 38] HEADSHOTS 56 SHOTS 1443"
+      ],
+      "shots": 1443,
+      "recovery_events": 0,
+      "last_round_spawn_deaths": 5
+    }
+  },
+  "remaining": [
+    "Requested COD4 art quality not reached; characters/interiors/weapon geometry need substantial work",
+    "Early spawn deaths remain; six bot matches do not prove balance",
+    "Navigation heights explicitly describe current ramp/deck; not a general navmesh",
+    "No internet lag compensation, matchmaking or production hardening",
+    "Windows runtime, gaming GPU performance and real audio output not verified"
+  ],
+  "sha256": {
+    "build/linux/ASHLINE.x86_64": "d3fd7af5d322c450105b94c1c307b28cc96d25a1d00f30069dbd09dcaf7ab981",
+    "build/windows/ASHLINE.exe": "dc488d92ce04e043b1d83da13bcdcee14d5efa28cc2b65524f4807621685b5ea"
+  }
+}

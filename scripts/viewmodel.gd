@@ -7,6 +7,9 @@ var sleeve: Node3D
 var animator: AnimationPlayer
 var contact_clip: StringName=&""
 var bolt: Node3D
+var slide: Node3D
+var action_age=1.0
+var action_kind=0
 var rest: Dictionary={}
 var recoil_position=Vector3.ZERO
 var recoil_velocity=Vector3.ZERO
@@ -27,12 +30,19 @@ func bind(node: Node3D):
  support=gun.find_child('LeftHand',true,false)
  sleeve=gun.find_child('LeftSleeve',true,false)
  bolt=gun.find_child('Bolt carrier',true,false)
- for part in [magazine,support,sleeve,bolt]:
+ slide=gun.find_child('SlideRig',true,false)
+ for part in [magazine,support,sleeve,bolt,slide]:
   if part:rest[part.get_instance_id()]=part.transform
- recoil_position=Vector3.ZERO;recoil_velocity=Vector3.ZERO;recoil_angle=Vector3.ZERO;angle_velocity=Vector3.ZERO;equip_blend=0;reload_stage=-1
+ recoil_position=Vector3.ZERO;recoil_velocity=Vector3.ZERO;recoil_angle=Vector3.ZERO;angle_velocity=Vector3.ZERO;equip_blend=0;reload_stage=-1;action_age=1.0
 func fire(kind: int):
+ action_kind=kind;action_age=0.0
  recoil_velocity+=Vector3(.045 if kind%2==0 else -.03,.08,[1.65,1.16,2.3,1.9][kind])
  angle_velocity+=Vector3([1.2,.85,1.75,1.4][kind],.15,.24 if kind%2==0 else -.18)
+static func cycle_at(age: float, kind: int) -> float:
+ var duration=[.082,.060,.12,.11][kind]
+ if age<0 or age>=duration:return 0.0
+ if age<.012:return smoothstep(0,.012,age)
+ return 1-smoothstep(.012,duration,age)
 func spring_step(dt: float):
  # Critically damped analytic spring: consistent at varying render rates.
  var frequency=19.0
@@ -64,9 +74,19 @@ func update(owner: Fighter, dt: float):
  if not hit.is_empty():
   var proximity=1-owner.eye().distance_to(hit.position)/.9
   position.z+=proximity*.22;angles.x+=proximity*.3
- for part in [magazine,support,sleeve,bolt]:
+ for part in [magazine,support,sleeve,bolt,slide]:
   if part:part.transform=rest[part.get_instance_id()]
- if bolt:bolt.position.z+=recoil_position.z*.38
+ # Separate mechanical cycle from the slower whole-weapon recoil spring.
+ # Give a shot at least one visible action pose even at a slow render rate.
+ var cycle=cycle_at(maxf(.012,action_age),action_kind)
+ action_age+=dt
+ if bolt:bolt.position.z+=cycle*.042
+ if slide:
+  var open=owner.ammo[3]==0 and owner.reload_left<=0
+  slide.position.z+=.043*(1.0 if open else cycle)
+  if owner.reload_left>0:
+   var progress=1-owner.reload_left/(Arsenal.WEAPONS[3].reload*(.78 if owner.class_id==0 else 1.0))
+   slide.position.z+=.043*(1-smoothstep(.84,.94,progress)) if owner.ammo[3]==0 else 0.0
  if animator and contact_clip!=&"":
   var contact_time=0.0
   if owner.reload_left>0:
