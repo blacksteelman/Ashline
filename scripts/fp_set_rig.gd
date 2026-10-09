@@ -33,6 +33,42 @@ var view_fix=Basis.IDENTITY
 const WORDS={'idle':['Idle'],'walk':['Walk'],'sprint':['Run'],'draw':['Draw'],'fire':['Shot_nosight','Shoot','Shot','Fire','OneShot'],
  'fire_ads':['Shot_sight'],'reload':['Reload_Fast','Reload_fast','Reload_easy','AK_Reload','SRifle_Reload','Reload'],'reload_empty':['Reload_full','Reload_Full'],'inspect':['inspect','Ispect']}
 
+# Some sets weight a few stray vertices to the rig's root joint (a thin line to the origin):
+# drop the triangles that use them. Cached per mesh resource.
+static var cleaned: Dictionary={}
+static func strip_strays(mi: MeshInstance3D):
+ var mesh: ArrayMesh=mi.mesh
+ if not mesh or not mi.skin:return
+ if cleaned.has(mesh):mi.mesh=cleaned[mesh];return
+ var root_binds={}
+ for b in mi.skin.get_bind_count():
+  var name=String(mi.skin.get_bind_name(b))
+  if name.begins_with('_rootJoint') or name.begins_with('GLTF_created'):root_binds[b]=true
+ var surfaces=[];var changed=false
+ for s in mesh.get_surface_count():
+  var arrays=mesh.surface_get_arrays(s);var bones=arrays[Mesh.ARRAY_BONES];var weights=arrays[Mesh.ARRAY_WEIGHTS]
+  var count=arrays[Mesh.ARRAY_VERTEX].size();var per=bones.size()/maxi(1,count)
+  var stray=PackedByteArray();stray.resize(count)
+  for v in count:
+   for k in per:
+    if weights[v*per+k]>.5 and root_binds.has(bones[v*per+k]):stray[v]=1
+  var idx: PackedInt32Array=arrays[Mesh.ARRAY_INDEX]
+  if idx.size()>0 and stray.count(1)>0:
+   var keep=PackedInt32Array()
+   for t in range(0,idx.size(),3):
+    if stray[idx[t]]==0 and stray[idx[t+1]]==0 and stray[idx[t+2]]==0:keep.append_array([idx[t],idx[t+1],idx[t+2]])
+   arrays[Mesh.ARRAY_INDEX]=keep;changed=true
+  for c in [Mesh.ARRAY_CUSTOM0,Mesh.ARRAY_CUSTOM1,Mesh.ARRAY_CUSTOM2,Mesh.ARRAY_CUSTOM3]:arrays[c]=null
+  surfaces.append(arrays)
+ if not changed:cleaned[mesh]=mesh;return
+ var out=ArrayMesh.new()
+ for s in mesh.get_surface_count():
+  var flags=mesh.surface_get_format(s)&(Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS|Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE)
+  out.add_surface_from_arrays(mesh.surface_get_primitive_type(s),surfaces[s],[],{},flags)
+  out.surface_set_material(s,mesh.surface_get_material(s))
+ cleaned[mesh]=out if changed else mesh
+ mi.mesh=cleaned[mesh]
+
 static func available(kind: int) -> bool:
  return Arsenal.WEAPONS[kind].has('fp') and ResourceLoader.exists(path(kind))
 static func path(kind: int) -> String:
@@ -45,6 +81,7 @@ func bind(node: Node3D, kind: int=-1):
  player=gun.find_child('AnimationPlayer',true,false)
  var ico=gun.find_child('Icosphere',true,false)
  if ico:ico.visible=false
+ for mi in gun.find_children('*','MeshInstance3D',true,false):strip_strays(mi)
  for i in skeleton.get_bone_count():
   var n=skeleton.get_bone_name(i)
   if n.begins_with('Head_Cam') and not '_end' in n:cam_bone=i

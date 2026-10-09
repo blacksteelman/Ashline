@@ -28,6 +28,7 @@ func run():
   for mi in scene.find_children('*','MeshInstance3D',true,false):
    var mat=mi.mesh.surface_get_material(0)
    if mi.name=='Icosphere' or (mat and mat.resource_name=='arms'):continue
+   FPSetRig.strip_strays(mi)
    var baked: ArrayMesh=mi.bake_mesh_from_current_skeleton_pose()
    var xf=socket*W.affine_inverse()*mi.global_transform
    var box=xf*baked.get_aabb()
