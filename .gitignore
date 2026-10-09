@@ -18,3 +18,7 @@ assets/viewmodels/*.jpg
 assets/viewmodels/*.png
 assets/viewmodels/*.jpg.import
 assets/viewmodels/*.png.import
+assets/characters/*.jpg
+assets/characters/*.png
+assets/characters/*.jpg.import
+assets/characters/*.png.import

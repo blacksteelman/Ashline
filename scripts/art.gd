@@ -43,6 +43,14 @@ static func sphere(parent: Node3D, pos: Vector3, scale_v: Vector3, material: Mat
  var m = MeshInstance3D.new(); m.mesh = SphereMesh.new(); m.material_override = material; parent.add_child(m); m.position = pos; m.scale = scale_v; return m
 static func text(parent: Node3D, pos: Vector3, words: String, size: int, color: Color) -> Label3D:
  var l = Label3D.new(); l.text = words; l.font_size = size; l.pixel_size = 0.006; l.outline_size=2;l.font=load('res://assets/interface.ttf');l.shaded=true;l.modulate = color; parent.add_child(l); l.position = pos; l.rotation.y=PI; l.double_sided=false; return l
+static func world_weapon(parent: Node3D, kind: int) -> Node3D:
+ # Third-person weapon from the viewmodel pipeline: weapon space, origin at the grip, Muzzle marker.
+ var path='res://assets/viewmodels/world_'+Arsenal.WEAPONS[kind].model+'.glb'
+ if not ResourceLoader.exists(path):return null
+ var scene=load(path).instantiate();parent.add_child(scene)
+ var marker=scene.find_child('Muzzle',true,false)
+ scene.set_meta('muzzle',marker.position if marker else Vector3(0,.02,-.5))
+ return scene
 static func weapon(parent: Node3D, kind: int, first_person: bool=true) -> Node3D:
  if ResourceLoader.exists('res://assets/weapon_'+str(kind)+'.glb'):
   var scene=load('res://assets/weapon_'+str(kind)+'.glb').instantiate()
@@ -92,6 +100,12 @@ static func weapon(parent: Node3D, kind: int, first_person: bool=true) -> Node3D
  root.set_meta('muzzle',Vector3(0,.025,-length*.94))
  return root
 static func soldier(parent: Node3D, team: int) -> Node3D:
+ var dressed='res://assets/characters/soldier_'+['aegis','ember'][team]+'.glb'
+ if ResourceLoader.exists(dressed):
+  # MakeHuman soldier (tools/build_soldiers.py): authored facing +Z, the game faces -Z.
+  var holder=Node3D.new();holder.name='Soldier';parent.add_child(holder)
+  var body=load(dressed).instantiate();body.rotation.y=PI;holder.add_child(body)
+  return holder
  if ResourceLoader.exists('res://assets/soldier_'+str(team)+'.glb'):
   var scene=load('res://assets/soldier_'+str(team)+'.glb').instantiate()
   parent.add_child(scene)

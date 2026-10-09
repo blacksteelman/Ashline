@@ -558,7 +558,7 @@ func shot_event(who: int, origin: Vector3, dir: Vector3):
  f.last_shot=.4
  sound(Arsenal.WEAPONS[f.weapon_id].sound,origin,f.local_player,-3)
  if f.local_player:f.view.fire(f.weapon_id);f.kick+=.038;f.pitch+=deg_to_rad(Arsenal.WEAPONS[f.weapon_id].recoil);muzzle(f.muzzle_world(),dir)
- else:muzzle(origin+dir*.55,dir,f.weapon_id)
+ else:muzzle(f.world_muzzle(origin+dir*.55),dir,f.weapon_id)
 @rpc('authority','call_remote','reliable')
 func kill_event(killer: int, victim: int, zone: String, score: Array):
  if fighters.size()!=12 or state!='match':return

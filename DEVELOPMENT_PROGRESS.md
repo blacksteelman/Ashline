@@ -44,13 +44,32 @@ Godot 4.6.3 (Forward+, Vulkan), Blender 4.3.2, Python 3 + Pillow/NumPy/OpenCV.
   `viewmodel_fov_scale` объявлена в project.godot.
 - Камуфляж рукавов: `tools/camo.py` генерирует мультикам-, ЕМР- и ММ14-подобные узоры
   (`assets/textures/camo_*`). Настройка UNIFORM CAMOUFLAGE в меню; по умолчанию Aegis — мультикам, Ember — ЕМР.
-- Модели для третьего лица: `assets/viewmodels/world_*.glb` (ещё не подключены к солдатам).
+- Модели для третьего лица: `assets/viewmodels/world_*.glb` — крепятся к узлу `WeaponSocket` солдата.
+
+### Солдаты — `tools/build_soldiers.py` → `assets/characters/soldier_{aegis,ember}.glb`
+- Тело MakeHuman через MPFB2 (CC0), риг cmu_mb. Экипировка из ассетов сообщества MakeHuman:
+  рубашка и брюки с камуфляжем (Aegis — мультикам, Ember — ЕМР, затайлено ×3–3.4 и затемнено),
+  плитник с подсумками, шлем (Aegis — KZ45, Ember — M1 + противогаз), берцы, перчатки. Лицензии — `LICENSES.md`.
+- Анимации: бег/бег назад/стрейф/спринт/присед-ходьба из мокапа CMU (BVH, ретаргет через мировые дельты
+  поворотов, автоматический поиск цикла, корень на месте); верх тела заменён стойкой с прикладом у плеча,
+  руки — IK к рукояти и цевью. Idle, CrouchIdle, Jump, Reload (левая рука: магазин → подсумок → магазин),
+  Death (колени → падение ничком) — процедурные. Всё запекается и экспортируется NLA-треками.
+- Кость `Weapon` (дочерняя `Chest`) + пустышка `WeaponSocket`: в Godot туда вставляется `world_<model>.glb`
+  (`Art.world_weapon`), вспышка у ботов — из маркера Muzzle (`Fighter.world_muzzle`).
+- Модель смотрит в +Z (Blender −Y); `Art.soldier` оборачивает её узлом с поворотом на 180°.
+- Важные грабли: MPFB `feet_on_ground` сдвигает меш, но не риг → риг поднимается вручную; после
+  переименования костей нужно переименовать группы вершин; ключи позы ставятся до `frame_set`, иначе
+  depsgraph перезаписывает позу; материалы MakeHuman экспортируются как BLEND → принудительно OPAQUE.
+- Подготовка окружения: MPFB2 в `~/.config/blender/4.3/extensions/user_default/mpfb`, паки ассетов
+  (makehuman_system_assets_cc0, pants01_cc0, shoes01_cc0, gloves01_cc0, hats02_cc0, equipment03_cc-by,
+  shirts02_ccby, masks02_ccby) в его папку данных; BVH скачиваются автоматически в `$ASHLINE_BVH`.
+- Проверка: `tests/capture_soldiers.gd` (все клипы обеих команд + сокет оружия).
 
 ## Известные проблемы / не сделано
 - Руки: хват исправлен, но мелкие позы (перезарядка болтовки, большой палец, позиция в кадре)
   требуют дальнейшей полировки по кадрам из движка. Смотреть `tests/capture_weapons.gd`.
-- Солдаты-боты всё ещё старые грубые модели Codex (`soldier_0/1.glb`). План: тело MakeHuman (MPFB2, CC0)
-  + форма с камуфляжем + бронежилет/шлем, либо CC-BY модели со Sketchfab (нужен токен API от пользователя).
+- Солдаты: пистолет в третьем лице держится стойкой винтовки (нет отдельного набора анимаций);
+  нет анимаций поворота на месте и стрельбы из укрытия; пальцы — одна общая кость.
 - АК-74/MP5 и другие реальные модели: на Sketchfab есть CC-BY, нужен токен `SKETCHFAB_TOKEN`.
 - Сеть: lag compensation и буфер интерполяции не сделаны.
 - Режимы (Domination и др.), перки по слотам, create-a-class — не сделаны.
@@ -67,6 +86,8 @@ godot --headless --path . -- --bot-test --seed=801 --matches=1
 DISPLAY=:99 VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/lvp_icd.json godot --path . --resolution 960x540 --script tests/capture_v8.gd -- --graphics=1
 DISPLAY=:99 ... godot --path . --script tests/capture_weapons.gd -- --graphics=1
 blender -b --python tools/build_viewmodels.py -- ar carbine sniper pistol [--preview] [--solve-only]
+blender -b --python tools/build_soldiers.py -- aegis ember [--preview] [--clip=Idle] [--analyze]
+DISPLAY=:99 ... godot --path . --resolution 1280x720 --script tests/capture_soldiers.gd
 ```
 Окружение: Godot ставится из GitHub releases в /opt/godot; Blender 4.3.2 с download.blender.org в /opt/blender;
 `apt-get install mesa-vulkan-drivers` для lavapipe. SDFGI на программном рендере ~5 с/кадр — для итераций использовать --graphics=1.

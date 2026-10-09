@@ -125,8 +125,18 @@ func update_world_weapon():
  var old=model.find_child('WorldWeapon',true,false)
  if old:
   old.visible=false;old.get_parent().remove_child(old);old.queue_free()
+ var socket=model.find_child('WeaponSocket',true,false)
+ if socket:world_gun=Art.world_weapon(socket,weapon_id)
+ if world_gun and socket:
+  world_gun.name='WorldWeapon'
+  for geometry in world_gun.find_children('*','GeometryInstance3D',true,false):geometry.visibility_range_end=90
+  return
  world_gun=Art.weapon(model,weapon_id,false);world_gun.name='WorldWeapon';world_gun.position=Vector3(.13,1.17,-.37);world_gun.scale=Vector3.ONE*.8
  if body_motion:body_motion.attach_weapon(world_gun)
+# Third-person muzzle (remote players, bots): the world weapon's marker when it has one.
+func world_muzzle(fallback: Vector3) -> Vector3:
+ if world_gun and world_gun.is_inside_tree() and world_gun.has_meta('muzzle') and model.visible:return world_gun.to_global(world_gun.get_meta('muzzle'))
+ return fallback
 func eye() -> Vector3:return global_position+Vector3(0,1.03 if crouched else 1.62,0)
 func aim_dir() -> Vector3:return Vector3(-sin(yaw)*cos(pitch),sin(pitch),-cos(yaw)*cos(pitch))
 func _input(event):
@@ -217,7 +227,7 @@ func _physics_process(dt):
   if knee:knee.rotation.x=-maxf(0,-sin(walk_phase))*.7*minf(1,moving/5)
   knee=model.find_child('KneeR',true,false)
   if knee:knee.rotation.x=-maxf(0,sin(walk_phase))*.7*minf(1,moving/5)
-  if world_gun:world_gun.rotation.x=pitch*.65+last_shot*.04
+  if world_gun and not model.find_child('WeaponSocket',true,false):world_gun.rotation.x=pitch*.65+last_shot*.04
   model.position.y=-.42 if crouched else 0.0
  if local_player:
   step_timer-=dt

@@ -15,11 +15,15 @@ var crouch_blend=0.0
 var air_blend=0.0
 var air_age=0.0
 var graphical=false
+var ref_walk=1.7
+var ref_sprint=2.46
+var ref_crouch=.95
 func bind(fighter: Fighter) -> bool:
  actor=fighter
  skeleton=actor.model.find_child('Skeleton3D',true,false)
  var player=actor.model.find_child('AnimationPlayer',true,false) as AnimationPlayer
  if not skeleton or not player or skeleton.find_bone('Chest')<0:return false
+ if skeleton.find_bone('Weapon')>=0:ref_walk=5.1;ref_sprint=7.8;ref_crouch=2.5
  for role in ['Idle','Forward','Backward','Left','Right','Sprint','CrouchIdle','CrouchWalk','Jump','Reload','Death']:
   for name in player.get_animation_list():
    if String(name).get_file().begins_with(role):clips[role]=name;break
@@ -42,7 +46,7 @@ func bind(fighter: Fighter) -> bool:
  var reload_clip=player.get_animation(clips.Reload)
  for track in range(reload_clip.get_track_count()):
   var path=reload_clip.track_get_path(track)
-  if path.get_subname_count()>0 and String(path.get_subname(0)) in ['UpperArm.L','Forearm.L','Hand.L']:reload_node.set_filter_path(path,true)
+  if path.get_subname_count()>0 and String(path.get_subname(0)) in ['UpperArm.L','Forearm.L','Hand.L','Weapon']:reload_node.set_filter_path(path,true)
  graph.add_node('Service',reload_node);graph.connect_node('Service',0,'Air');graph.connect_node('Service',1,'ReloadClock')
  graph.add_node('Death',animation('Death'));graph.add_node('DeathClock',AnimationNodeTimeSeek.new());graph.connect_node('DeathClock',0,'Death')
  blend(graph,'Down','Service','DeathClock');graph.connect_node('output',0,'Down')
@@ -55,7 +59,7 @@ func animation(role: String) -> AnimationNodeAnimation:
 func blend(graph: AnimationNodeBlendTree, name: String, a: String,b: String):
  graph.add_node(name,AnimationNodeBlend2.new());graph.connect_node(name,0,a);graph.connect_node(name,1,b)
 func attach_weapon(gun: Node3D):
- if not anchor:return
+ if not anchor or actor.model.find_child('WeaponSocket',true,false):return
  var rest=actor.model.global_transform.affine_inverse()*skeleton.global_transform*skeleton.get_bone_global_rest(skeleton.find_bone('Chest'))
  gun.reparent(anchor,false)
  gun.transform=rest.affine_inverse()*Transform3D(Basis.IDENTITY.scaled(Vector3.ONE*.8),Vector3(.13,1.17,-.37))
@@ -80,12 +84,13 @@ func update(dt: float):
  var speed=Vector2(local.x,local.z).length()
  var moving=Vector2(local.x,local.z)/maxf(1.0,speed)
  tree.set('parameters/Movement/blend_position',moving*minf(1,speed/1.0))
- tree.set('parameters/Cadence/scale',clampf(speed/1.7,.6,2.9) if speed>.2 else 1.0)
+ # Clip reference speeds: Forward/Backward/strafe 5.1, Sprint 7.8, CrouchWalk 2.5 (dressed soldiers).
+ tree.set('parameters/Cadence/scale',clampf(speed/ref_walk,.6,2.9) if speed>.2 else 1.0)
  tree.set('parameters/Fast/blend_amount',clampf((speed-6.0)/1.8,0,1))
- tree.set('parameters/SprintCadence/scale',clampf(speed/2.46,.8,3.6))
+ tree.set('parameters/SprintCadence/scale',clampf(speed/ref_sprint,.8,3.6))
  crouch_blend=move_toward(crouch_blend,1.0 if actor.crouched else 0.0,dt*9)
  tree.set('parameters/Low/blend_amount',crouch_blend);tree.set('parameters/Crouch/blend_position',minf(1,speed/.8))
- tree.set('parameters/CrouchCadence/scale',clampf(speed/.95,.6,2.8) if speed>.2 else 1.0)
+ tree.set('parameters/CrouchCadence/scale',clampf(speed/ref_crouch,.6,2.8) if speed>.2 else 1.0)
  var airborne=absf(velocity.y)>.5 if remote else not actor.is_on_floor()
  air_age=air_age+dt if airborne else 0.0;tree.set('parameters/AirClock/seek_request',minf(.799,air_age*1.25))
  air_blend=move_toward(air_blend,1.0 if airborne else 0.0,dt*10);tree.set('parameters/Air/blend_amount',air_blend)
