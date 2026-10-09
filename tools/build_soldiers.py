@@ -7,8 +7,8 @@ Clothing (MakeHuman community asset packs):
   shirt  elvs_male_shirt_untucked_bd1 (CC-BY Elvaerwyn)  -> camo combat shirt
   pants  cortu_cargo_pants (CC0 Cortu)                     -> camo trousers
   vest   mindfront_tactical_vest_male (CC-BY Mindfront)    -> plate carrier
-  helmet mindfront_helmet_kz45 (CC-BY 4.0 Mindfront) / mrgreaterthan_m1_helmet (CC0 MrGreaterThan)
-  mask   gredal_gas_mask (CC0)  (Ember)
+  helmet mindfront_helmet_kz45 (CC-BY 4.0 Mindfront)  (Aegis)
+  mask   gredal_gas_mask (CC0), hooded, replaces the helmet  (Ember)
   boots  toigo_ankle_boots_male (CC0 MargaretToigo), gloves toigo_gloves_short (CC0)
 Motion: CMU Graphics Lab Motion Capture Database (BVH conversion by B. Hahne, free to use),
   retargeted onto the rig; the upper body is replaced by a shouldered-rifle stance and arm IK.
@@ -40,7 +40,7 @@ TEAMS = {
     'aegis': {'camo': 'multicam', 'camo_gain': 0.78, 'vest_tint': (0.50, 0.43, 0.31), 'helmet': 'mindfront_helmet_kz45',
               'helmet_tint': (0.40, 0.36, 0.27), 'mask': None, 'skin': 'young_caucasian_male',
               'macro': {'gender': 1.0, 'age': 0.45, 'muscle': 0.7, 'weight': 0.55, 'height': 0.6, 'proportions': 0.6}},
-    'ember': {'camo': 'emr', 'camo_gain': 0.72, 'vest_tint': (0.30, 0.34, 0.25), 'helmet': 'mrgreaterthan_m1_helmet',
+    'ember': {'camo': 'emr', 'camo_gain': 0.72, 'vest_tint': (0.30, 0.34, 0.25), 'helmet': None,
               'helmet_tint': (0.28, 0.32, 0.24), 'mask': 'gredal_gas_mask', 'skin': 'young_caucasian_male',
               'macro': {'gender': 1.0, 'age': 0.5, 'muscle': 0.65, 'weight': 0.6, 'height': 0.55, 'proportions': 0.55}},
 }
@@ -127,7 +127,10 @@ def retexture(obj, albedo_path=None, tint=None, roughness=None, tiles=1.0, gain=
                 nt.links.remove(link)
             nt.links.new(tex.outputs['Color'], bsdf.inputs['Base Color'])
         elif tint is not None:
-            src = bsdf.inputs['Base Color'].links[0].from_node if bsdf.inputs['Base Color'].links else None
+            # MakeHuman routes the albedo through a MixRGB 'diffuseIntensity' node: use the image directly.
+            src = nt.nodes.get('diffuseTexture')
+            if src is None and bsdf.inputs['Base Color'].links:
+                src = bsdf.inputs['Base Color'].links[0].from_node
             if src is not None and src.type == 'TEX_IMAGE' and src.image is not None:
                 img = src.image.copy(); img.name = obj.name + '_tinted'
                 px = np.empty(img.size[0] * img.size[1] * 4, np.float32); img.pixels.foreach_get(px)
@@ -136,6 +139,9 @@ def retexture(obj, albedo_path=None, tint=None, roughness=None, tiles=1.0, gain=
                 lum = lum / max(1e-3, float(np.median(lum)))  # keep detail, normalise brightness
                 px[:, :3] = np.clip(lum[:, None] * np.array(tint, np.float32)[None, :], 0, 1)
                 img.pixels.foreach_set(px.ravel()); img.pack(); src.image = img
+                for link in list(bsdf.inputs['Base Color'].links):
+                    nt.links.remove(link)
+                nt.links.new(src.outputs['Color'], bsdf.inputs['Base Color'])
             else:
                 for link in list(bsdf.inputs['Base Color'].links):
                     nt.links.remove(link)
@@ -174,10 +180,13 @@ def build_body(team, spec):
     if os.path.exists(skin):
         HumanService.set_character_skin(skin, body, skin_type='GAMEENGINE')
     items = [('elvs_male_shirt_untucked_bd1', ('camo', 3.4)), ('cortu_cargo_pants', ('camo', 3.0)),
-             ('mindfront_tactical_vest_male', ('tint', spec['vest_tint'], 0.35)), (spec['helmet'], ('tint', spec['helmet_tint'], 0.45)),
+             ('mindfront_tactical_vest_male', ('tint', spec['vest_tint'], 0.35)),
              ('toigo_ankle_boots_male', ('tint', (0.075, 0.072, 0.065), None)), ('toigo_gloves_short', ('tint', (0.085, 0.085, 0.08), None))]
+    if spec['helmet']:
+        items.append((spec['helmet'], ('tint', spec['helmet_tint'], 0.45)))
     if spec['mask']:
-        items.append((spec['mask'], ('keep', None, 0.5)))
+        # The hood of the gas mask covers the head; dark olive rubber.
+        items.append((spec['mask'], ('tint', (0.16, 0.18, 0.14), 0.5)))
     for name, look in items:
         path = clothes_file(name)
         if not os.path.exists(path):

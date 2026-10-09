@@ -34,6 +34,7 @@ var menu_camera: Camera3D
 var net_mode='offline'
 var dedicated_server=false
 var net_test_age=0.0
+var net_test_live=-1.0
 var local_id=0
 var net_timer=0.0
 var snapshot_count=0
@@ -224,12 +225,12 @@ func _physics_process(dt):
   combat_tick+=1
   # Rotate simulation order so one team never owns every same-tick first shot.
   for actor in fighters:actor.process_physics_priority=-50 if actor.local_player else (actor.id+combat_tick)%12
-  time_left-=dt
+  time_left-=dt;server_clock+=dt;record_history()
   if bot_test:test_elapsed+=dt
 func _process(dt):
  if '--net-test' in OS.get_cmdline_user_args():
   net_test_age+=dt
-  if net_test_age>15:push_error('NETWORK_TIMEOUT snapshots='+str(snapshot_count));get_tree().quit(1)
+  if net_test_age>40:push_error('NETWORK_TIMEOUT snapshots='+str(snapshot_count));get_tree().quit(1)
  head_time=maxf(0,head_time-dt);hit_time=maxf(0,hit_time-dt);kill_time=maxf(0,kill_time-dt);damage_flash=maxf(0,damage_flash-dt*1.7)
  if state=='match':
   if authority():
@@ -249,13 +250,16 @@ func _process(dt):
   if feed[i].time<=0:feed.remove_at(i)
  update_fx(dt);update_grenades(dt)
  if net_mode!='offline':network_tick(dt)
- if '--net-test' in OS.get_cmdline_user_args() and player:
-  if snapshot_count>10 and snapshot_count<35:Input.action_press('forward')
+ # Scripted client: time-based so a loaded machine delivering snapshots in bursts still exercises input.
+ if '--net-test' in OS.get_cmdline_user_args() and player and snapshot_count>0:
+  if net_test_live<0:net_test_live=net_test_age
+  var live=net_test_age-net_test_live
+  if live>.4 and live<1.4:Input.action_press('forward')
   else:Input.action_release('forward')
-  if snapshot_count>10 and snapshot_count<100:Input.action_press('fire')
+  if live>.4 and live<3.4:Input.action_press('fire')
   else:Input.action_release('fire')
- if '--net-test' in OS.get_cmdline_user_args() and snapshot_count>=120:
-  if player.predicted_shots==0:push_error('NETWORK_TEST_NO_FIRE');get_tree().quit(1);return
+ if '--net-test' in OS.get_cmdline_user_args() and snapshot_count>=120 and net_test_live>=0 and net_test_age-net_test_live>4.0:
+  if player.predicted_shots==0 and player.deaths==0:push_error('NETWORK_TEST_NO_FIRE');get_tree().quit(1);return
   print('NETWORK_OK snapshots=',snapshot_count,' slot=',local_id,' actors=',fighters.size(),' score=',scores,' predicted_shots=',player.predicted_shots,' ammo=',player.ammo,' acknowledged=',player.acknowledged_fire,' pending=',player.pending_predictions.size())
   get_tree().quit()
 func confirm_kill(attacker: Fighter, victim: Fighter, zone: String):
@@ -443,6 +447,64 @@ func start_client(address: String):
 func show_error(words: String):
  var v=panel(Vector2(550,650),Vector2(650,100));label(v,words,17,Color('#dda07a'))
 var peer_slots: Dictionary={}
+# Netcode timing. The host stamps snapshots with its simulation clock and keeps a short
+# position history; clients render remote players INTERP_DELAY behind the newest snapshot
+# and report the clock they were looking at with every shot (lag compensation).
+const INTERP_DELAY=.1
+const MAX_REWIND=.25
+const HISTORY_SECONDS=.6
+var server_clock=0.0
+var clock_offset=0.0
+var clock_synced=false
+var history: Array=[]
+func local_seconds() -> float:return Time.get_ticks_usec()/1000000.0
+func view_clock() -> float:return local_seconds()+clock_offset-INTERP_DELAY
+func record_history():
+ if history.size()!=fighters.size():
+  history.clear()
+  for f in fighters:history.append([])
+ for f in fighters:
+  var h: Array=history[f.id];h.append([server_clock,f.global_position,f.dead])
+  while h.size()>2 and h[0][0]<server_clock-HISTORY_SECONDS:h.pop_front()
+func history_at(id: int, clock: float):
+ if id>=history.size():return null
+ var h: Array=history[id]
+ if h.is_empty():return null
+ for i in range(h.size()-1,-1,-1):
+  if h[i][0]<=clock:
+   if h[i][2]:return null
+   if i==h.size()-1:return h[i][1]
+   var a=h[i];var b=h[i+1]
+   return a[1].lerp(b[1],clampf((clock-a[0])/maxf(.0001,b[0]-a[0]),0,1))
+ return h[0][1]
+# Runs action while fire traces test fighters at the positions the shooter saw (see trace()).
+var rewind_clock=-1.0
+func rewound(_shooter: Fighter, stamp: float, action: Callable):
+ rewind_clock=clampf(stamp,server_clock-MAX_REWIND,server_clock)
+ action.call()
+ rewind_clock=-1.0
+# Fire trace. Normally a physics ray; while rewound, the world is ray-tested and fighters are
+# tested analytically as upright cylinders at their historical positions (bodies cannot be
+# moved and queried in the same physics frame).
+func trace(origin: Vector3, to: Vector3, shooter: Fighter) -> Dictionary:
+ var space=shooter.get_world_3d().direct_space_state
+ if rewind_clock<0:return space.intersect_ray(PhysicsRayQueryParameters3D.create(origin,to,1|2,[shooter.get_rid()]))
+ var hit=space.intersect_ray(PhysicsRayQueryParameters3D.create(origin,to,1,[shooter.get_rid()]))
+ var end=hit.position if hit else to
+ for f in fighters:
+  if f==shooter or f.dead:continue
+  var past=history_at(f.id,rewind_clock)
+  if past==null:continue
+  var height=1.2 if f.crouched else 1.8
+  var center=past+Vector3(0,height*.5,0)
+  # Geometry3D cylinders run along local Z: swap Y and Z on the way in and out.
+  var a=origin-center;var b=end-center
+  var r=Geometry3D.segment_intersects_cylinder(Vector3(a.x,a.z,a.y),Vector3(b.x,b.z,b.y),height,.3)
+  if r.is_empty():continue
+  var at=center+Vector3(r[0].x,r[0].z,r[0].y)
+  if origin.distance_to(at)<origin.distance_to(end):
+   end=at;hit={'position':at,'normal':Vector3(r[1].x,r[1].z,r[1].y),'collider':f,'rewound_base':past}
+ return hit
 func peer_joined(_peer: int):pass
 func peer_left(peer: int):
  if peer_slots.has(peer):
@@ -476,18 +538,18 @@ func network_tick(dt: float):
  elif net_mode=='host':
   var data=[]
   for f in fighters:data.append([f.position,f.yaw,f.pitch,f.health,f.dead,f.kills,f.deaths,f.streak,f.ammo,f.reserves,f.weapon_id,f.respawn_time,f.rewards,f.class_id,f.reload_left,f.crouched,f.acknowledged_fire])
-  snapshot.rpc(var_to_bytes(data).compress(FileAccess.COMPRESSION_DEFLATE),scores,time_left,radar_time)
+  snapshot.rpc(var_to_bytes(data).compress(FileAccess.COMPRESSION_DEFLATE),scores,time_left,radar_time,server_clock)
 @rpc('any_peer','call_remote','unreliable_ordered')
 func submit_input(input: Dictionary):
  if not authority():return
  var sender=multiplayer.get_remote_sender_id()
  if peer_slots.has(sender):fighters[peer_slots[sender]].network_input=input
-func send_action(action: String):action_request.rpc_id(1,action,0,Vector2.ZERO,-1,match_number)
+func send_action(action: String):action_request.rpc_id(1,action,0,Vector2.ZERO,-1,match_number,0.0)
 func send_shot(actor: Fighter, aim: Vector2):
  actor.fire_sequence+=1;actor.pending_predictions.append({'sequence':actor.fire_sequence,'weapon':actor.weapon_id})
- action_request.rpc_id(1,'fire',actor.fire_sequence,aim,actor.weapon_id,match_number)
+ action_request.rpc_id(1,'fire',actor.fire_sequence,aim,actor.weapon_id,match_number,view_clock())
 @rpc('any_peer','call_remote','reliable')
-func action_request(action: String, sequence: int, aim: Vector2, weapon: int, generation: int):
+func action_request(action: String, sequence: int, aim: Vector2, weapon: int, generation: int, stamp: float):
  if not authority():return
  var sender=multiplayer.get_remote_sender_id()
  if not peer_slots.has(sender) or generation!=match_number or state!='match':return
@@ -497,7 +559,7 @@ func action_request(action: String, sequence: int, aim: Vector2, weapon: int, ge
    if sequence<=f.acknowledged_fire or not aim.is_finite():return
    if f.dead or f.reload_left>0 or weapon!=f.weapon_id:
     f.acknowledged_fire=sequence;return
-   if f.pending_remote_shots.size()<4:f.pending_remote_shots.append({'sequence':sequence,'aim':Vector2(aim.x,clampf(aim.y,-1.45,1.45)),'weapon':weapon})
+   if f.pending_remote_shots.size()<4:f.pending_remote_shots.append({'sequence':sequence,'aim':Vector2(aim.x,clampf(aim.y,-1.45,1.45)),'weapon':weapon,'stamp':stamp if is_finite(stamp) else server_clock})
   'reload':
    if f.pending_remote_shots.is_empty():f.start_reload()
    else:f.reload_requested=true
@@ -505,12 +567,17 @@ func action_request(action: String, sequence: int, aim: Vector2, weapon: int, ge
   'grenade':f.throw_grenade()
   'streak':f.activate_streak()
 @rpc('authority','call_remote','unreliable_ordered')
-func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array):
+func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array, stamp: float):
  var unpacked=packed.decompress_dynamic(65536,FileAccess.COMPRESSION_DEFLATE)
  if unpacked.is_empty():return
  var data=bytes_to_var(unpacked)
  if not data is Array or data.size()!=12 or fighters.size()!=12:return
  snapshot_count+=1;scores=score;time_left=clock;radar_time=radar
+ # Clock offset tracks the fastest delivery seen, decaying slowly to follow drift.
+ var sample=stamp-local_seconds()
+ if not clock_synced or sample>clock_offset:clock_offset=sample
+ else:clock_offset=lerpf(clock_offset,sample,.02)
+ clock_synced=true
  for i in range(12):
   var f=fighters[i];var s=data[i]
   var displacement=f.position.distance_to(s[0])
@@ -521,7 +588,9 @@ func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array)
   if f.local_player:f.position=f.position.lerp(s[0],.35) if displacement<3 else s[0]
   else:
    f.network_position=s[0];f.network_yaw=s[1]
-   if not f.network_pose_ready or displacement>3 or f.dead!=s[4]:f.position=s[0];f.rotation.y=s[1]
+   if not f.network_pose_ready or f.dead!=s[4]:f.net_buffer.clear();f.position=s[0];f.rotation.y=s[1]
+   f.net_buffer.append([stamp,s[0],s[1]])
+   while f.net_buffer.size()>24:f.net_buffer.pop_front()
    f.network_pose_ready=true;f.yaw=s[1];f.pitch=s[2]
   f.health=s[3];f.dead=s[4];f.kills=s[5];f.deaths=s[6];f.streak=s[7];f.ammo=s[8];f.reserves=s[9];f.respawn_time=s[11];f.rewards.assign(s[12]);f.class_id=s[13];f.reload_left=s[14];f.crouched=s[15];f.col.shape.height=1.2 if f.crouched else 1.8;f.col.position.y=.6 if f.crouched else .9;f.model.visible=not f.local_player or f.dead;f.model.rotation.x=0 if f.body_motion else (-1.48 if f.dead else 0);f.model.position.y=0 if f.body_motion else (.12 if f.dead else (-.42 if f.crouched else 0));f.collision_layer=0 if f.dead else 2
   if f.local_player:

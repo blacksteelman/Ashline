@@ -81,6 +81,7 @@ var remote_jump_held=false
 var network_position=Vector3.ZERO
 var network_yaw=0.0
 var network_pose_ready=false
+var net_buffer: Array=[] # [server clock, position, yaw] from snapshots
 var standing_clearance=SphereShape3D.new()
 func _ready():
  collision_layer=2;collision_mask=(1|8) if bot else (1|2|8)
@@ -190,7 +191,9 @@ func _physics_process(dt):
   if not pending_remote_shots.is_empty() and cooldown<=0:
    var request=pending_remote_shots.pop_front();acknowledged_fire=maxi(acknowledged_fire,request.sequence)
    if request.weapon==weapon_id:
-    var latest_aim=Vector2(yaw,pitch);yaw=request.aim.x;pitch=request.aim.y;shoot();yaw=latest_aim.x;pitch=latest_aim.y
+    var latest_aim=Vector2(yaw,pitch);yaw=request.aim.x;pitch=request.aim.y
+    game.rewound(self,request.get('stamp',game.server_clock),shoot)
+    yaw=latest_aim.x;pitch=latest_aim.y
   if reload_requested and pending_remote_shots.is_empty():reload_requested=false;start_reload()
  if was_crouched and not crouched and not can_stand():crouched=true
  var direction=Vector3(move_wish.x,0,move_wish.y).rotated(Vector3.UP,yaw)
@@ -238,12 +241,32 @@ func _physics_process(dt):
     var surface=ground.collider.get_meta('surface','asphalt')
     sound_key='step_metal' if surface=='metal' else ('step_concrete' if surface in ['concrete','brick','plaster'] else 'step')
    game.sound(sound_key,eye(),true,-17);step_timer=.30 if sprinting else .42
+# Remote players are drawn between the two snapshots around the view clock;
+# short gaps are extrapolated (<= 100 ms), teleports (respawn) snap.
+func interpolate_network(clock: float):
+ if net_buffer.is_empty():return
+ var newest=net_buffer[-1]
+ if clock>=newest[0]:
+  var extra=minf(clock-newest[0],.1)
+  if net_buffer.size()>1 and extra>0:
+   var prev=net_buffer[-2];var span=maxf(.001,newest[0]-prev[0])
+   var velocity=(newest[1]-prev[1])/span
+   position=newest[1]+velocity*extra if velocity.length()<12 else newest[1]
+  else:position=newest[1]
+  rotation.y=newest[2];return
+ for i in range(net_buffer.size()-2,-1,-1):
+  var a=net_buffer[i]
+  if a[0]<=clock:
+   var b=net_buffer[i+1]
+   if a[1].distance_to(b[1])>3:position=b[1];rotation.y=b[2];return
+   var x=clampf((clock-a[0])/maxf(.001,b[0]-a[0]),0,1)
+   position=a[1].lerp(b[1],x);rotation.y=lerp_angle(a[2],b[2],x);return
+ position=net_buffer[0][1];rotation.y=net_buffer[0][2]
 func can_stand() -> bool:
  var query=PhysicsShapeQueryParameters3D.new();query.shape=standing_clearance;query.transform=Transform3D(Basis.IDENTITY,global_position+Vector3.UP*1.49);query.collision_mask=1;query.exclude=[get_rid()]
  return get_world_3d().direct_space_state.intersect_shape(query,1).is_empty()
 func _process(dt: float):
- if not game.authority() and not local_player and network_pose_ready:
-  position=position.lerp(network_position,1-exp(-dt*20));rotation.y=lerp_angle(rotation.y,network_yaw,1-exp(-dt*20))
+ if not game.authority() and not local_player and network_pose_ready:interpolate_network(game.view_clock())
  if body_motion and game.state=='match':
   body_motion.update(dt)
   if not dead:model.rotation.z=lerpf(model.rotation.z,0,1-exp(-dt*9))
@@ -285,14 +308,14 @@ func shoot():
   local_fire_feedback(w,direction);return
  var dir=aim_dir();var spread=w.spread*(.18 if ads else 1.0)*(1.7 if not is_on_floor() else 1.0)
  dir=(dir+Vector3(randf_range(-spread,spread),randf_range(-spread,spread),randf_range(-spread,spread))).normalized()
- var origin=eye();var ray=PhysicsRayQueryParameters3D.create(origin,origin+dir*140,1|2,[get_rid()]);var hit=get_world_3d().direct_space_state.intersect_ray(ray)
+ var origin=eye();var hit=game.trace(origin,origin+dir*140,self)
  if local_player:local_fire_feedback(w,dir)
  else:game.sound(w.sound,origin,false,-3);game.muzzle(eye()+dir*.55,dir,weapon_id)
  if not hit.is_empty():
   var target=hit.collider
   if target is Fighter:
    if target.team!=team:
-    var h=hit.position.y-target.global_position.y
+    var h=hit.position.y-hit.get('rewound_base',target.global_position).y
     var zone='HEAD' if h>(1.03 if target.crouched else 1.48) else ('LEGS' if h<.72 else 'TORSO')
     var damage=w.damage*(2.4 if zone=='HEAD' else (.72 if zone=='LEGS' else 1.0))
     # Damage falls off past each weapon's effective range.

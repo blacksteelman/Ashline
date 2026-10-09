@@ -29,7 +29,6 @@ Third-party resources added in 0.8 (see tools/fetch_polyhaven.py, tools/fetch_am
 - MakeHuman community clothing assets:
   - elvs_male_shirt_untucked_bd1 by Elvaerwyn — CC BY (shirt, recoloured with project camouflage)
   - mindfront_tactical_vest_male and mindfront_helmet_kz45 by Mindfront (Sweden) — CC BY 4.0 (plate carrier, helmet; recoloured, decimated)
-  - mrgreaterthan_m1_helmet by MrGreaterThan — CC0
   - gredal_gas_mask — CC0
   - cortu_cargo_pants by Cortu — CC0
   - toigo_ankle_boots_male, toigo_gloves_short by MRT (MargaretToigo) — CC0

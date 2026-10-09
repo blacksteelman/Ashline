@@ -8,6 +8,7 @@ var teal=Color('#73c0c4')
 var orange=Color('#dba477')
 func _ready():
  mouse_filter=Control.MOUSE_FILTER_IGNORE;set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ var minimap=load('res://scripts/minimap.gd').new();minimap.game=game;add_child(minimap)
 func _process(_dt):queue_redraw()
 func words(pos: Vector2, text: String, size_v: int=16, color: Color=Color('#dedfce'), fixed: bool=false):
  draw_string(mono if fixed else font,pos,text,HORIZONTAL_ALIGNMENT_LEFT,-1,size_v,Color(0,0,0,.8));draw_string(mono if fixed else font,pos+Vector2(0,-1),text,HORIZONTAL_ALIGNMENT_LEFT,-1,size_v,color)
@@ -26,20 +27,8 @@ func _draw():
  for i in range(mini(game.feed.size(),5)):
   var f=game.feed[i];words(Vector2(1170,110+i*24),f.killer+'  '+('◇' if f.head else '›')+'  '+f.victim,14,teal if f.team==0 else orange)
  if not p:return
- # Map uses real collision geometry and radar information, never omniscient enemies.
- var center=Vector2(110,110);var scale_v=2.1
- draw_rect(Rect2(28,28,164,164),Color(.025,.04,.045,.72));draw_rect(Rect2(28,28,164,164),Color('#536d70'),false,1)
- for r in game.arena.obstacles:
-  draw_rect(Rect2(center+r.position*scale_v,r.size*scale_v),Color(.32,.38,.37,.8))
- for f in game.fighters:
-  if f.dead:continue
-  var pos=center+Vector2(f.position.x,f.position.z)*scale_v
-  if f==p:
-   var dir=Vector2(-sin(p.yaw),-cos(p.yaw));var right=Vector2(dir.y,-dir.x);draw_colored_polygon(PackedVector2Array([pos+dir*6,pos-dir*4+right*4,pos-dir*4-right*4]),ivory)
-  elif f.team==p.team:draw_circle(pos,2.4,teal)
-  elif game.radar_time[p.team]>0 or f.last_shot>0:draw_circle(pos,3,orange)
- words(Vector2(28,211),'N ↑  /  SECTOR 04',11,muted,true)
- if game.radar_time[p.team]>0:words(Vector2(28,230),'RECON  '+str(int(game.radar_time[p.team]))+'s',12,teal)
+ # Minimap: scripts/minimap.gd (child control, clipped and rotating).
+ if game.radar_time[p.team]>0:words(Vector2(28,212),'RECON  '+str(int(game.radar_time[p.team]))+'s',12,teal)
  if Input.is_action_pressed('scoreboard'):
   scoreboard();return
  if p.dead:
