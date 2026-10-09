@@ -116,6 +116,19 @@
   "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
   "source": "https://ambientcg.com/view?id=Ground037"
  },
+ "fabric_canvas": {
+  "archive_sha256": "7af520fce64a91a7c0eeb89a6b4e02d0c57da8c886a44ec2b5d8624eb4688be6",
+  "asset": "Fabric066",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "fabric_canvas_albedo.jpg": "b8155e0d697a90a49dcc76df6b659084583657823010e211af1702e65c3195df",
+   "fabric_canvas_normal.jpg": "34a27ba5b883569d26804106b81b182979acefa48a834569cf766e767226acdc",
+   "fabric_canvas_orm.jpg": "5c8e076571df615f431c39067487a4bc27e5cb21cd08d9536cd4cf43ddee95bf"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Fabric066"
+ },
  "facade_windows": {
   "archive_sha256": "8cee41a9b44f031bdfb1820e8824ca90d9d329256fb1e0267d12b8dd61aedf0b",
   "asset": "Facade018A",
@@ -154,6 +167,19 @@
   "license": "CC0-1.0",
   "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
   "source": "https://ambientcg.com/view?id=PaintedMetal016"
+ },
+ "leather_dark": {
+  "archive_sha256": "681d26d63912c849151266a087290a41c2fc5e95789c2cd6669f36c45d70efa6",
+  "asset": "Leather026",
+  "author": "ambientCG / Lennart Demes",
+  "files": {
+   "leather_dark_albedo.jpg": "b85b13068b3123be50a1efffea5eab538396c312a1d34685e0acae6fdc80e2b5",
+   "leather_dark_normal.jpg": "6b65c4f5c93446b4046cd3e185152bc91dd8acf0163c70c598b5cb25c9386020",
+   "leather_dark_orm.jpg": "72d2f189d5588020344989f631a4d48c42740e256cbbaa30800f22d815bc5134"
+  },
+  "license": "CC0-1.0",
+  "modifications": "Resized to 1024px colour/normal and 512px ORM (AO, roughness, metalness packed).",
+  "source": "https://ambientcg.com/view?id=Leather026"
  },
  "metal_plates": {
   "archive_sha256": "83687a9d4fe9cbba5cfa1898a47bd8c90a0e999d648543fa75e30db597c78cf1",

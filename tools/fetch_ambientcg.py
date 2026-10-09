@@ -37,6 +37,8 @@ SETS = {
     'facade_windows': ('Facade018A', 1024, 512),
     'tiles_floor': ('Tiles107', 1024, 512),
     'paving': ('PavingStones136', 1024, 512),
+    'fabric_canvas': ('Fabric066', 1024, 512),
+    'leather_dark': ('Leather026', 1024, 512),
 }
 
 

@@ -48,14 +48,17 @@ func run():
   p.shoot();expect(enemy.health<100,'Weapon '+str(kind)+' hits and damages')
  # The visible moving pieces are part of the actual imported viewmodel.
  p.weapon_id=0;p.build_gun();p.ammo[0]=12;p.reload_left=0;p.start_reload()
- expect(p.view.magazine!=null and p.view.contact_clip!=&'','Reload has articulated magazine and supporting hand')
- var duration=Arsenal.WEAPONS[0].reload*.78
- p.reload_left=duration*.55;p.view.update(p,.016)
- expect(p.view.magazine.position.y<-.1,'Magazine is withdrawn during reload')
- var arms=p.gun.find_child('Skeleton3D',true,false);arms.force_update_all_bone_transforms()
- expect(arms.get_bone_global_pose(arms.find_bone('hand.L')).origin.y<-.1,'Supporting hand reaches magazine')
- p.reload_left=0;p.view.update(p,.016)
- expect(p.view.magazine.position.length()<.001,'Magazine returns to its seated pose')
+ var arms: Skeleton3D=p.gun.find_child('Skeleton3D',true,false)
+ expect(p.view is FirstPersonRig and arms!=null and arms.find_bone('magazine')>=0,'Viewmodel has a skinned rig with a magazine bone')
+ var mag_bone=arms.find_bone('magazine');var hand=arms.find_bone('hand.L')
+ var seated=arms.get_bone_global_rest(mag_bone).origin
+ var duration=p.reload_left
+ p.reload_left=duration*.55;p.view.update(p,.016);p.view.tree.advance(0);arms.force_update_all_bone_transforms()
+ var withdrawn=arms.get_bone_global_pose(mag_bone).origin
+ expect(withdrawn.y<seated.y-.1,'Magazine is withdrawn during reload')
+ expect(arms.get_bone_global_pose(hand).origin.distance_to(withdrawn)<.25,'Supporting hand carries the magazine')
+ p.reload_left=0;p.view.update(p,.016);p.view.tree.advance(0);arms.force_update_all_bone_transforms()
+ expect(arms.get_bone_global_pose(mag_bone).origin.distance_to(seated)<.005,'Magazine returns to its seated pose')
  p.view.fire(0);p.view.spring_step(.016)
  expect(p.view.recoil_position.z>0,'Spring recoil moves weapon rearward')
  for tick in range(100):p.view.spring_step(.016)
@@ -70,8 +73,8 @@ func run():
  var wall=Art.box(g,Vector3(0,1,-17.5),Vector3(3,2,.5),Art.mat('concrete'),true)
  await physics_frame;await physics_frame
  p.cooldown=0;p.shoot();expect(enemy.health==100,'Wall blocks weapon damage')
- var raw=g.arena.nearest_open(Vector2i(16,-12),Vector3(14,.1,-12))
- expect(raw.x<15,'Navigation projection stays on reachable side of wall')
+ var detour=g.arena.route(Vector3(14,.2,30),Vector3(14,.2,-30))
+ expect(detour.size()>30,'Navigation routes around the foundry hall walls')
  p.local_player=false
  var before=p.grenades;p.throw_grenade();expect(p.grenades==before-1 and g.grenades.size()==1,'Frag creates physical grenade')
  g.start_match(false);await process_frame;expect(g.grenades.is_empty(),'Round restart clears grenades')

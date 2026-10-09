@@ -5,7 +5,7 @@ var fighters: Array[Fighter]=[]
 var player: Fighter
 var state='menu'
 var menu_open=false
-var settings={'sensitivity':1.5,'fov':90.0,'volume':.75,'fullscreen':false,'graphics':2,'vsync':true}
+var settings={'sensitivity':1.5,'fov':90.0,'volume':.75,'fullscreen':false,'graphics':2,'vsync':true,'camo':0}
 var hud: CanvasLayer
 var ui: Control
 var scores=[0,0]
@@ -158,10 +158,17 @@ func settings_menu(in_match: bool):
  var quality=OptionButton.new()
  for preset in ['PERFORMANCE','BALANCED','QUALITY','ULTRA']:quality.add_item(preset)
  quality.selected=settings.graphics;v.add_child(quality);quality.item_selected.connect(func(value):settings.graphics=value;save_settings())
+ label(v,'UNIFORM CAMOUFLAGE',13)
+ var camo=OptionButton.new()
+ for item in ['TEAM ISSUE','MULTICAM','EMR (DIGITAL FLORA)','MM14']:camo.add_item(item)
+ camo.selected=int(settings.camo);v.add_child(camo);camo.item_selected.connect(apply_camo)
  var sync=CheckButton.new();sync.text='VSync';sync.button_pressed=settings.vsync;v.add_child(sync);sync.toggled.connect(func(value):settings.vsync=value;save_settings())
  var check=CheckButton.new();check.text='Fullscreen';check.button_pressed=settings.fullscreen;v.add_child(check);check.toggled.connect(func(value):settings.fullscreen=value;save_settings())
  label(v,'Q  PRIMARY / PISTOL     G  FRAG\n3  ACTIVATE EARNED STREAK     TAB  SCOREBOARD\nESC  MENU     SPACE  JUMP',15)
  button(v,'BACK',pause_menu if in_match else main_menu)
+func apply_camo(value: int):
+ settings.camo=value;save_settings()
+ if player and player.local_player:player.build_gun()
 func leave_match():
  clear_combat_effects();net_mode='offline'
  if multiplayer.has_multiplayer_peer():multiplayer.multiplayer_peer=null
@@ -550,7 +557,7 @@ func shot_event(who: int, origin: Vector3, dir: Vector3):
  if f.local_player:return # Local predicted recoil/audio already played.
  f.last_shot=.4
  sound(Arsenal.WEAPONS[f.weapon_id].sound,origin,f.local_player,-3)
- if f.local_player:f.view.fire(f.weapon_id);f.kick+=.038;f.pitch+=deg_to_rad(Arsenal.WEAPONS[f.weapon_id].recoil);muzzle(f.gun.to_global(f.gun.get_meta('muzzle')),dir)
+ if f.local_player:f.view.fire(f.weapon_id);f.kick+=.038;f.pitch+=deg_to_rad(Arsenal.WEAPONS[f.weapon_id].recoil);muzzle(f.muzzle_world(),dir)
  else:muzzle(origin+dir*.55,dir,f.weapon_id)
 @rpc('authority','call_remote','reliable')
 func kill_event(killer: int, victim: int, zone: String, score: Array):

@@ -9,8 +9,8 @@ var class_id=0
 var queued_class=-1
 var weapon_id=0
 var primary=0
-var ammo=[30,36,14,12]
-var reserves=[120,144,56,48]
+var ammo=Arsenal.full_ammo()
+var reserves=Arsenal.full_reserves()
 var health=100.0
 var kills=0
 var deaths=0
@@ -30,7 +30,7 @@ var crouched=false
 var camera: Camera3D
 var rig: Node3D
 var gun: Node3D
-var view=WeaponView.new()
+var view=WeaponView.new() # FirstPersonRig when an authored viewmodel exists
 var recoil_sequence=0
 var recoil_return=Vector2.ZERO
 var shot_age=1.0
@@ -97,11 +97,28 @@ func _ready():
 func build_gun():
  if gun:
   gun.visible=false;gun.get_parent().remove_child(gun);gun.queue_free()
- gun=Art.weapon(rig,weapon_id)
+ if FirstPersonRig.available(weapon_id):
+  gun=load(FirstPersonRig.path(weapon_id)).instantiate();rig.add_child(gun)
+  for geometry in gun.find_children('*','GeometryInstance3D',true,false):
+   geometry.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;geometry.extra_cull_margin=2.0
+  ViewmodelMaterial.apply(gun)
+  view=FirstPersonRig.new()
+  view.gun=gun;view.dress(team,int(game.settings.get('camo',0)))
+ else:
+  gun=Art.weapon(rig,weapon_id)
+  view=WeaponView.new()
  view.bind(gun)
+
+func muzzle_world() -> Vector3:
+ if view is FirstPersonRig:return view.muzzle_position()
+ return gun.to_global(gun.get_meta('muzzle'))
+
+func ejector_world() -> Vector3:
+ if view is FirstPersonRig:return view.ejector_position()
+ return gun.to_global(gun.get_meta('ejector',Vector3(.049,.016,-.12)))
 func load_class(c: int):
  class_id=c;primary=Arsenal.CLASSES[c].weapon;weapon_id=primary
- ammo=[30,36,14,12];reserves=[120,144,56,48];grenades=2;reload_left=0
+ ammo=Arsenal.full_ammo();reserves=Arsenal.full_reserves();grenades=2;reload_left=0
  if local_player and rig:build_gun()
  update_world_weapon()
 func update_world_weapon():
@@ -268,7 +285,8 @@ func shoot():
     var h=hit.position.y-target.global_position.y
     var zone='HEAD' if h>(1.03 if target.crouched else 1.48) else ('LEGS' if h<.72 else 'TORSO')
     var damage=w.damage*(2.4 if zone=='HEAD' else (.72 if zone=='LEGS' else 1.0))
-    if weapon_id==1:damage*=clampf(1.4-origin.distance_to(hit.position)/50,.6,1)
+    # Damage falls off past each weapon's effective range.
+    damage*=clampf(1.25-origin.distance_to(hit.position)/(w.range*2.0),.62,1.0)
     target.hurt(damage,self,zone);game.impact(hit.position,hit.normal,'flesh')
     if local_player:
      game.hit_time=.16
@@ -288,8 +306,8 @@ func local_fire_feedback(w: Dictionary, direction: Vector3):
  var previous_pitch=pitch
  pitch=clampf(pitch+rise,-1.45,1.45);yaw+=lateral
  recoil_return+=Vector2((pitch-previous_pitch)*.65,lateral);shot_age=0
- game.muzzle(gun.to_global(gun.get_meta('muzzle')),direction,weapon_id)
- game.shell(gun.to_global(gun.get_meta('ejector',Vector3(.049,.016,-.12))),gun.global_basis.x)
+ game.muzzle(muzzle_world(),direction,weapon_id)
+ game.shell(ejector_world(),camera.global_basis.x)
 func hurt(amount: float, attacker: Fighter, zone: String):
  if dead or not game.authority() or game.state!='match':return
  if local_player and game.showcase:return

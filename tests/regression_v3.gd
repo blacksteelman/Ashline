@@ -33,7 +33,8 @@ func run():
  for tick in range(120):await physics_frame
  Input.action_release('fire');p.set_physics_process(false)
  var shots=30-p.ammo[0]
- expect(shots>=21 and shots<=23,'AR cadence keeps fractional tick remainder: '+str(shots)+' shots / 2s')
+ var expected=int(2.0/Arsenal.WEAPONS[0].interval)
+ expect(absi(shots-expected)<=1,'AR cadence keeps fractional tick remainder: '+str(shots)+' shots / 2s (expected '+str(expected)+')')
  var peak=p.pitch;p.shot_age=.2
  for tick in range(60):p.recover_recoil(1.0/60)
  expect(p.pitch<peak and p.pitch>0,'Recoil settles partially without erasing controlled climb')

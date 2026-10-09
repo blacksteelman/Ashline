@@ -63,6 +63,25 @@
   "resolution": "1k",
   "source": "https://polyhaven.com/a/barrel_03"
  },
+ "bolt_action_rifle_7_62": {
+  "authors": {
+   "Mateusz Sadek": "All"
+  },
+  "files": {
+   "bolt_action_rifle_7_62.bin": "c9a32b6471ef08b6d901f9c1865a31c22d37b254a3f772a3c3348d0fa8203ed0",
+   "bolt_action_rifle_7_62.gltf": "d9e9290e531c9a04ddfe3281ba73501a4f2a640f1ff150a12d2cb879b8d43ae3",
+   "textures/bolt_action_rifle_7_62_accesories_arm_2k.jpg": "39f7a89d3617903948a97bcc7c339b285edbc727c1d265066ed43f85b6658538",
+   "textures/bolt_action_rifle_7_62_accesories_diff_2k.jpg": "92e851b49dd7352e0a22c6c643f61a8bcb64c92877e4fcdfab26811fa5dbcbd2",
+   "textures/bolt_action_rifle_7_62_accesories_nor_gl_2k.jpg": "384c30a68b6d26c06520aca240782e1d1c6a8242c6821eceb1cda3bfdfcced5b",
+   "textures/bolt_action_rifle_7_62_arm_2k.jpg": "8a542b1488d21ed66042b0e632217cd2aa1fda6fa75fd4936467ed1205ee397b",
+   "textures/bolt_action_rifle_7_62_diff_2k.jpg": "dffc7b47305ca8d0d6e813ca8284d118e78dec4db27f98baee249401da081af3",
+   "textures/bolt_action_rifle_7_62_nor_gl_2k.jpg": "fe3725ff044b4001d322a177c3d5d2738c0bc3a9c1b432bd0febc7cccf8f99d1"
+  },
+  "license": "CC0-1.0",
+  "name": "Bolt Action Rifle 7.62",
+  "resolution": "2k",
+  "source": "https://polyhaven.com/a/bolt_action_rifle_7_62"
+ },
  "cardboard_box_01": {
   "authors": {
    "Rahul Chaudhary": "All"
@@ -752,6 +771,22 @@
   "resolution": "1k",
   "source": "https://polyhaven.com/a/security_light"
  },
+ "service_pistol": {
+  "authors": {
+   "Mateusz Sadek": "All"
+  },
+  "files": {
+   "service_pistol.bin": "a97b6d31ca8865384a76d31289017e25a326a67b3b254162b2a02ecbd97600bc",
+   "service_pistol.gltf": "0930deef47632f7254f1be7c0a8dc44b0376b451be5fc8cf8525be4fe064c824",
+   "textures/service_pistol_arm_2k.jpg": "da6d5b10f35c10a43516e503661406513e52289ce9630cf5ce6e738b26214bba",
+   "textures/service_pistol_diff_2k.jpg": "ca680cbbc712ee2c70a337686274eb1e5aae383dbe9b99692c4eedb9e64f6cfb",
+   "textures/service_pistol_nor_gl_2k.jpg": "118349e76f9d0433eba65e375fdbba5812f850eaa00390f6c7b54f82529dd98b"
+  },
+  "license": "CC0-1.0",
+  "name": "Service Pistol",
+  "resolution": "2k",
+  "source": "https://polyhaven.com/a/service_pistol"
+ },
  "small_lpg_tank": {
   "authors": {
    "Ulan Cabanilla": "All"
@@ -783,6 +818,22 @@
   "name": "Steel Frame Shelves 01",
   "resolution": "1k",
   "source": "https://polyhaven.com/a/steel_frame_shelves_01"
+ },
+ "stick_grenade": {
+  "authors": {
+   "singaii": "All"
+  },
+  "files": {
+   "stick_grenade.bin": "239b287bd831629014cc2eeb679deb5ba4c4ce13aaa57f7f6378b42a8d1cf8c8",
+   "stick_grenade.gltf": "801b507e80075faf87cbbd2f4cf7832b723a0c5878512af230aac21d8e860d67",
+   "textures/stick_grenade_arm_1k.jpg": "4eac502b4f88b1ca3655c2e363ece98e60a4cd2130dbcf8e1405006b3d17142e",
+   "textures/stick_grenade_diff_1k.jpg": "e49424dff57ecfa9a4eb90c2f61bb453d9974b156dd1434b58cd5ab4b1f4d24a",
+   "textures/stick_grenade_nor_gl_1k.jpg": "cc96aa989974de7f7736e9ab19fcae070446f36fb7bba995d522ec05e95122f0"
+  },
+  "license": "CC0-1.0",
+  "name": "Stick Grenade",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/stick_grenade"
  },
  "tool_cart": {
   "authors": {

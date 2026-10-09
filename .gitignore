@@ -14,3 +14,7 @@ assets/kit/*.jpg
 assets/kit/*.png
 assets/kit/*.jpg.import
 assets/kit/*.png.import
+assets/viewmodels/*.jpg
+assets/viewmodels/*.png
+assets/viewmodels/*.jpg.import
+assets/viewmodels/*.png.import
