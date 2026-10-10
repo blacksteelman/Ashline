@@ -1,30 +1,34 @@
-# ASHLINE — playable PC alpha 0.7
+# ASHLINE — playable PC alpha 0.8
 
-Самостоятельный PC FPS на Godot 4.6.3: оригинальная карта Foundry District, собственные и лицензированные CC0-модели, материалы ambientCG и записи оружия из Free Firearm Sound Library (CC0). Это работающая ранняя альфа. Целевое качество современной коммерческой FPS ещё не достигнуто.
+Сетевой военный FPS на Godot 4.6.3 в духе CoD4/MW2: карта Foundry District, реальное оружие (ACR, AK-74M,
+снайперская винтовка, Springfield XD, MPA 30 SST) с анимированными руками от первого лица, солдаты двух сторон
+(Aegis — OCP, Ember — форма ФСБ), режимы Team Deathmatch и Domination, перки и CREATE A CLASS, сеть с
+интерполяцией и компенсацией лага. Модели — Sketchfab CC-BY и CC0 (авторы в `LICENSES.md`), анимации — CMU mocap.
 
 ## Скачать готовую игру
 
-Проверенные архивы находятся в [ветке builds/v0.7.0-alpha](https://github.com/blacksteelman/Ashline/tree/builds/v0.7.0-alpha). Откройте нужный ZIP и нажмите **Download raw file** (значок скачивания). Для приватного репозитория требуется вход в GitHub с доступом к нему.
+Билды собирает GitHub Actions при каждом push (`.github/workflows/build.yml`):
+вкладка **Actions** → последний зелёный запуск **Build game** → внизу **Artifacts**:
+`ASHLINE-windows` и `ASHLINE-linux` (нужен вход в GitHub с доступом к репозиторию).
+Запуск вручную: Actions → Build game → **Run workflow**.
 
-- [Windows x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.7.0-alpha/ASHLINE-0.7-Windows-x64.zip)
-- [Linux x64](https://github.com/blacksteelman/Ashline/blob/builds/v0.7.0-alpha/ASHLINE-0.7-Linux-x64.zip)
-- [Исходники](https://github.com/blacksteelman/Ashline/blob/builds/v0.7.0-alpha/ASHLINE-0.7-Source.zip)
-- [Исходные ассеты для пересоздания моделей](https://github.com/blacksteelman/Ashline/blob/builds/v0.7.0-alpha/ASHLINE-0.7-Asset-Sources.zip)
-- [Реальные скриншоты](https://github.com/blacksteelman/Ashline/blob/builds/v0.7.0-alpha/ASHLINE-0.7-Screenshots.zip)
-
-## Запуск готового билда
+## Запуск
 
 - Windows x64: распаковать архив, запустить `ASHLINE.exe`.
-- Linux x64: распаковать архив, при необходимости `chmod +x ASHLINE.x86_64`, запустить `./ASHLINE.x86_64`.
-- Godot устанавливать не требуется. Основной рендер — Vulkan Forward+, профиль Balanced с контактным затенением. Нужен актуальный драйвер GPU с поддержкой Vulkan.
-- Для оборудования без Vulkan: `Launch-OpenGL.bat` на Windows или `./Launch-OpenGL.sh` на Linux. Используется Compatibility/OpenGL 3.3, без SSAO/SSIL/SSR.
-- Windows-билд экспортирован из тех же исходников, но не запущен в данной Linux-среде.
+- Linux x64: распаковать, `chmod +x ASHLINE.x86_64`, запустить `./ASHLINE.x86_64`.
+- Godot не нужен. Рендер — Vulkan Forward+ (нужен актуальный драйвер GPU с Vulkan). Без Vulkan:
+  `ASHLINE.exe --rendering-driver opengl3` (или `./ASHLINE.x86_64 --rendering-driver opengl3`).
+- Linux-билд проверен в этой среде (матч ботов и запуск с рендером); Windows-билд собран из тех же файлов.
 
-PLAY → выбрать класс → появиться на карте → играть TDM 6v6 с 11 ботами. Матч идёт до 75 убийств или 7 минут. NEXT MATCH запускает новый раунд. HUD показывает счёт, время, radar, боезапас, здоровье, feed и серии. Tab открывает таблицу, в том числе после смерти.
+PLAY → класс (EDIT — свой класс: оружие и по перку из трёх ярусов) → режим TDM или Domination → матч 6×6
+с ботами. TDM — до 75 убийств или 7 минут; Domination — удерживать A/B/C, 150 очков или 10 минут.
+По сети: LOCAL NETWORK → HOST (остальные места займут боты) или CONNECT по IP, UDP-порт 27841.
 
-WASD — движение; Shift — sprint; Ctrl — crouch; Space — jump; ЛКМ — огонь; ПКМ — ADS; R — reload; Q — основное оружие/пистолет; G — frag; 3 — серия убийств; Tab — scoreboard; Esc — меню.
+WASD — движение; Shift — бег; Ctrl — присесть; Space — прыжок; ЛКМ — огонь; ПКМ — прицел; R — перезарядка;
+Q — основное оружие/пистолет; G — граната; 3 — серия убийств; Tab — таблица; Esc — меню.
 
-Rifleman: AR-41, перезарядка быстрее на 22%. Raider: KITE-9, sprint быстрее на 12%. Watchman: MR-62, взрывной урон меньше на 25%. У всех есть P-12 и две frag. Серии: 3 Recon (radar 20 секунд), 5 Mortar, 7 Overwatch. Смена класса в паузе применяется при следующем respawn.
+Классы: RIFLEMAN (ACR 6.8), BREACHER (MPA 30 SST), SNIPER (болтовая .308); у всех Springfield XD и гранаты.
+Перки: Sleight of Hand / Scavenger; Stopping Power / Juggernaut; Lightweight / Steady Aim / Flak Jacket.
 
 Сохраняются sensitivity, FOV, volume, fullscreen, VSync и графический профиль. Performance отключает MSAA и экранные эффекты, Balanced включает MSAA и SSAO, Quality добавляет SSIL/SSR при Forward+. Настройки расположены в стандартной пользовательской директории Godot (`user://settings.cfg`).
 

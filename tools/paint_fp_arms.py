@@ -15,7 +15,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = os.path.join(ROOT, 'assets', 'viewmodels', 'fp_acr', 'arms_baseColor.jpg')
+SRC = os.path.join(ROOT, 'assets', 'viewmodels', 'arms', 'arms_baseColor.jpg')
 OUT = os.path.join(ROOT, 'assets', 'viewmodels')
 CHAR = os.path.join(ROOT, 'assets', 'characters')
 TEX = os.path.join(ROOT, 'assets', 'textures')

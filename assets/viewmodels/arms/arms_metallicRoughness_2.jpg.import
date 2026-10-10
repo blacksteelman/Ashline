@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cpe74fa750by5"
-path="res://.godot/imported/arms_normal.jpg-c4b5e6891e2c3f98fbb996f858a499a5.ctex"
+uid="uid://73bbah1ed8qu"
+path="res://.godot/imported/arms_metallicRoughness_2.jpg-d3930c9288bcae6a6addedf34ae643db.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/viewmodels/fp_acr/arms_normal.jpg"
-dest_files=["res://.godot/imported/arms_normal.jpg-c4b5e6891e2c3f98fbb996f858a499a5.ctex"]
+source_file="res://assets/viewmodels/arms/arms_metallicRoughness_2.jpg"
+dest_files=["res://.godot/imported/arms_metallicRoughness_2.jpg-d3930c9288bcae6a6addedf34ae643db.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cm2tscuwy751d"
-path="res://.godot/imported/arms_baseColor.jpg-386590debc99dcdf0b447cbc3b985084.ctex"
+uid="uid://bqyeyvtw4x4ed"
+path="res://.godot/imported/arms_occlusion.jpg-481792424a1084ed8e8f8fa213e01fc9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/viewmodels/fp_acr/arms_baseColor.jpg"
-dest_files=["res://.godot/imported/arms_baseColor.jpg-386590debc99dcdf0b447cbc3b985084.ctex"]
+source_file="res://assets/viewmodels/arms/arms_occlusion.jpg"
+dest_files=["res://.godot/imported/arms_occlusion.jpg-481792424a1084ed8e8f8fa213e01fc9.ctex"]
 
 [params]
 

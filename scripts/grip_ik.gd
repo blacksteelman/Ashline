@@ -27,6 +27,8 @@ static func attach(holder: Node3D, socket_node: Node3D, weapon: Node3D) -> GripI
  ik.support=weapon.get_meta('support',AUTHORED_SUPPORT) if weapon else AUTHORED_SUPPORT
  # The first-person hands reach further forward than this stance allows (ACR handguard ~0.40 m): cap it.
  ik.support.z=maxf(ik.support.z,MAX_REACH)
+ # ...and keep the wrist just under the bore (the sniper's first-person hand sits low under a tall stock).
+ if weapon and weapon.has_meta('muzzle'):ik.support.y=maxf(ik.support.y,weapon.get_meta('muzzle').y-.06)
  for side in ['R','L']:
   ik.arms[side]=[sk.find_bone('UpperArm.'+side),sk.find_bone('Forearm.'+side),sk.find_bone('Hand.'+side)]
  return ik

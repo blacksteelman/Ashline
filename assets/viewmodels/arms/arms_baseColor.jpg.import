@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8b7je82r80cg"
-path="res://.godot/imported/arms_baseColor.jpg-b70bec7439d20fa72ff1172269669180.ctex"
+uid="uid://cn80ix2qjho4k"
+path="res://.godot/imported/arms_baseColor.jpg-87c1ea2487ecc527d157febfc7aacfca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/viewmodels/fp_ak74m/arms_baseColor.jpg"
-dest_files=["res://.godot/imported/arms_baseColor.jpg-b70bec7439d20fa72ff1172269669180.ctex"]
+source_file="res://assets/viewmodels/arms/arms_baseColor.jpg"
+dest_files=["res://.godot/imported/arms_baseColor.jpg-87c1ea2487ecc527d157febfc7aacfca.ctex"]
 
 [params]
 

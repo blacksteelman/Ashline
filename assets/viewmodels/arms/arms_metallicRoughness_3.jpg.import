@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0gwk0rsmrnes"
-path="res://.godot/imported/arms_diffuse.jpg-21e9c6f700fb7f98455955bb558bd120.ctex"
+uid="uid://mes0xxch5nf0"
+path="res://.godot/imported/arms_metallicRoughness_3.jpg-24ac501c8d44845b5653d640bb82a19b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/viewmodels/fp_pistol/arms_diffuse.jpg"
-dest_files=["res://.godot/imported/arms_diffuse.jpg-21e9c6f700fb7f98455955bb558bd120.ctex"]
+source_file="res://assets/viewmodels/arms/arms_metallicRoughness_3.jpg"
+dest_files=["res://.godot/imported/arms_metallicRoughness_3.jpg-24ac501c8d44845b5653d640bb82a19b.ctex"]
 
 [params]
 

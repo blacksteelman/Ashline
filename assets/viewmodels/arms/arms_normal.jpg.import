@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ba0iy5fep6xob"
-path="res://.godot/imported/arms_specularGlossiness.png-6c83d66f74a7f08078aba6b53a8c9592.ctex"
+uid="uid://bsllltsy4paib"
+path="res://.godot/imported/arms_normal.jpg-60d03c775c270eca1db45ba542941ed7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/viewmodels/fp_pistol/arms_specularGlossiness.png"
-dest_files=["res://.godot/imported/arms_specularGlossiness.png-6c83d66f74a7f08078aba6b53a8c9592.ctex"]
+source_file="res://assets/viewmodels/arms/arms_normal.jpg"
+dest_files=["res://.godot/imported/arms_normal.jpg-60d03c775c270eca1db45ba542941ed7.ctex"]
 
 [params]
 

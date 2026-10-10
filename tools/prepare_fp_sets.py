@@ -3,10 +3,11 @@
 
 python3 tools/prepare_fp_sets.py [key ...]
 assets/thirdparty/sketchfab/<key>/scene.gltf -> assets/viewmodels/<key>/scene.gltf (+ .bin),
-textures <= 2048 px re-encoded as JPEG (RGB) or PNG (when alpha is used). The rig, skinning and
+textures <= 2048 px re-encoded as JPEG (RGB) or PNG (when alpha is used). The arms textures are the same
+in every set: identical files are moved to assets/viewmodels/arms/ and shared (one copy in the build). The rig, skinning and
 animations are untouched; scripts/first_person_rig.gd aligns the Head_Cam bone with the camera.
 """
-import json, os, shutil, sys
+import hashlib, json, os, shutil, sys
 import numpy as np
 from PIL import Image
 
@@ -43,6 +44,32 @@ def prepare(key):
     print('prepared', key, size // 1024, 'KB')
 
 
+def share_arms():
+    shared = os.path.join(OUT, 'arms'); os.makedirs(shared, exist_ok=True)
+    names = {hashlib.md5(open(os.path.join(shared, f), 'rb').read()).hexdigest(): f
+             for f in os.listdir(shared) if not f.endswith('.import')}
+    for key in KEYS:
+        path = os.path.join(OUT, key, 'scene.gltf')
+        if not os.path.exists(path):
+            continue
+        gltf = json.load(open(path))
+        for image in gltf.get('images', []):
+            if not image['uri'].startswith('arms_'):
+                continue
+            src = os.path.join(OUT, key, image['uri'])
+            digest = hashlib.md5(open(src, 'rb').read()).hexdigest()
+            if digest not in names:
+                base, ext = os.path.splitext(image['uri'].replace('arms_diffuse', 'arms_baseColor'))
+                name, i = base + ext, 2
+                while os.path.exists(os.path.join(shared, name)):
+                    name, i = f'{base}_{i}{ext}', i + 1
+                shutil.copy(src, os.path.join(shared, name)); names[digest] = name
+            image['uri'] = '../arms/' + names[digest]
+            os.remove(src)
+        json.dump(gltf, open(path, 'w'))
+
+
 if __name__ == '__main__':
     for key in sys.argv[1:] or KEYS:
         prepare(key)
+    share_arms()
