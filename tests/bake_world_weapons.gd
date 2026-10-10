@@ -27,16 +27,18 @@ func run():
    if 'Idle' in String(a):ap.play(a);ap.seek(0,true);break
   for i in 4:await process_frame
   ap.pause()
-  var wb=-1;var hand=-1
+  var wb=-1;var hand=-1;var hand_l=-1
   for i in sk.get_bone_count():
    var n=sk.get_bone_name(i)
    if wb<0 and n.begins_with(cfg.bone) and not '_end' in n:wb=i
    if n.begins_with('Hand_R') and not '_end' in n:hand=i
+   if n.begins_with('Hand_L') and not '_end' in n:hand_l=i
   var W=sk.global_transform*sk.get_bone_global_pose(wb)*cfg.frame
   var wrist=W.affine_inverse()*(sk.global_transform*sk.get_bone_global_pose(hand).origin)
   # Socket origin: top of the pistol grip on the barrel centre line (wrist + ~7 cm up, 4 cm forward).
   var grip=Vector3(cfg.muzzle.x,wrist.y+.07/cfg.scale,wrist.z+.04/cfg.scale)
-  var socket=Transform3D(Basis(Vector3.UP,PI).scaled(Vector3.ONE*cfg.scale),Vector3.ZERO)*Transform3D(Basis.IDENTITY,-grip)
+  # The barrel frames (Arsenal fp.frame) are left-handed: flip x back, or the gun comes out mirrored and inside-out.
+  var socket=Transform3D(Basis(Vector3.UP,PI).scaled(Vector3.ONE*cfg.scale)*Basis.from_scale(Vector3(-1,1,1)),Vector3.ZERO)*Transform3D(Basis.IDENTITY,-grip)
   var out=ArrayMesh.new()
   for mi in scene.find_children('*','MeshInstance3D',true,false):
    var mat=mi.mesh.surface_get_material(0)
@@ -61,6 +63,10 @@ func run():
   ResourceSaver.save(out,path,ResourceSaver.FLAG_COMPRESS)
   var muzzle=socket*cfg.muzzle
   print('BAKED ',cfg.set,' surfaces ',out.get_surface_count(),' aabb ',out.get_aabb(),' muzzle ',muzzle)
-  var meta=ConfigFile.new();meta.set_value('weapon','muzzle',muzzle);meta.save('res://assets/viewmodels/world_'+cfg.set+'.cfg')
+  # Where the first-person hands hold this gun (wrists, socket space): soldiers' arm IK uses them (GripIK).
+  var to_socket=socket*W.affine_inverse()*sk.global_transform
+  var grip_wrist=to_socket*sk.get_bone_global_pose(hand).origin;var support=to_socket*sk.get_bone_global_pose(hand_l).origin
+  print('  grip ',grip_wrist,' support ',support)
+  var meta=ConfigFile.new();meta.set_value('weapon','muzzle',muzzle);meta.set_value('weapon','grip',grip_wrist);meta.set_value('weapon','support',support);meta.save('res://assets/viewmodels/world_'+cfg.set+'.cfg')
   scene.queue_free();await process_frame
  quit()

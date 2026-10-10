@@ -148,6 +148,7 @@ func update_world_weapon():
   old.visible=false;old.get_parent().remove_child(old);old.queue_free()
  var socket=model.find_child('WeaponSocket',true,false)
  if socket:world_gun=Art.world_weapon(socket,weapon_id)
+ if socket:GripIK.attach(model,socket,world_gun) # hands onto this gun's grip and handguard
  if world_gun and socket:
   world_gun.name='WorldWeapon'
   for geometry in world_gun.find_children('*','GeometryInstance3D',true,false):geometry.visibility_range_end=90

@@ -52,6 +52,8 @@ static func world_weapon(parent: Node3D, kind: int) -> Node3D:
    var mi=MeshInstance3D.new();mi.name='WorldWeapon';mi.mesh=load(base+'.res');parent.add_child(mi)
    var meta=ConfigFile.new();meta.load(base+'.cfg')
    mi.set_meta('muzzle',meta.get_value('weapon','muzzle',Vector3(0,.03,-.6)))
+   for key in ['grip','support']:
+    if meta.has_section_key('weapon',key):mi.set_meta(key,meta.get_value('weapon',key))
    return mi
  # Third-person weapon from the viewmodel pipeline: weapon space, origin at the grip, Muzzle marker.
  var path='res://assets/viewmodels/world_'+Arsenal.WEAPONS[kind].model+'.glb'

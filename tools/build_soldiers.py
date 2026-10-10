@@ -67,8 +67,10 @@ MIRROR = {'Left': 'Right', 'Right': 'Left', 'LHip': 'RHip', 'RHip': 'LHip'}
 
 # Weapon space: +Y muzzle, +Z up, origin at the top of the pistol grip (as tools/build_viewmodels.py).
 # (wrist position, finger direction, palm normal) for the M4A1 world model.
-GRIP = (Vector((0.014, -0.045, -0.075)), Vector((-0.15, 0.7, -0.7)), Vector((-1, 0, 0)))
-SUPPORT = (Vector((0.0, 0.20, -0.045)), Vector((0.72, 0.66, 0.1)), Vector((0, 0, 1)))
+# Wrists measured on the first-person sets (world_fp_*.cfg grip/support, socket (x,y,z) -> weapon (x,-z,y));
+# the handguard point is the AK/MPA/ACR average capped at the reach of this stance.
+GRIP = (Vector((0.04, -0.04, -0.07)), Vector((-0.15, 0.7, -0.7)), Vector((-1, 0, 0)))
+SUPPORT = (Vector((-0.06, 0.27, -0.07)), Vector((0.72, 0.66, 0.1)), Vector((0, 0, 1)))
 MAGWELL = (Vector((-0.01, 0.045, -0.13)), Vector((0.55, 0.3, 0.75)), Vector((0.9, 0.0, -0.4)))
 
 # Clips: role -> source and treatment. 'speed' is the game speed the clip plays at with
@@ -229,6 +231,17 @@ def build_sketchfab_body(team, spec):
     for o in list(bpy.data.objects):
         if o.type == 'MESH' and not any(m.type == 'ARMATURE' for m in o.modifiers):
             bpy.data.objects.remove(o, do_unlink=True)  # carried rifle, patches, helper sphere
+    # Night-vision goggles on the helmet look odd in a daytime match: drop them (whole meshes or their faces).
+    import bmesh
+    for o in [o for o in bpy.data.objects if o.type == 'MESH']:
+        nvg = [i for i, m in enumerate(o.data.materials) if m and 'night_vis' in m.name.lower()]
+        if not nvg:
+            continue
+        if len(nvg) == len(o.data.materials):
+            bpy.data.objects.remove(o, do_unlink=True); continue
+        bm = bmesh.new(); bm.from_mesh(o.data)
+        bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index in nvg], context='FACES')
+        bm.to_mesh(o.data); bm.free()
     if rig.animation_data:
         rig.animation_data_clear()
     for a in list(bpy.data.actions):
@@ -600,10 +613,10 @@ def hand_basis(rig, side):
     f = (rig.data.bones[s + 'FingerBase'].tail_local - head).normalized()
     th = rig.data.bones[('LThumb' if side == 'L' else 'RThumb')].head_local - head
     t = (th - f * th.dot(f)).normalized()
-    n = f.cross(t)
-    medial = Vector((-1 if side == 'L' else 1, 0, 0))
-    sign = 1.0 if n.dot(medial) > 0 else -1.0
-    n = n * sign
+    # Palm side = -(fingers x thumb) on both hands of this rig (the rest pose has palms down, so 'towards the
+    # body' was a coin toss and flipped the left palm: back of the hand on the handguard, fingers curling away).
+    sign = -1.0
+    n = f.cross(t) * sign
     inv = hb.matrix_local.to_3x3().inverted()
     return inv @ f, inv @ t, inv @ n, sign
 
@@ -616,7 +629,9 @@ def hand_target(rig, side, wm, contact):
     t = n.cross(f) * sign
     A = Matrix((f, t, n)).transposed(); L = Matrix((f_l, t_l, n_l)).transposed()
     R = A @ L.inverted()
-    return Matrix.Translation(wm @ wrist) @ R.to_4x4()
+    # wm carries the Sketchfab armature's 0.01 scale: contact offsets are metres, so place them unscaled
+    # (with wm @ wrist every hand target collapsed onto the weapon origin).
+    return Matrix.Translation(wm.translation + r3 @ wrist) @ R.to_4x4()
 
 
 def curl_fingers(rig, side, base, tip, thumb):
@@ -768,7 +783,7 @@ def author_frame(setup, d, hips, weapon=Matrix.Identity(4), left=None, feet=None
     set_pose(rig, d, hips)
     wb = rig.pose.bones['Weapon']; wb.rotation_mode = 'QUATERNION'
     loc, q, _ = weapon.decompose(); wb.location = loc; wb.rotation_quaternion = q
-    curl_fingers(rig, 'R', 40, 50, 10); curl_fingers(rig, 'L', 34, 44, 8)
+    curl_fingers(rig, 'R', 62, 78, 24); curl_fingers(rig, 'L', 52, 66, 20)  # fist on the grip, wrap the handguard
     # Key before evaluating: the depsgraph re-applies the action and would discard unkeyed edits.
     key_pose(rig, frame)
     bpy.context.scene.frame_set(frame)
