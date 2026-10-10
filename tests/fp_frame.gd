@@ -14,6 +14,7 @@ func run():
   if a=='--side':over['side']=true
   if a=='--top':over['side']=true;over['top']=true
   if a=='--marks':over['marks']=true
+  if a.begins_with('--team='):over['team']=int(a.substr(7))
   for key in ['eye','rear','front','fov_ads','ads_roll']:
    if a.begins_with('--'+key+'='):
     var v=Array(a.substr(key.length()+3).split(',')).map(func(x):return float(x))
@@ -29,6 +30,7 @@ func run():
  var sun=DirectionalLight3D.new();world.add_child(sun);sun.rotation_degrees=Vector3(-45,-30,0);sun.light_energy=1.6
  var cam=Camera3D.new();world.add_child(cam);cam.fov=cfg.get('fov',68.0);cam.near=.01;cam.current=true
  var gun=load(FPSetRig.path(kind)).instantiate();cam.add_child(gun)
+ if cfg.has('team'):FPSetRig.dress_arms(gun,cfg.team)
  var rig=FPSetRig.new();rig.bind(gun,kind)
  var clip=''
  for n in rig.player.get_animation_list():

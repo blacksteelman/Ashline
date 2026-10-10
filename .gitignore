@@ -18,6 +18,9 @@ assets/viewmodels/*.jpg
 assets/viewmodels/*.png
 assets/viewmodels/*.jpg.import
 assets/viewmodels/*.png.import
+# ...but the team arms textures are painted by tools/paint_fp_arms.py and kept.
+!assets/viewmodels/arms_*_albedo.jpg
+!assets/viewmodels/arms_*_albedo.jpg.import
 assets/characters/*.jpg
 assets/characters/*.png
 assets/characters/*.jpg.import

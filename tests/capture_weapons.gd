@@ -10,14 +10,16 @@ func shot(name: String):
  root.get_texture().get_image().save_png(directory+'/'+name+'.png');print('SCREENSHOT ',name)
 func run():
  DirAccess.make_dir_recursive_absolute(directory)
- var only=[];var ads_only=false
+ var only=[];var ads_only=false;var team=-1
  for a in OS.get_cmdline_user_args():
   if a.begins_with('--weapons='):only=Array(a.substr(10).split(',')).map(func(x):return int(x))
   if a=='--ads-only':ads_only=true
+  if a.begins_with('--team='):team=int(a.substr(7))
  g=load('res://main.tscn').instantiate();root.add_child(g);g.showcase=true;g.start_match(false)
  for f in g.fighters:
   if not f.local_player:f.set_physics_process(false);f.position=Vector3(0,-30,0)
  var p=g.player;p.set_physics_process(false)
+ if team>=0:p.team=team
  p.global_position=Vector3(-4.0,.05,-30.0);p.yaw=PI-.35;p.pitch=-.04;p.velocity=Vector3.ZERO
  g.hud.visible=false
  await frames(40)
@@ -26,8 +28,8 @@ func run():
   p.weapon_id=w;p.ammo=Arsenal.full_ammo();p.reserves=Arsenal.full_reserves()
   p.build_gun();p.view.equip_blend=1.0;p.ads=false;p.reload_left=0
   if p.view is FPSetRig:p.view.stop_action()
-  if not ads_only:await frames(25);await shot('vm%d-idle' % w)
-  p.ads=true;await frames(30);await shot('vm%d-ads' % w);p.ads=false;await frames(25)
+  if not ads_only:await frames(25);await shot('vm%d-idle%s' % [w,'' if team<0 else '-t%d'%team])
+  p.ads=true;await frames(30);await shot('vm%d-ads%s' % [w,'' if team<0 else '-t%d'%team]);p.ads=false;await frames(25)
   if ads_only:continue
   p.cooldown=0;p.ammo[w]=10;p.shoot();await frames(1);await shot('vm%d-fire' % w);await frames(20)
   p.ammo[w]=mini(5,Arsenal.WEAPONS[w].mag-1);p.start_reload();var total=p.reload_left;p.reload_left=total*.45;await frames(2);await shot('vm%d-reload' % w);p.reload_left=0

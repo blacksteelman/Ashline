@@ -126,6 +126,24 @@ static func ads_offset(c: Dictionary, wb: Transform3D) -> Transform3D:
 
 func dress(_team: int,_choice: int):pass
 
+# The sets share one arms texture (olive jacket, brown leather gloves); swap in the team's sleeve camo and gloves
+# so the hands match the soldier models (tools/paint_fp_arms.py). Call before ViewmodelMaterial.apply.
+const TEAM_ARMS=['res://assets/viewmodels/arms_aegis_albedo.jpg','res://assets/viewmodels/arms_ember_albedo.jpg']
+static var dressed_arms: Dictionary={}
+static func dress_arms(root: Node, team: int):
+ var path=TEAM_ARMS[clampi(team,0,TEAM_ARMS.size()-1)]
+ if not ResourceLoader.exists(path):return
+ for mi in root.find_children('*','MeshInstance3D',true,false):
+  if not mi.mesh:continue
+  for i in mi.mesh.get_surface_count():
+   var source=mi.mesh.surface_get_material(i)
+   if not source is BaseMaterial3D or source.resource_name!='arms':continue
+   var key=[source,team]
+   if not dressed_arms.has(key):
+    var m: BaseMaterial3D=source.duplicate();m.albedo_texture=load(path);m.albedo_color=Color.WHITE
+    dressed_arms[key]=m
+   mi.set_surface_override_material(i,dressed_arms[key])
+
 func has_clip(clip: String) -> bool:return clips.has(clip)
 
 func set_base(clip: String):

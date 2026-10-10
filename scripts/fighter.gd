@@ -107,6 +107,7 @@ func build_gun():
   gun=load(FPSetRig.path(weapon_id)).instantiate();rig.add_child(gun)
   for geometry in gun.find_children('*','GeometryInstance3D',true,false):
    geometry.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;geometry.extra_cull_margin=2.0
+  FPSetRig.dress_arms(gun,team)
   ViewmodelMaterial.apply(gun)
   view=FPSetRig.new();view.bind(gun,weapon_id);return
  if FirstPersonRig.available(weapon_id):
