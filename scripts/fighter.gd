@@ -301,7 +301,8 @@ func _process(dt: float):
  kick=move_toward(kick,0,dt*.7);landing=move_toward(landing,0,dt*.25);sway=sway.lerp(Vector2.ZERO,1-exp(-dt*10))
  sprint_blend=lerpf(sprint_blend,1.0 if sprinting else 0.0,1-exp(-dt*14))
  view.update(self,dt)
- gun.visible=not (Arsenal.scoped(weapon_id) and aiming and view.aim_blend>.98)
+ # The viewmodel draws over everything (near depth), so only through our own camera.
+ gun.visible=camera.current and not (Arsenal.scoped(weapon_id) and aiming and view.aim_blend>.98)
 func recover_recoil(dt: float):
  if shot_age<.14:return
  var correction=recoil_return*(1-exp(-dt*8))
