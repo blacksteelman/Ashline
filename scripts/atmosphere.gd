@@ -14,24 +14,25 @@ static func build(game: Node3D) -> Environment:
  panorama.panorama=load(SKY_PATH);panorama.energy_multiplier=1.0
  sky.sky_material=panorama;sky.radiance_size=Sky.RADIANCE_SIZE_256;e.sky=sky
  e.background_energy_multiplier=1.0
- e.ambient_light_source=Environment.AMBIENT_SOURCE_SKY;e.ambient_light_sky_contribution=1.0;e.ambient_light_energy=.9
+ e.ambient_light_source=Environment.AMBIENT_SOURCE_SKY;e.ambient_light_sky_contribution=1.0;e.ambient_light_energy=.8
  e.reflected_light_source=Environment.REFLECTION_SOURCE_SKY
- e.tonemap_mode=Environment.TONE_MAPPER_AGX;e.tonemap_exposure=1.05;e.tonemap_white=12.0
+ # ACES: the punchier, higher-contrast filmic curve of 2007-2011 shooters (AgX read flat and milky).
+ e.tonemap_mode=Environment.TONE_MAPPER_ACES;e.tonemap_exposure=1.12;e.tonemap_white=6.0
  # Slightly desaturated, cool shadows and warm highlights: the 2007-2011 military grade.
- e.adjustment_enabled=true;e.adjustment_brightness=1.0;e.adjustment_contrast=1.07;e.adjustment_saturation=.86
+ e.adjustment_enabled=true;e.adjustment_brightness=1.0;e.adjustment_contrast=1.12;e.adjustment_saturation=1.02
  e.glow_enabled=true;e.glow_intensity=.55;e.glow_strength=.9;e.glow_bloom=.04;e.glow_hdr_threshold=1.6;e.glow_blend_mode=Environment.GLOW_BLEND_MODE_SOFTLIGHT
  e.set_glow_level(0,0.0);e.set_glow_level(1,1.0);e.set_glow_level(2,.6);e.set_glow_level(3,.35);e.set_glow_level(4,.15)
  # Distance haze ties the skyline into the sky colour.
- e.fog_enabled=true;e.fog_light_color=Color('#a7b3b6');e.fog_light_energy=.85;e.fog_density=.0011;e.fog_sky_affect=.1;e.fog_aerial_perspective=.35;e.fog_sun_scatter=.18
+ e.fog_enabled=true;e.fog_light_color=Color('#b9b6a8');e.fog_light_energy=.8;e.fog_density=.0005;e.fog_sky_affect=.05;e.fog_aerial_perspective=.25;e.fog_sun_scatter=.25
  e.fog_height=-2.0;e.fog_height_density=.0
  e.ssao_radius=1.1;e.ssao_intensity=1.9;e.ssao_power=1.3;e.ssao_detail=.6;e.ssao_light_affect=.15;e.ssao_ao_channel_affect=.35
  e.ssil_radius=4.0;e.ssil_intensity=.8
  e.ssr_max_steps=48;e.ssr_fade_in=.15;e.ssr_fade_out=2.0;e.ssr_depth_tolerance=.25
- e.sdfgi_use_occlusion=true;e.sdfgi_cascades=4;e.sdfgi_min_cell_size=.2;e.sdfgi_energy=.9;e.sdfgi_bounce_feedback=.45;e.sdfgi_read_sky_light=true
- e.volumetric_fog_density=.006;e.volumetric_fog_albedo=Color('#d9dcd6');e.volumetric_fog_anisotropy=.55;e.volumetric_fog_length=48;e.volumetric_fog_detail_spread=2.0;e.volumetric_fog_gi_inject=.4;e.volumetric_fog_sky_affect=.0;e.volumetric_fog_ambient_inject=.15
+ e.sdfgi_use_occlusion=true;e.sdfgi_cascades=4;e.sdfgi_min_cell_size=.2;e.sdfgi_energy=1.25;e.sdfgi_bounce_feedback=.6;e.sdfgi_read_sky_light=true
+ e.volumetric_fog_density=.0018;e.volumetric_fog_albedo=Color('#d9dcd6');e.volumetric_fog_anisotropy=.55;e.volumetric_fog_length=48;e.volumetric_fog_detail_spread=2.0;e.volumetric_fog_gi_inject=.4;e.volumetric_fog_sky_affect=.0;e.volumetric_fog_ambient_inject=.15
  var sun=DirectionalLight3D.new();sun.name='Sun';game.add_child(sun)
  sun.rotation_degrees=Vector3(-SUN_ELEVATION,SUN_AZIMUTH,0)
- sun.light_color=Color('#fff1dc');sun.light_energy=2.2;sun.light_angular_distance=.6
+ sun.light_color=Color('#ffe6c4');sun.light_energy=2.7;sun.light_angular_distance=.6
  sun.shadow_enabled=true;sun.shadow_bias=.03;sun.shadow_normal_bias=.9;sun.shadow_blur=1.2
  sun.directional_shadow_mode=DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS;sun.directional_shadow_max_distance=110
  sun.directional_shadow_split_1=.06;sun.directional_shadow_split_2=.18;sun.directional_shadow_split_3=.45;sun.directional_shadow_blend_splits=true
