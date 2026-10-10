@@ -92,7 +92,8 @@ func cutout(scene: Node):
     mi.set_surface_override_material(i,cutout_cache[m])
 
 func lamp(pos: Vector3, energy: float=1.6, range_v: float=9.0, color: Color=Color('#ffd9a8'), shadow: bool=false) -> OmniLight3D:
- var l=OmniLight3D.new();lights_root.add_child(l);l.position=pos;l.light_energy=energy;l.omni_range=range_v;l.light_color=color;l.shadow_enabled=shadow;l.omni_attenuation=1.4
+ # Interior fixtures read as working lights under the ACES grade: brighter, wider, softer falloff.
+ var l=OmniLight3D.new();lights_root.add_child(l);l.position=pos;l.light_energy=energy*2.4;l.omni_range=range_v*1.35;l.light_color=color;l.shadow_enabled=shadow;l.omni_attenuation=1.0;l.light_indirect_energy=1.5
  return l
 
 # Box wall from a to b (ground plan) with rectangular openings [u0,u1,v0,v1] measured from a.
