@@ -14,7 +14,7 @@ const WEAPONS = [
    'frame':Transform3D(Basis(Vector3(-0.499041,0.003247,0.054519),Vector3(-0.054606,-0.039306,-0.497492),Vector3(-0.001051,0.500469,-0.039426)),Vector3(0.040358,-0.265475,-0.100388)),
    'rear':Vector3(0.093,-0.110,0.715),'front':Vector3(0.108,-0.181,1.69),'muzzle':Vector3(0.107,-0.266,1.91),'ejector':Vector3(0.14,-0.2,0.2)}},
  {'name':'BOLT-ACTION .308','model':'sniper','sound':'sniper','damage':120.0,'interval':1.2,'mag':5,'reserve':30,'reload':3.0,'recoil':3.2,'spread':.002,'auto':false,'range':200.0,'bolt':true,'scope':true,'zoom':.32,'kick':1.6,
-  'fp':{'set':'fp_sniper','bone':'Body','fwd':'-y','up':'+z','cam_offset':Vector3(-0.02,0.23,0.15),'cam_rot':Vector3(5,0,0),'scale':1.0,'fov':68.0,'fov_ads':55.0,'eye':.08,
+  'fp':{'set':'fp_sniper','bone':'Body','camera_anchor':'rig_origin','fwd':'-y','up':'+z','cam_offset':Vector3(-0.02,0.23,0.15),'cam_rot':Vector3(5,0,0),'scale':1.0,'fov':68.0,'fov_ads':55.0,'eye':.08,
    'frame':Transform3D(Basis(Vector3(-0.994791,-0.05109,0.088204),Vector3(-0.101897,0.52101,-0.847447),Vector3(0.002659,0.85202,0.523502)),Vector3(0.081174,-0.023836,0.054162)),
    'rear':Vector3(0.071,0.23,0.10),'front':Vector3(0.071,0.23,0.25),'muzzle':Vector3(0.10,0.105,0.71),'ejector':Vector3(0.11,0.15,0.05)}},
  {'name':'SPRINGFIELD XD','model':'pistol','sound':'pistol','damage':34.0,'interval':.13,'mag':13,'reserve':52,'reload':1.5,'recoil':1.4,'spread':.013,'auto':false,'range':25.0,'zoom':.8,'kick':1.2,

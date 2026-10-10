@@ -38,7 +38,7 @@ func run():
  rig.player.play(clip);rig.player.seek(rig.player.get_animation(clip).length*at,true);rig.player.pause()
  for i in 3:await process_frame
  var s=cfg.get('scale',1.0)
- var cb=rig.bone_in_root(rig.cam_bone);cb.basis=cb.basis.orthonormalized()*rig.view_fix
+ var cb=rig.camera_in_root();cb.basis=cb.basis.orthonormalized()*rig.view_fix
  for i in offsets.size():
   cam.fov=offsets[i].get('fov',0.0) if offsets[i].get('fov',0.0)>0 else cfg.get('fov',68.0)
   gun.transform=Transform3D(Basis.IDENTITY.scaled(Vector3.ONE*s),Vector3.ZERO)*FPSetRig.eye_fix(offsets[i]).affine_inverse()*cb.affine_inverse()

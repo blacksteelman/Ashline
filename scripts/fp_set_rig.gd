@@ -204,15 +204,24 @@ func inertia_step(target: Vector2, dt: float):
  inertia=target*6.0+decay*(offset*cosine+(speed+offset*7.0)*sine)
  inertia_velocity=decay*(speed*cosine-(speed*7.0+offset*90.0)*sine)
 
-# Camera bone pose in the scene root's space.
-func bone_in_root(bone: int) -> Transform3D:
- var t=Transform3D.IDENTITY;var n: Node=skeleton
+# Skeleton transform in the imported scene root's space.
+func skeleton_in_root() -> Transform3D:
+ var n: Node=skeleton
  var chain=skeleton.transform
  n=skeleton.get_parent()
  while n and n!=gun:
   if n is Node3D:chain=n.transform*chain
   n=n.get_parent()
- return chain*skeleton.get_bone_global_pose(bone)
+ return chain
+
+func bone_in_root(bone: int) -> Transform3D:
+ return skeleton_in_root()*skeleton.get_bone_global_pose(bone)
+
+func camera_in_root() -> Transform3D:
+ # The sniper set has no Head_Cam joint. Its framing offsets were authored
+ # relative to the rig origin; declare that explicitly instead of querying -1.
+ if cfg.get('camera_anchor','bone')=='rig_origin':return skeleton_in_root()
+ return bone_in_root(cam_bone)
 
 func update(owner: Fighter, dt: float):
  if not is_instance_valid(gun):return
@@ -242,7 +251,7 @@ func update(owner: Fighter, dt: float):
  var a=smoothstep(0,1,aim_blend)
  # Authored camera -> our camera.
  var s=cfg.get('scale',1.0)
- var cam=bone_in_root(cam_bone);cam.basis=cam.basis.orthonormalized()*view_fix
+ var cam=camera_in_root();cam.basis=cam.basis.orthonormalized()*view_fix
  var align=Transform3D(Basis.IDENTITY.scaled(Vector3.ONE*s),Vector3.ZERO)*eye_fix(cfg).affine_inverse()*cam.affine_inverse()
  # ADS: sight line (weapon-bone frame) onto the view axis.
  var ads=Transform3D.IDENTITY
