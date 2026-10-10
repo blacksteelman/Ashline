@@ -1,4 +1,5 @@
 extends SceneTree
+# Finds vertices far from the camera bone in the idle pose (after FPSetRig.strip_strays); needs a GPU for skinning.
 func _initialize():call_deferred('run')
 func run():
  for key in ['fp_acr','fp_ak74m','fp_smg','fp_sniper','fp_pistol']:
@@ -13,6 +14,7 @@ func run():
   var c=(sk.global_transform*sk.get_bone_global_pose(cam)).origin
   for mi in vm.find_children('*','MeshInstance3D',true,false):
    if mi.name=='Icosphere':continue
+   FPSetRig.strip_strays(mi)
    var baked: ArrayMesh=mi.bake_mesh_from_current_skeleton_pose()
    var orig: ArrayMesh=mi.mesh
    var skin: Skin=mi.skin
@@ -20,13 +22,16 @@ func run():
    for s in baked.get_surface_count():
     var v=baked.surface_get_arrays(s)[Mesh.ARRAY_VERTEX];var oa=orig.surface_get_arrays(s);var bones=oa[Mesh.ARRAY_BONES];var weights=oa[Mesh.ARRAY_WEIGHTS]
     var per=bones.size()/v.size()
-    for i in v.size():
+    var used={}
+    for i in oa[Mesh.ARRAY_INDEX]:used[i]=true
+    for i in used:
      var d=(mi.global_transform*v[i]).distance_to(c)
      dists.append(d)
-     if d>2.5:
+     if d>1.2:
       var bi=bones[i*per];var bn=skin.get_bind_name(bi) if skin and skin.get_bind_name(bi)!=&'' else str(bi)
       if skin and skin.get_bind_bone(bi)>=0:bn=sk.get_bone_name(skin.get_bind_bone(bi))
       far[bn]=far.get(bn,0)+1
+      if far[bn]<=2:print('  far vertex bones ',bones.slice(i*per,i*per+per),' weights ',weights.slice(i*per,i*per+per))
    dists.sort()
    print(key,' ',mi.name,' n=',dists.size(),' median ',snappedf(dists[dists.size()/2],.01),' p99 ',snappedf(dists[int(dists.size()*.99)],.01),' max ',snappedf(dists[-1],.01),' far ',far)
   vm.queue_free();await process_frame

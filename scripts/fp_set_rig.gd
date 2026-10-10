@@ -33,7 +33,7 @@ var view_fix=Basis.IDENTITY
 const WORDS={'idle':['Idle'],'walk':['Walk'],'sprint':['Run'],'draw':['Draw'],'fire':['Shot_nosight','Shoot','Shot','Fire','OneShot'],
  'fire_ads':['Shot_sight'],'reload':['Reload_Fast','Reload_fast','Reload_easy','AK_Reload','SRifle_Reload','Reload'],'reload_empty':['Reload_full','Reload_Full'],'inspect':['inspect','Ispect']}
 
-# Some sets weight a few stray vertices to the rig's root joint (a thin line to the origin):
+# Some sets weight a few stray vertices to the rig's root joint, or to nothing (a thin line to the origin):
 # drop the triangles that use them. Cached per mesh resource.
 static var cleaned: Dictionary={}
 static func strip_strays(mi: MeshInstance3D):
@@ -43,6 +43,8 @@ static func strip_strays(mi: MeshInstance3D):
  var root_binds={}
  for b in mi.skin.get_bind_count():
   var name=String(mi.skin.get_bind_name(b))
+  var sk=mi.get_node_or_null(mi.skeleton) as Skeleton3D
+  if name=='' and sk and mi.skin.get_bind_bone(b)>=0:name=sk.get_bone_name(mi.skin.get_bind_bone(b))
   if name.begins_with('_rootJoint') or name.begins_with('GLTF_created'):root_binds[b]=true
  var surfaces=[];var changed=false
  for s in mesh.get_surface_count():
@@ -50,8 +52,11 @@ static func strip_strays(mi: MeshInstance3D):
   var count=arrays[Mesh.ARRAY_VERTEX].size();var per=bones.size()/maxi(1,count)
   var stray=PackedByteArray();stray.resize(count)
   for v in count:
+   var w=0.0;var total=0.0
    for k in per:
-    if weights[v*per+k]>.5 and root_binds.has(bones[v*per+k]):stray[v]=1
+    total+=weights[v*per+k]
+    if root_binds.has(bones[v*per+k]):w+=weights[v*per+k]
+   if w>=.5 or total<.01:stray[v]=1
   var idx: PackedInt32Array=arrays[Mesh.ARRAY_INDEX]
   if idx.size()>0 and stray.count(1)>0:
    var keep=PackedInt32Array()
@@ -111,6 +116,13 @@ static func axes_basis(fwd: String, up: String) -> Basis:
 # cam_offset moves it, cam_rot (degrees, pitch/yaw/roll) turns the view.
 static func eye_fix(c: Dictionary) -> Transform3D:
  return Transform3D(Basis.from_euler(c.get('cam_rot',Vector3.ZERO)*PI/180.0),c.get('cam_offset',Vector3.ZERO))
+
+# Moves the sight line (rear/front in the barrel frame wb) onto the view axis, eye metres behind the rear sight;
+# ads_roll (degrees) levels a set whose barrel frame is canted.
+static func ads_offset(c: Dictionary, wb: Transform3D) -> Transform3D:
+ var rear=wb*c.rear;var front=wb*c.front
+ var basis=Basis.looking_at(front-rear,wb.basis.y.normalized())*Basis(Vector3.BACK,deg_to_rad(c.get('ads_roll',0.0)))
+ return Transform3D(Basis.IDENTITY,Vector3(0,0,-c.get('eye',.15)))*Transform3D(basis,rear).affine_inverse()
 
 func dress(_team: int,_choice: int):pass
 
@@ -196,10 +208,7 @@ func update(owner: Fighter, dt: float):
  # ADS: sight line (weapon-bone frame) onto the view axis.
  var ads=Transform3D.IDENTITY
  if a>0 and weapon_bone>=0 and cfg.has('rear'):
-  var wb=align*bone_in_root(weapon_bone)*cfg.frame
-  var rear=wb*cfg.rear;var front=wb*cfg.front
-  var line=Transform3D(Basis.looking_at(front-rear,wb.basis.y.normalized()),rear)
-  ads=Transform3D(Basis.IDENTITY,Vector3(0,0,-cfg.get('eye',.15)))*line.affine_inverse()
+  ads=ads_offset(cfg,align*bone_in_root(weapon_bone)*cfg.frame)
  # Procedural feel.
  var target_inertia=owner.sway*(1.0-a*.7)
  inertia_velocity+=(target_inertia*6.0-inertia)*dt*90.0

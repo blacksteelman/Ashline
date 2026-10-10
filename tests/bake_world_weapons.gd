@@ -3,6 +3,19 @@ extends SceneTree
 # DISPLAY=:99 godot --path . --script tests/bake_world_weapons.gd
 # Output: assets/viewmodels/world_<set>.res (ArrayMesh in socket space: grip at origin, muzzle -Z, metres)
 func _initialize():call_deferred('run')
+var shrunk={}
+# Textures the glTF importer generated (embedded, not files) would be saved inline at 2K: a 512 px copy is plenty here.
+func small_textures(material: Material) -> Material:
+ if not material is BaseMaterial3D:return material
+ var m: BaseMaterial3D=material.duplicate()
+ for prop in ['albedo_texture','normal_texture','roughness_texture','metallic_texture','emission_texture','ao_texture']:
+  var t: Texture2D=m.get(prop)
+  if not t or not '::' in t.resource_path and t.resource_path!='':continue
+  if not shrunk.has(t):
+   var img=t.get_image();img.decompress();img.resize(mini(img.get_width(),512),mini(img.get_height(),512),Image.INTERPOLATE_LANCZOS);img.generate_mipmaps()
+   shrunk[t]=ImageTexture.create_from_image(img)
+  m.set(prop,shrunk[t])
+ return m
 func run():
  for kind in range(Arsenal.WEAPONS.size()):
   var w=Arsenal.WEAPONS[kind]
@@ -31,11 +44,18 @@ func run():
    FPSetRig.strip_strays(mi)
    var baked: ArrayMesh=mi.bake_mesh_from_current_skeleton_pose()
    var xf=socket*W.affine_inverse()*mi.global_transform
-   var box=xf*baked.get_aabb()
+   # Bounds of the vertices triangles still use (strip_strays leaves unused ones in the arrays).
+   var box=AABB();var first=true
+   for s in baked.get_surface_count():
+    var a=baked.surface_get_arrays(s);var vs: PackedVector3Array=a[Mesh.ARRAY_VERTEX]
+    for i in a[Mesh.ARRAY_INDEX]:
+     var p=xf*vs[i]
+     if first:box=AABB(p,Vector3.ZERO);first=false
+     else:box=box.expand(p)
    if box.get_center().length()>1.5 or box.size.length()>3.0:print(' skip parked part ',mi.name);continue
    for s in baked.get_surface_count():
-    var st=SurfaceTool.new();st.append_from(baked,s,xf)
-    var material=mi.get_active_material(s)
+    var st=SurfaceTool.new();st.append_from(baked,s,xf);st.deindex();st.index() # keeps only vertices triangles use
+    var material=small_textures(mi.get_active_material(s))
     st.set_material(material);st.commit(out)
   var path='res://assets/viewmodels/world_'+cfg.set+'.res'
   ResourceSaver.save(out,path,ResourceSaver.FLAG_COMPRESS)
