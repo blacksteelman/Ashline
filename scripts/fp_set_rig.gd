@@ -171,17 +171,38 @@ func fire(kind: int):
  recoil_velocity+=Vector3(randf_range(-.01,.01),.012,.75)*k
  angle_velocity+=Vector3(.9,randf_range(-.2,.2),randf_range(-.3,.3))*k
 
-# Recoil springs, integrated in fixed 1/240 s substeps so slow frames cannot blow them up.
+# Exact integration of the existing recoil response. Keeping damping inside the
+# solution avoids a different kick at each render rate or a frozen tail after a hitch.
+static func recoil_state(position: Vector3, velocity: Vector3, stiffness: float, damping: float, dt: float) -> Array:
+ var half_trace=(12.0+damping)*.5
+ var diagonal=(damping-12.0)*.5
+ var frequency=sqrt(diagonal*diagonal-.06*stiffness)
+ var fast=exp((-half_trace-frequency)*dt)
+ var slow=exp((-half_trace+frequency)*dt)
+ var even=(slow+fast)*.5
+ var odd=(slow-fast)/(2.0*frequency)
+ return [position*even+(position*diagonal+velocity*.06)*odd,
+         velocity*even+(-position*stiffness-velocity*diagonal)*odd]
+
 func spring_step(dt: float):
- var steps=clampi(int(ceil(dt*240.0)),1,48);var h=minf(dt,.2)/steps
- for i in steps:
-  var c=-recoil_position*240.0-recoil_velocity*22.0
-  recoil_velocity+=c*h;recoil_position+=recoil_velocity*h*.06
-  var ca=-recoil_angle*260.0-angle_velocity*24.0
-  angle_velocity+=ca*h;recoil_angle+=angle_velocity*h*.06
- recoil_position*=exp(-dt*12.0);recoil_angle*=exp(-dt*12.0)
- if not recoil_position.is_finite() or not recoil_angle.is_finite():
-  recoil_position=Vector3.ZERO;recoil_velocity=Vector3.ZERO;recoil_angle=Vector3.ZERO;angle_velocity=Vector3.ZERO
+ if dt<=0 or not is_finite(dt):return
+ var linear=recoil_state(recoil_position,recoil_velocity,240.0,22.0,dt)
+ recoil_position=linear[0];recoil_velocity=linear[1]
+ var angular=recoil_state(recoil_angle,angle_velocity,260.0,24.0,dt)
+ recoil_angle=angular[0];angle_velocity=angular[1]
+
+# Damped spring towards mouse inertia; analytic so a hitch cannot fling the
+# weapon across the screen. The same target over the same time gives the same pose.
+func inertia_step(target: Vector2, dt: float):
+ if dt<=0 or not is_finite(dt):return
+ var frequency=sqrt(41.0)
+ var decay=exp(-7.0*dt)
+ var cosine=cos(frequency*dt)
+ var sine=sin(frequency*dt)/frequency
+ var offset=inertia-target*6.0
+ var speed=inertia_velocity
+ inertia=target*6.0+decay*(offset*cosine+(speed+offset*7.0)*sine)
+ inertia_velocity=decay*(speed*cosine-(speed*7.0+offset*90.0)*sine)
 
 # Camera bone pose in the scene root's space.
 func bone_in_root(bone: int) -> Transform3D:
@@ -229,8 +250,7 @@ func update(owner: Fighter, dt: float):
   ads=ads_offset(cfg,align*bone_in_root(weapon_bone)*cfg.frame)
  # Procedural feel.
  var target_inertia=owner.sway*(1.0-a*.7)
- inertia_velocity+=(target_inertia*6.0-inertia)*dt*90.0
- inertia_velocity*=exp(-dt*14.0);inertia+=inertia_velocity*dt
+ inertia_step(target_inertia,dt)
  breath+=dt
  var offset=recoil_position*Vector3(1,1,.08)*(1-a*.4)+Vector3(0,-owner.landing*1.3,0)+Vector3(sin(breath*1.1)*.0008,sin(breath*2.2)*.0006,0)*(1-a)
  var rot=Vector3(recoil_angle.x*.04,recoil_angle.y*.02,recoil_angle.z*.03)*(1-a*.5)
