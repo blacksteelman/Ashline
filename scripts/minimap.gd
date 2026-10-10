@@ -1,7 +1,7 @@
 extends Control
 # Rotating, player-centred minimap. The backdrop is rasterised once from the real
 # collision geometry (top-down rays), so it always matches the map that is loaded.
-const SIZE=164.0
+const SIZE=196.0
 const ZOOM=3.2 # pixels per metre on screen
 const RES=2.0 # texels per metre in the backdrop
 var game: Node3D
