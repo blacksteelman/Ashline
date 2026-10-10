@@ -42,6 +42,7 @@ var showcase=false
 var capture_at=0.0
 var capture_path='user://capture.png'
 var sound_cache: Dictionary={}
+var local_shots: Array=[]
 var address_field: LineEdit
 var selected_class=0
 func _ready():
@@ -56,9 +57,8 @@ func _ready():
  var overlay=load('res://scripts/hud.gd').new();overlay.game=self;hud.add_child(overlay)
  ui=Control.new();hud.add_child(ui)
  resize_ui();get_viewport().size_changed.connect(resize_ui)
- for name in ['rifle','smg','marksman','pistol','reload','step','hit','kill','explosion','ambient','mag_out','mag_in','bolt','impact_metal','impact_concrete','ricochet','step_concrete','step_metal','dryfire','impact_body']:sound_cache[name]=load('res://assets/'+name+'.wav')
- for weapon_sound in ['rifle','smg','marksman','pistol']:
-  sound_cache[weapon_sound+'_alt']=load('res://assets/'+weapon_sound+'_alt.wav')
+ for name in Arsenal.WEAPON_SOUNDS:sound_cache[name]=load('res://assets/sfx/'+name+'.wav');sound_cache[name+'_far']=load('res://assets/sfx/'+name+'_far.wav')
+ for name in ['reload','step','hit','kill','explosion','ambient','mag_out','mag_in','bolt','impact_metal','impact_concrete','ricochet','step_concrete','step_metal','dryfire','impact_body']:sound_cache[name]=load('res://assets/'+name+'.wav')
  sound_cache['ambient'].loop_mode=AudioStreamWAV.LOOP_FORWARD
  sound('ambient',Vector3.ZERO,true,-14)
  var args=OS.get_cmdline_user_args()
@@ -334,13 +334,22 @@ func finish_tests(success: bool, reason: String):
  print('BOT_TEST ',JSON.stringify(report));get_tree().quit(0 if success else 1)
 func sound(key: String, pos: Vector3, local: bool=false, volume: float=0):
  if bot_test or DisplayServer.get_name()=='headless':return
+ var gun=key in Arsenal.WEAPON_SOUNDS
  var audio: Node
  if local:audio=AudioStreamPlayer.new()
- else:audio=AudioStreamPlayer3D.new();audio.max_distance=65;audio.unit_size=9
- var selected_sound=key+'_alt' if key in ['rifle','smg','marksman','pistol'] and randf()<.5 else key
- audio.stream=sound_cache.get(selected_sound);audio.bus=AudioMix.bus(self,key,pos,local);audio.volume_db=volume;audio.pitch_scale=randf_range(.985,1.015) if key in ['rifle','smg','marksman','pistol'] else randf_range(.96,1.04);add_child(audio)
+ else:
+  audio=AudioStreamPlayer3D.new();audio.max_distance=220 if gun else 65;audio.unit_size=14 if gun else 9
+  audio.attenuation_filter_cutoff_hz=9000 if gun else 5000
+ audio.stream=sound_cache.get(key+'_far' if gun and not local else key)
+ audio.bus=AudioMix.bus(self,key,pos,local);audio.volume_db=volume;audio.pitch_scale=randf_range(.975,1.025) if gun else randf_range(.96,1.04);add_child(audio)
  if audio is Node3D:audio.global_position=pos
  audio.finished.connect(audio.queue_free);audio.play()
+ # Automatic fire: keep three overlapping tails, fade the oldest (muddy otherwise).
+ if gun and local:
+  local_shots.append(audio)
+  while local_shots.size()>3:
+   var old=local_shots.pop_front()
+   if is_instance_valid(old):create_tween().tween_property(old,'volume_db',-60.0,.09).finished.connect(old.queue_free)
 func add_fx(node: Node3D, life: float, velocity: Vector3=Vector3.ZERO, gravity: bool=false):
  fx.append({'node':node,'life':life,'total':life,'velocity':velocity,'gravity':gravity,'presented':false})
 func update_fx(dt):
@@ -367,14 +376,47 @@ func smoke_sprite(pos: Vector3, scale_v: float, life: float, velocity: Vector3, 
  var sprite=Sprite3D.new();sprite.texture=load('res://assets/smoke.png');sprite.billboard=BaseMaterial3D.BILLBOARD_ENABLED;sprite.pixel_size=.01;sprite.modulate=tint;sprite.no_depth_test=false
  sprite.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
  add_child(sprite);sprite.position=pos;sprite.scale=Vector3.ONE*scale_v;add_fx(sprite,life,velocity)
-func muzzle(pos: Vector3, direction: Vector3, kind: int=0):
+# Additive, unshaded FX materials (one per texture).
+var fx_materials: Dictionary={}
+func fx_material(path: String, billboard: bool=false) -> StandardMaterial3D:
+ var key=path+str(billboard)
+ if not fx_materials.has(key):
+  var m=StandardMaterial3D.new();m.albedo_texture=load(path);m.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+  m.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA;m.blend_mode=BaseMaterial3D.BLEND_MODE_ADD;m.cull_mode=BaseMaterial3D.CULL_DISABLED
+  m.no_depth_test=false;m.vertex_color_use_as_albedo=false
+  if billboard:m.billboard_mode=BaseMaterial3D.BILLBOARD_ENABLED
+  fx_materials[key]=m
+ return fx_materials[key]
+# First-person flash: drawn in the viewmodel's projection (assets/shaders/viewmodel_fx.gdshader), so it sits
+# on the muzzle the player sees and is not hidden behind the gun.
+func fx_vm_material(path: String, billboard: bool) -> ShaderMaterial:
+ var key='vm'+path+str(billboard)
+ if not fx_materials.has(key):
+  var m=ShaderMaterial.new();m.shader=load('res://assets/shaders/viewmodel_fx.gdshader')
+  m.set_shader_parameter('tex',load(path));m.set_shader_parameter('billboard',billboard);m.set_shader_parameter('intensity',1.4)
+  fx_materials[key]=m
+ return fx_materials[key]
+func fx_quad(path: String, size: Vector2, billboard: bool=false, first_person: bool=false) -> MeshInstance3D:
+ var q=QuadMesh.new();q.size=size;var mi=MeshInstance3D.new();mi.mesh=q
+ mi.material_override=fx_vm_material(path,billboard) if first_person else fx_material(path,billboard)
+ mi.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF;add_child(mi);return mi
+# Muzzle flash: a front star facing the camera plus two crossed side flames along the barrel. Suppressed
+# guns (ACR, sniper, MPA) flash smaller; the AK the most.
+const FLASH_SCALE=[.55,1.0,.6,.7,.5]
+func muzzle(pos: Vector3, direction: Vector3, kind: int=0, first_person: bool=false):
  if bot_test or dedicated_server or DisplayServer.get_name()=='headless':return
- var flash=Sprite3D.new();flash.texture=load('res://assets/muzzle.png');flash.billboard=BaseMaterial3D.BILLBOARD_ENABLED;flash.pixel_size=.002*[1.0,.8,1.25,.65][clampi(kind,0,3)];flash.shaded=false
- flash.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
- add_child(flash);flash.position=pos;flash.rotation.z=randf()*TAU;add_fx(flash,.035)
+ var k=FLASH_SCALE[clampi(kind,0,FLASH_SCALE.size()-1)]*randf_range(.85,1.15)
+ var dir=direction.normalized()
+ var front=fx_quad('res://assets/fx/muzzle_front_%d.png'%(randi()%3),Vector2.ONE*.32*k,true,first_person)
+ front.position=pos+dir*.03;front.rotation.z=randf()*TAU;front.set_instance_shader_parameter('spin',randf()*TAU);add_fx(front,.04)
+ var side_axis=(dir.cross(Vector3.UP) if absf(dir.y)<.95 else dir.cross(Vector3.RIGHT)).normalized()
+ for twist in [0.0,PI/2]:
+  var side=fx_quad('res://assets/fx/muzzle_side_%d.png'%(randi()%3),Vector2(.5,.22)*k,false,first_person)
+  var up=side_axis.rotated(dir,twist+randf_range(-.3,.3))
+  side.basis=Basis(dir,up,dir.cross(up)).orthonormalized();side.position=pos+dir*.25*k;add_fx(side,.04)
  if fx.size()<160:
-  var light=OmniLight3D.new();add_child(light);light.position=pos;light.light_color=Color('#ffa659');light.omni_range=3;light.light_energy=1.6;add_fx(light,.065)
-  smoke_sprite(pos,.09,.24,Vector3.UP*.25+direction*.35,Color('#b0ada0'))
+  var light=OmniLight3D.new();add_child(light);light.position=pos+dir*.1;light.light_color=Color('#ffb066');light.omni_range=5.5*k+1.5;light.light_energy=3.6*k;add_fx(light,.06)
+  smoke_sprite(pos+dir*.1,.14*k,.4,Vector3.UP*.3+dir*.5,Color('#a9a597'))
 func shell(pos: Vector3, direction: Vector3=Vector3.RIGHT):
  if bot_test or dedicated_server or DisplayServer.get_name()=='headless':return
  var m=Art.cylinder(self,pos,.005,.028,Art.mat('brass',Color('#b49357'),.8))
@@ -401,9 +443,15 @@ func impact(pos: Vector3, normal: Vector3, material: String):
   if not metal:m.mesh=Ruins.fragment(Vector3(.018,.013,.019),i+hash(pos))
   add_fx(m,randf_range(.10,.28),normal*randf_range(.7,2)+Vector3(randf_range(-1,1),randf(),randf_range(-1,1)),true)
  if not flesh:
-  for i in range(2):smoke_sprite(pos+normal*.04,.20,.48,normal*.4+Vector3.UP*.3,Color('#8b8c7e'))
-  var mark=Art.cylinder(self,pos+normal*.003,.025,.001,Art.mat('bulletmark',Color('#303830')))
-  mark.basis=Basis(Quaternion(Vector3.UP,normal));add_fx(mark,20)
+  for i in range(3):smoke_sprite(pos+normal*.05,randf_range(.22,.34),randf_range(.5,.8),normal*randf_range(.4,.9)+Vector3.UP*.3+Vector3(randf_range(-.2,.2),0,randf_range(-.2,.2)),Color('#9a9888'))
+  # Bullet hole decal projected onto the surface (Decal projects along its -Y).
+  var mark=Decal.new();mark.texture_albedo=load('res://assets/fx/bullet_hole.png');mark.size=Vector3(.14,.08,.14)
+  mark.cull_mask=1;mark.upper_fade=.1;mark.lower_fade=.1;add_child(mark)
+  mark.global_position=pos;mark.basis=Basis(Quaternion(Vector3.UP,normal.normalized()))*Basis(Vector3.UP,randf()*TAU);add_fx(mark,25)
+  if metal:
+   for i in range(5):
+    var spark=fx_quad('res://assets/fx/spark.png',Vector2(.09,.022),true);spark.position=pos+normal*.02
+    add_fx(spark,randf_range(.08,.18),(normal*randf_range(2,5)+Vector3(randf_range(-2,2),randf_range(0,2.5),randf_range(-2,2))),true)
 func tracer(from: Vector3, to: Vector3):
  if bot_test or dedicated_server or DisplayServer.get_name()=='headless' or from.distance_to(to)<2:return
  var length=minf(2.0,from.distance_to(to)*.16)
@@ -463,7 +511,7 @@ func support_shot(owner: Fighter):
  var enemies=fighters.filter(func(f):return f.team!=owner.team and not f.dead)
  if enemies.is_empty():return
  var target=enemies.pick_random();var origin=target.eye()+Vector3(0,20,0);var q=PhysicsRayQueryParameters3D.create(origin,target.eye(),1)
- if get_world_3d().direct_space_state.intersect_ray(q).is_empty():target.hurt(45,owner,'SUPPORT');impact(target.eye(),Vector3.UP,'metal');sound('marksman',origin)
+ if get_world_3d().direct_space_state.intersect_ray(q).is_empty():target.hurt(45,owner,'SUPPORT');impact(target.eye(),Vector3.UP,'metal');sound('sniper',origin)
 # ENet: server simulates bots, damage, score and respawn. Clients send intent only.
 func start_host(dedicated: bool):
  var peer=ENetMultiplayerPeer.new();var err=peer.create_server(27841,12 if dedicated else 11)

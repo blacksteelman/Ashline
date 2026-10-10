@@ -361,7 +361,7 @@ func local_fire_feedback(w: Dictionary, direction: Vector3):
  var previous_pitch=pitch
  pitch=clampf(pitch+rise,-1.45,1.45);yaw+=lateral
  recoil_return+=Vector2((pitch-previous_pitch)*.65,lateral);shot_age=0
- game.muzzle(muzzle_world(),direction,weapon_id)
+ game.muzzle(muzzle_world(),direction,weapon_id,view is FPSetRig)
  game.shell(ejector_world(),camera.global_basis.x)
 func hurt(amount: float, attacker: Fighter, zone: String):
  if dead or not game.authority() or game.state!='match':return
