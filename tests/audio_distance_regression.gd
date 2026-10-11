@@ -1,4 +1,6 @@
 extends SceneTree
+class AudioTestGame extends 'res://scripts/game.gd':
+ func audio_enabled() -> bool:return true
 var checks=0
 var failures=0
 func expect(ok: bool, label: String):
@@ -7,47 +9,38 @@ func expect(ok: bool, label: String):
  if not ok:failures+=1
 func _initialize():call_deferred('run')
 func run():
- var g=load('res://main.tscn').instantiate();root.add_child(g)
- await process_frame
- expect(AudioServer.get_bus_send(AudioServer.get_bus_index('Interior'))=='Weapons','Indoor local fire keeps weapon compression')
- expect(AudioServer.get_bus_send(AudioServer.get_bus_index('WorldInterior'))=='World','Indoor enemy fire remains on the spatial world channel')
- expect(AudioServer.get_bus_effect( AudioServer.get_bus_index('Weapons'),0) is AudioEffectCompressor,'Weapon bus retains its compressor')
- for distance in [0.0,10.0,20.0,30.0,40.0,50.0,100.0]:
-  var layers=AudioMix.world_layers(distance)
-  var power=0.0
-  for layer in layers:power+=pow(db_to_linear(layer.gain_db),2)
-  expect(absf(power-1.0)<.00001,'Gunshot transition preserves layer power at %dm'%distance)
- expect(AudioMix.world_layers(3.0).size()==1 and AudioMix.world_layers(3.0)[0].suffix=='_near','Close enemy shot uses the close recording')
- expect(AudioMix.world_layers(80.0).size()==1 and AudioMix.world_layers(80.0)[0].suffix=='_far','Distant enemy shot uses the far recording')
- var previous=1.0;var continuous=true
- for distance in range(0,101):
-  var amplitude=0.0
-  for layer in AudioMix.world_layers(distance):
-   if layer.suffix=='_near':amplitude=db_to_linear(layer.gain_db)
-  if amplitude>previous+.000001 or absf(amplitude-previous)>.05:continuous=false
-  previous=amplitude
- expect(continuous,'Close shot layer fades monotonically without an abrupt distance switch')
+ var g=AudioTestGame.new();root.add_child(g)
+ g.set_process(false);g.set_physics_process(false)
+ await physics_frame;await physics_frame
+ expect(AudioServer.get_bus_send(AudioServer.get_bus_index('Interior'))=='Master','Original indoor routing')
+ expect(AudioServer.get_bus_index('WorldInterior')<0,'No added spatial indoor bus')
+ expect(AudioServer.get_bus_effect(AudioServer.get_bus_index('Weapons'),0) is AudioEffectCompressor,'Original weapon compressor')
+ expect(AudioServer.get_bus_effect(AudioServer.get_bus_index('Interior'),0) is AudioEffectReverb,'Original room reverb')
+ var outside=Vector3(0,50,0)
  for key in Arsenal.WEAPON_SOUNDS:
-  var near=g.sound_cache[key+'_near'] as AudioStreamWAV
-  var far=g.sound_cache[key+'_far'] as AudioStreamWAV
-  expect(near!=null and not near.stereo and near.mix_rate==48000,key+' close positional recording is mono 48kHz')
-  expect(far!=null and not far.stereo,key+' far positional recording remains mono')
-  var voice=g.play_sound_voice(key+'_near',Vector3(0,1,0),false,-6.0,.99,'World',true)
-  expect(voice is AudioStreamPlayer3D and voice.stream==near and voice.max_distance==220 and is_equal_approx(voice.pitch_scale,.99),key+' creates the actual positional playback voice')
-  voice.queue_free()
- g.menu_camera.global_position=Vector3(0,1,30)
- var mixed=g.play_world_shot('acr',Vector3(0,1,0),-3.0,1.01,'World')
- expect(mixed.size()==2 and mixed[0].stream==g.sound_cache.acr_near and mixed[1].stream==g.sound_cache.acr_far,'Actual listener distance selects both recordings in the transition')
- expect(mixed.size()==2 and is_equal_approx(mixed[0].pitch_scale,mixed[1].pitch_scale),'Both layers share the same shot pitch')
- for voice in mixed:voice.queue_free()
- var roof=StaticBody3D.new();g.add_child(roof);roof.position=Vector3(0,3,0)
+  var own=g.sound(key,outside,true,-6)
+  expect(own is AudioStreamPlayer and own.stream==g.sound_cache[key],key+' original local recording')
+  expect(own.bus=='Weapons' and own.volume_db==-6,key+' local bus and gain')
+  expect(own.pitch_scale>=.975 and own.pitch_scale<=1.025,key+' original pitch range')
+  var remote=g.sound(key,outside,false,-9)
+  expect(remote is AudioStreamPlayer3D and remote.stream==g.sound_cache[key+'_far'],key+' original distant recording')
+  expect(remote.bus=='World' and remote.global_position==outside,key+' spatial routing')
+  expect(remote.max_distance==220 and remote.unit_size==14,key+' original attenuation')
+  g.local_shots.clear();own.queue_free();remote.queue_free()
+ var roof=StaticBody3D.new();g.add_child(roof);roof.position=outside+Vector3.UP*3
  var shape=CollisionShape3D.new();var box=BoxShape3D.new();box.size=Vector3(2,.2,2);shape.shape=box;roof.add_child(shape)
  await physics_frame;await physics_frame
- expect(AudioMix.bus(g,'acr',Vector3(0,1,0),true)=='Interior','Roof ray routes local fire through indoor weapon effects')
- expect(AudioMix.bus(g,'acr',Vector3(0,1,0),false)=='WorldInterior','Roof ray routes enemy fire through indoor spatial effects')
+ for local in [true,false]:
+  var voice=g.sound('acr',outside,local,-8)
+  expect(voice.bus=='Interior','Original indoor playback routing local='+str(local))
+  g.local_shots.clear();voice.queue_free()
  roof.queue_free();await physics_frame;await physics_frame
- expect(AudioMix.bus(g,'acr',Vector3(0,1,0),true)=='Weapons','Open street restores the local weapon bus')
- expect(AudioMix.bus(g,'acr',Vector3(0,1,0),false)=='World','Open street restores the spatial world bus')
- g.queue_free();await process_frame
+ var oldest=g.sound('acr',outside,true,-8)
+ for i in range(3):g.sound('acr',outside,true,-8)
+ expect(g.local_shots.size()==3,'Burst keeps three local tails')
+ await create_timer(.16).timeout
+ expect(not is_instance_valid(oldest),'Oldest burst tail fades and frees')
+ g.queue_free();g=null;await process_frame;await process_frame
+ await create_timer(.2).timeout # Let the audio thread release the queued playback voices.
  print('AUDIO_DISTANCE ',checks,' checks, ',failures,' failures')
  quit(0 if failures==0 else 1)

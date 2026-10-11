@@ -58,7 +58,7 @@ func _ready():
  ui=Control.new();hud.add_child(ui)
  resize_ui();get_viewport().size_changed.connect(resize_ui)
  for name in Arsenal.WEAPON_SOUNDS:
-  for suffix in ['','_near','_far']:sound_cache[name+suffix]=load('res://assets/sfx/'+name+suffix+'.wav')
+  for suffix in ['','_far']:sound_cache[name+suffix]=load('res://assets/sfx/'+name+suffix+'.wav')
  for name in ['reload','step','hit','kill','explosion','ambient','mag_out','mag_in','bolt','impact_metal','impact_concrete','ricochet','step_concrete','step_metal','dryfire','impact_body']:sound_cache[name]=load('res://assets/'+name+'.wav')
  sound_cache['ambient'].loop_mode=AudioStreamWAV.LOOP_FORWARD
  sound('ambient',Vector3.ZERO,true,-14)
@@ -333,39 +333,26 @@ func finish_tests(success: bool, reason: String):
  var file=FileAccess.open(prefix+'bot_report_'+str(test_seed)+'.json',FileAccess.WRITE)
  if file:file.store_string(JSON.stringify(report,'  '))
  print('BOT_TEST ',JSON.stringify(report));get_tree().quit(0 if success else 1)
-func sound(key: String, pos: Vector3, local: bool=false, volume: float=0):
- if bot_test or DisplayServer.get_name()=='headless':return
+func audio_enabled() -> bool:
+ return not bot_test and DisplayServer.get_name()!='headless'
+func sound(key: String, pos: Vector3, local: bool=false, volume: float=0) -> Node:
+ if not audio_enabled():return null
  var gun=key in Arsenal.WEAPON_SOUNDS
- var pitch=randf_range(.975,1.025) if gun else randf_range(.96,1.04)
- var target_bus=AudioMix.bus(self,key,pos,local)
- if gun and not local:
-  play_world_shot(key,pos,volume,pitch,target_bus)
-  return
- var audio=play_sound_voice(key,pos,local,volume,pitch,target_bus,gun)
+ var audio: Node
+ if local:audio=AudioStreamPlayer.new()
+ else:
+  audio=AudioStreamPlayer3D.new();audio.max_distance=220 if gun else 65;audio.unit_size=14 if gun else 9
+  audio.attenuation_filter_cutoff_hz=9000 if gun else 5000
+ audio.stream=sound_cache.get(key+'_far' if gun and not local else key)
+ audio.bus=AudioMix.bus(self,key,pos,local);audio.volume_db=volume;audio.pitch_scale=randf_range(.975,1.025) if gun else randf_range(.96,1.04);add_child(audio)
+ if audio is Node3D:audio.global_position=pos
+ audio.finished.connect(audio.queue_free);audio.play()
  # Automatic fire: keep three overlapping tails, fade the oldest (muddy otherwise).
  if gun and local:
   local_shots.append(audio)
   while local_shots.size()>3:
    var old=local_shots.pop_front()
    if is_instance_valid(old):create_tween().tween_property(old,'volume_db',-60.0,.09).finished.connect(old.queue_free)
-
-func play_world_shot(key: String, pos: Vector3, volume: float, pitch: float, target_bus: String) -> Array:
- var listener=get_viewport().get_camera_3d()
- var distance=listener.global_position.distance_to(pos) if listener else 50.0
- var voices=[]
- for layer in AudioMix.world_layers(distance):voices.append(play_sound_voice(key+layer.suffix,pos,false,volume+layer.gain_db,pitch,target_bus,true))
- return voices
-
-func play_sound_voice(key: String, pos: Vector3, local: bool, volume: float, pitch: float, target_bus: String, gun: bool) -> Node:
- var audio: Node
- if local:audio=AudioStreamPlayer.new()
- else:
-  audio=AudioStreamPlayer3D.new();audio.max_distance=220 if gun else 65;audio.unit_size=14 if gun else 9
-  audio.attenuation_filter_cutoff_hz=9000 if gun else 5000
- audio.stream=sound_cache.get(key)
- audio.bus=target_bus;audio.volume_db=volume;audio.pitch_scale=pitch;add_child(audio)
- if audio is Node3D:audio.global_position=pos
- audio.finished.connect(audio.queue_free);audio.play()
  return audio
 func add_fx(node: Node3D, life: float, velocity: Vector3=Vector3.ZERO, gravity: bool=false):
  fx.append({'node':node,'life':life,'total':life,'velocity':velocity,'gravity':gravity,'presented':false})

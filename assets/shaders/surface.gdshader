@@ -12,6 +12,7 @@ uniform vec4 tint : source_color = vec4(1.0);
 uniform float tile_size = 2.0;          // metres per texture repeat
 uniform float normal_strength = 1.0;
 uniform float roughness_scale = 1.0;
+uniform float roughness_floor = 0.04;
 uniform float metallic_scale = 1.0;
 uniform float color_saturation = 1.0;
 uniform float variation_strength = 0.18;
@@ -64,7 +65,7 @@ void fragment() {
 	ALBEDO = alb * tint.rgb;
 	AO = orm.r;
 	AO_LIGHT_AFFECT = 0.25;
-	ROUGHNESS = clamp(orm.g * roughness_scale + grime * 0.15 + vary * 0.1, 0.04, 1.0);
+	ROUGHNESS = clamp(orm.g * roughness_scale + grime * 0.15 + vary * 0.1, roughness_floor, 1.0);
 	METALLIC = orm.b * metallic_scale;
 	NORMAL = normalize((VIEW_MATRIX * vec4(nw, 0.0)).xyz);
 }

@@ -50,6 +50,15 @@ static func world_weapon(parent: Node3D, kind: int) -> Node3D:
   var base='res://assets/viewmodels/world_'+Arsenal.WEAPONS[kind].fp.set
   if ResourceLoader.exists(base+'.res'):
    var mi=MeshInstance3D.new();mi.name='WorldWeapon';mi.mesh=load(base+'.res');parent.add_child(mi)
+   if kind==0:
+    # ACR's magazine is a distinct authored surface. Keep it movable rather
+    # than baking it into the receiver while the soldier removes it.
+    var assembled=mi.mesh.duplicate() as ArrayMesh;var magazine=mi.mesh.duplicate() as ArrayMesh
+    for s in range(mi.mesh.get_surface_count()-1,-1,-1):
+     if mi.mesh.surface_get_material(s).resource_name=='Pmag':assembled.surface_remove(s)
+     else:magazine.surface_remove(s)
+    mi.mesh=assembled
+    var movable=MeshInstance3D.new();movable.name='MagazineRig';movable.mesh=magazine;mi.add_child(movable)
    var meta=ConfigFile.new();meta.load(base+'.cfg')
    mi.set_meta('muzzle',meta.get_value('weapon','muzzle',Vector3(0,.03,-.6)))
    for key in ['grip','support']:

@@ -14,6 +14,7 @@ var reload_blend=0.0
 var crouch_blend=0.0
 var air_blend=0.0
 var air_age=0.0
+var sprint_blend=0.0
 var graphical=false
 var ref_walk=1.7
 var ref_sprint=2.46
@@ -46,7 +47,7 @@ func bind(fighter: Fighter) -> bool:
  var reload_clip=player.get_animation(clips.Reload)
  for track in range(reload_clip.get_track_count()):
   var path=reload_clip.track_get_path(track)
-  if path.get_subname_count()>0 and String(path.get_subname(0)) in ['UpperArm.L','Forearm.L','Hand.L','Weapon']:reload_node.set_filter_path(path,true)
+  if path.get_subname_count()>0 and reload_bone(skeleton,String(path.get_subname(0))):reload_node.set_filter_path(path,true)
  graph.add_node('Service',reload_node);graph.connect_node('Service',0,'Air');graph.connect_node('Service',1,'ReloadClock')
  graph.add_node('Death',animation('Death'));graph.add_node('DeathClock',AnimationNodeTimeSeek.new());graph.connect_node('DeathClock',0,'Death')
  blend(graph,'Down','Service','DeathClock');graph.connect_node('output',0,'Down')
@@ -54,6 +55,15 @@ func bind(fighter: Fighter) -> bool:
  var aim=load('res://scripts/character_aim.gd').new();aim.actor=actor;skeleton.add_child(aim)
  previous_position=actor.global_position;graphical=DisplayServer.get_name()!='headless';tree.active=graphical
  return true
+static func reload_bone(sk: Skeleton3D, name: String) -> bool:
+ # The tilted weapon and both arm chains must use the same reload pose.
+ # Include fingers and shoulder joints without replacing locomotion in the torso/legs.
+ if name=='Weapon':return true
+ var index=sk.find_bone(name)
+ while index>=0:
+  if sk.get_bone_name(index) in ['UpperArm.L','UpperArm.R','LeftShoulder','RightShoulder']:return true
+  index=sk.get_bone_parent(index)
+ return false
 func animation(role: String) -> AnimationNodeAnimation:
  var node=AnimationNodeAnimation.new();node.animation=clips[role];return node
 func blend(graph: AnimationNodeBlendTree, name: String, a: String,b: String):
@@ -65,6 +75,7 @@ func attach_weapon(gun: Node3D):
  gun.transform=rest.affine_inverse()*Transform3D(Basis.IDENTITY.scaled(Vector3.ONE*.8),Vector3(.13,1.17,-.37))
 func reset():
  death_age=0;was_dead=false;previous_position=actor.global_position;rendered_velocity=Vector3.ZERO
+ sprint_blend=0;reload_blend=0;crouch_blend=0;air_blend=0;air_age=0
  if tree:tree.set('parameters/Down/blend_amount',0.0)
 func update(dt: float):
  if not tree:return
@@ -86,7 +97,9 @@ func update(dt: float):
  tree.set('parameters/Movement/blend_position',moving*minf(1,speed/1.0))
  # Clip reference speeds: Forward/Backward/strafe 5.1, Sprint 7.8, CrouchWalk 2.5 (dressed soldiers).
  tree.set('parameters/Cadence/scale',clampf(speed/ref_walk,.6,2.9) if speed>.2 else 1.0)
- tree.set('parameters/Fast/blend_amount',clampf((speed-6.0)/1.8,0,1))
+ var sprint_target=clampf((speed-6.0)/1.8,0,1) if (remote or actor.sprinting) and actor.reload_left<=0 and not actor.crouched else 0.0
+ sprint_blend=lerpf(sprint_blend,sprint_target,1-exp(-dt*12))
+ tree.set('parameters/Fast/blend_amount',sprint_blend)
  tree.set('parameters/SprintCadence/scale',clampf(speed/ref_sprint,.8,3.6))
  crouch_blend=move_toward(crouch_blend,1.0 if actor.crouched else 0.0,dt*9)
  tree.set('parameters/Low/blend_amount',crouch_blend);tree.set('parameters/Crouch/blend_position',minf(1,speed/.8))
@@ -107,4 +120,7 @@ func update(dt: float):
   var magazine=actor.world_gun.find_child('MagazineRig',true,false)
   if magazine:
    var t=clampf(1-actor.reload_left/(actor.reload_time(actor.weapon_id)),0,1)
-   magazine.position.y=-sin(PI*t)*.07 if actor.reload_left>0 else 0.0
+   # Match the authored hand: extract, stow, fetch, insert (2-second source clip).
+   var extraction=smoothstep(.21,.375,t)*(1.0-smoothstep(.65,.725,t)) if actor.reload_left>0 else 0.0
+   magazine.position=Vector3(0,-.16,.09)*extraction
+   magazine.visible=not (actor.reload_left>0 and t>=.375 and t<.475)

@@ -43,6 +43,9 @@ func run():
   for mi in scene.find_children('*','MeshInstance3D',true,false):
    var mat=mi.mesh.surface_get_material(0)
    if mi.name=='Icosphere' or (mat and mat.resource_name=='arms'):continue
+   # First-person reload rigs park a second magazine near the weapon in Idle.
+   # It is not part of the assembled third-person weapon.
+   if (cfg.set=='fp_ak74m' and mi.name=='Object_99') or (cfg.set=='fp_smg' and mi.name=='Object_96'):continue
    FPSetRig.strip_strays(mi)
    var baked: ArrayMesh=mi.bake_mesh_from_current_skeleton_pose()
    var xf=socket*W.affine_inverse()*mi.global_transform

@@ -3,8 +3,8 @@ extends RefCounted
 # Runtime PBR materials for authored architecture (ambientCG CC0 sets in assets/textures).
 # Each entry: texture key, metres per repeat, tint, physical surface for audio/impacts.
 const DEFS={
- 'road':['road',4.0,Color(.68,.68,.66),'asphalt',{'grime_strength':0.0,'variation_strength':.22}],
- 'asphalt_patch':['asphalt_patch',3.0,Color(.92,.92,.92),'asphalt',{'grime_strength':0.0}],
+ 'road':['road',4.0,Color(.42,.43,.43),'asphalt',{'grime_strength':0.0,'variation_strength':.22,'normal_strength':.38,'roughness_floor':.82}],
+ 'asphalt_patch':['asphalt_patch',3.0,Color(.64,.65,.65),'asphalt',{'grime_strength':0.0,'normal_strength':.4,'roughness_floor':.82}],
  'sidewalk':['concrete_floor',2.5,Color(.95,.94,.9),'concrete',{'grime_strength':0.0}],
  'concrete_floor':['concrete_floor',3.0,Color(.86,.86,.84),'concrete',{'grime_strength':0.0}],
  'concrete_panel':['concrete_panel',3.0,Color(.92,.91,.88),'concrete',{}],
