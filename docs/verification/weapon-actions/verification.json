@@ -1,0 +1,26 @@
+{
+  "gameplay_commit": "35dd113017d735a9748d130932cf956c98ae6f24",
+  "checks": 290,
+  "native_matches": 2,
+  "shots": 1096,
+  "headshots": 38,
+  "route_recoveries": 9,
+  "network": "Actual native dedicated server/client; 125 snapshots, 30 predicted shots, acknowledged 30, pending 0",
+  "graphics": "Actual source probes and exported Linux showcase; Forward+ Vulkan llvmpipe, 1280x720",
+  "limitations": "No Windows runtime or listening verification. Source probes freeze gameplay for deterministic pose capture. Assets not replaced. Native headless bot matches do not measure gunfeel.",
+  "screenshots": {
+    "after-w0-tactical-55.png": "03675cb46cf8da5155715934939377857b1646fb7a4505bf28546262f8a1f907",
+    "after-w0-tactical-85.png": "a8c48f939b640a84e3d6970d7459603cc7a3f9dcce7ef232373a5587421cc7bc",
+    "after-w3-empty-85.png": "c5ee0a94b8ea90d3d98b8b625fbd671b419fe293f06ba7afd7795a6fbbcff51c",
+    "ads-w0-shot1.png": "860b648c518f561c32159eca24cbd2406d45ba084751c4f44a7a2696b0e94f22",
+    "ads-w0-idle.png": "223ccf1ef957bdad88ab8b530680e14a7a4857fec30265cba7d60f3f4363734e",
+    "after-w3-empty-55.png": "3f9badfcb3906c67d3baa1935de3a58a95a64581ab46e240b15413d71b895e3c",
+    "ads-w3-shot0.png": "5bab064b6a0d8343853206aad6079b43ae04956426c5050cfce3b428692c0a6f",
+    "after-w0-tactical-20.png": "c8a98ae8d7719b19eced6a390f50af80e2cfc75b700c751749eaa10031ab0677",
+    "ads-w3-recover.png": "67e535926383c32e80544721d533fb17a65d89b378c0cb3b4e9b340753f688af",
+    "baseline-w0-tactical-55.png": "03675cb46cf8da5155715934939377857b1646fb7a4505bf28546262f8a1f907",
+    "native-linux.png": "0b7b60bc5eaab8e30379b5ac137bb95247104cc0a78b47e421db29fa95c23644",
+    "ads-w3-idle.png": "83057d5ac75be0bc8b394467f53843cee56de93b1db72273d877970d1f0b9d57",
+    "after-w3-empty-20.png": "5410cec0c7461bb6f38bbac8b95f8e92911cf62ab750d1e530f5a3c27ba7655e"
+  }
+}

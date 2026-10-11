@@ -1,3 +1,5 @@
+Latest continuation: [WEAPON_ACTIONS_HANDOFF.md](WEAPON_ACTIONS_HANDOFF.md) — weapon action synchronization and PC packages.
+
 # Ragdoll and combat readability — 2026-10-11
 
 Working tree `/workspace/ashline-polish`, branch `codex/weapon-polish`.

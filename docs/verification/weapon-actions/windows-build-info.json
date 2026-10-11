@@ -1,0 +1,25 @@
+{
+  "game": "ASHLINE",
+  "revision": "35dd113017d735a9748d130932cf956c98ae6f24",
+  "godot": "4.6.3",
+  "platform": "Windows",
+  "created_utc": "2026-10-11T10:41:12.695398+00:00",
+  "files": {
+    "ASHLINE.exe": {
+      "bytes": 505840456,
+      "sha256": "2933124bde1bd41a76763dcaf33f2541666e7b2d03abc9ffe786a334ecd1fd54"
+    },
+    "LICENSES.md": {
+      "bytes": 6405,
+      "sha256": "63f8038698970bbd2980d131db35049a7b3d48630b651e9127f133b08559259f"
+    },
+    "README.md": {
+      "bytes": 21983,
+      "sha256": "115071352d664ce9a30b6497b9ca79219857006864b45044c79e6812234c004a"
+    },
+    "START_HERE_RU.txt": {
+      "bytes": 1458,
+      "sha256": "5f1bbeb9b75baeeaa52bc309ccd6a6d88a4c591088d39496a543606001d048ad"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+CUES 0 reload OUT=0.27 IN=0.58
+CUES 1 reload OUT=0.44 IN=0.72
+CUES 1 reload_empty OUT=0.34 IN=0.55
+CUES 2 reload OUT=0.25 IN=0.68
+CUES 2 reload_empty OUT=0.36 IN=0.65
+CUES 3 reload OUT=0.24 IN=0.81
+CUES 3 reload_empty OUT=0.19 IN=0.65
+CUES 4 reload OUT=0.19 IN=0.68
+CUES 4 reload_empty OUT=0.17 IN=0.61

@@ -1,0 +1,11 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+Vulkan 1.4.305 - Forward+ - Using Device #0: Unknown - llvmpipe (LLVM 19.1.7, 256 bits)
+
+CLIPS 0 { "idle": "Armature|Arms_FPS_Anim_Idle", "walk": "Armature|Arms_FPS_Anim_Walk", "sprint": "Armature|Arms_FPS_Anim_Run", "draw": "Armature|Arms_FPS_Anim_Draw", "fire": "Armature|Arms_FPS_Anim_Shoot", "reload": "Armature|Arms_FPS_Anim_Reload_Fast", "inspect": "Armature|Arms_FPS_Anim_rifle_inspect" }
+NAV_READY points=7534 ms=787
+RELOAD 0 false 0.2
+RELOAD 0 false 0.55
+RELOAD 0 false 0.85
+RELOAD 0 true 0.2
+RELOAD 0 true 0.55
+RELOAD 0 true 0.85

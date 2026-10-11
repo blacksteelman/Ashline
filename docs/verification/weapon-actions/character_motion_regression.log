@@ -1,0 +1,21 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS Actual reload graph includes UpperArm.R
+PASS Actual reload graph includes Forearm.R
+PASS Actual reload graph includes Hand.R
+PASS Actual reload graph includes UpperArm.L
+PASS Actual reload graph includes Forearm.L
+PASS Actual reload graph includes Hand.L
+PASS Actual reload graph includes Weapon
+PASS Reload leaves torso and legs on locomotion
+PASS ACR has an actual movable magazine mesh
+PASS Reload extracts the visible magazine
+PASS Magazine is stowed while hand fetches replacement
+PASS Replacement seats before hand returns to foregrip
+PASS Reload completion restores assembled weapon
+PASS Sprint pose eases in
+PASS Sprint reaches its authored stance
+PASS Sprint exit eases rather than snapping
+PASS Running without sprint does not select lowered weapon
+PASS Respawn clears presentation state
+CHARACTER_MOTION 18 checks, 0 failures

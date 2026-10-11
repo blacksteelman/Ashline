@@ -1,0 +1,33 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS Weapon 0 firing clip actually advances
+FAIL Weapon 0 repeated shot restarts its mechanical animation
+PASS Weapon 0 rig evaluates its own animation before framing
+FAIL Weapon 0 tactical reload follows gameplay clock exactly
+FAIL Weapon 0 empty reload follows gameplay clock exactly
+PASS Weapon 0 reload completion returns to locomotion
+PASS Weapon 1 firing clip actually advances
+FAIL Weapon 1 repeated shot restarts its mechanical animation
+PASS Weapon 1 rig evaluates its own animation before framing
+FAIL Weapon 1 tactical reload follows gameplay clock exactly
+FAIL Weapon 1 empty reload follows gameplay clock exactly
+PASS Weapon 1 reload completion returns to locomotion
+PASS Weapon 2 firing clip actually advances
+FAIL Weapon 2 repeated shot restarts its mechanical animation
+PASS Weapon 2 rig evaluates its own animation before framing
+FAIL Weapon 2 tactical reload follows gameplay clock exactly
+PASS Weapon 2 empty reload follows gameplay clock exactly
+PASS Weapon 2 reload completion returns to locomotion
+PASS Weapon 3 firing clip actually advances
+FAIL Weapon 3 repeated shot restarts its mechanical animation
+PASS Weapon 3 rig evaluates its own animation before framing
+FAIL Weapon 3 tactical reload follows gameplay clock exactly
+FAIL Weapon 3 empty reload follows gameplay clock exactly
+PASS Weapon 3 reload completion returns to locomotion
+PASS Weapon 4 firing clip actually advances
+FAIL Weapon 4 repeated shot restarts its mechanical animation
+PASS Weapon 4 rig evaluates its own animation before framing
+FAIL Weapon 4 tactical reload follows gameplay clock exactly
+PASS Weapon 4 empty reload follows gameplay clock exactly
+PASS Weapon 4 reload completion returns to locomotion
+FP_ACTIONS 30 checks, 13 failures
