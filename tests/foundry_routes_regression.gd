@@ -58,6 +58,16 @@ func run():
   await physics_frame
   if p.position.distance_to(Vector3(31,3.2,26))<.55:rejoined=true;break
  expect(rejoined and p.recoveries==0,'Displaced bot replans to the same upper-floor destination without random recovery')
+ # Bot-test time scaling gives 4x larger physics steps. Tight waypoint arrival
+ # must still work rather than bouncing across the target at sprint speed.
+ p.global_position=Vector3(31,3.2,23.19914);p.velocity=Vector3(0,0,6);p.stuck_time=0;p.progress_window=0;p.recoveries=0;p.bot_target=null;p.bot_think=10000
+ p.set_route(Vector3(31,3.2,26));Engine.time_scale=4
+ var arrived=false
+ for tick in 90:
+  await physics_frame
+  if p.position.distance_to(Vector3(31,3.2,26))<.55:arrived=true;break
+ Engine.time_scale=1
+ expect(arrived and p.recoveries==0,'Sprint brakes into tight waypoints with 4x simulation steps')
  p.set_physics_process(false)
  print('FOUNDRY_ROUTES ',checks,' checks, ',failures,' failures')
  quit(0 if failures==0 else 1)

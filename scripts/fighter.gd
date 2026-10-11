@@ -411,7 +411,9 @@ func follow_route(dt: float, face_path: bool=true):
   if direction.length()<.18:path_index+=1;continue
   if face_path:yaw=lerp_angle(yaw,atan2(-direction.x,-direction.z),dt*12);pitch=0
   var local_direction=direction.normalized().rotated(Vector3.UP,-yaw)
-  move_wish=Vector2(local_direction.x,local_direction.z)
+  # Brake into a waypoint before reversing. Full sprint speed at a 20 cm
+  # target otherwise oscillates past the tight door/corner arrival radius.
+  move_wish=Vector2(local_direction.x,local_direction.z)*minf(1.0,direction.length()/.6)
   return
 func think_bot(dt: float):
  bot_age+=dt;bot_think-=dt;bot_reaction-=dt;cover_time=maxf(0,cover_time-dt);memory_time=maxf(0,memory_time-dt);bot_pause=maxf(0,bot_pause-dt)
@@ -467,7 +469,7 @@ func think_bot(dt: float):
   follow_route(dt)
  # Step-up attempts bob and rebound at a stair side. Measure net horizontal
  # progress over a quarter second, rather than counting every rebound as travel.
- if move_wish.length()>.7 and (not is_instance_valid(bot_target) or cover_time>0):
+ if move_wish.length()>.1 and (not is_instance_valid(bot_target) or cover_time>0):
   if progress_window==0:last_position=global_position
   progress_window+=dt
   if progress_window>=.25:
