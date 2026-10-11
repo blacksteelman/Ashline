@@ -1,5 +1,22 @@
 # Weapon material / HUD continuation
 
+## Latest user feedback — quality rejected
+
+User says sound, animations, models and overall graphics remain poor and prefers
+Claude's original sound/overall result. The small HUD/material pass is not an
+accepted quality improvement. Do not present regression totals as evidence that
+the result is enjoyable. An exact original reference is now preserved in
+`/workspace/ashline-claude-baseline`, branch `codex/claude-baseline`; read its
+CLAUDE_BASELINE_HANDOFF.md. Original Windows/Linux artifacts were downloaded,
+CRC verified, and its Linux binary was actually rendered and ran a TDM. The
+original has old bot recovery bugs, so use it to recover preferred presentation
+selectively rather than throwing away verified gameplay fixes. Current polish
+code is preserved; no claim of restoring its default sound has been made.
+
+The subsequent street-art draft was paused and removed from this playable tree.
+It is stored in stash a8f221120ae9b1f3221c9a2b24a3631667713cd8. It has an
+unimplemented architecture call, so it is an unfinished investigation.
+
 Worktree: `/workspace/ashline-polish`, branch `codex/weapon-polish`.
 Game commit: `490d61bf5fb415101165d2b8ada4dedabd20ba95`.
 Read INTERIORS_HANDOFF.md / GRAPHICS_HANDOFF.md for prior art and build context.
