@@ -16,10 +16,12 @@ Local builds: `build/service-linux/ASHLINE.x86_64`, `build/service-windows/ASHLI
 
 CI: https://github.com/blacksteelman/Ashline/actions/runs/38158301046 (final artifact details to be recorded after completion).
 
-To capture: start Xorg using `tests/xorg.conf`; use `VK_ICD_FILENAMES=/workspace/ashline/.runtime/vulkan/lvp.json`, then Godot with `--script tests/capture_character_motion.gd -- --tag=service-final --weapon=0 --service`. Last display `:157`; use `:158` next. Source captures use the actual Fighter, CharacterMotion, GripIK and world weapon in the live map, with time advanced deterministically. Export templates: `XDG_DATA_HOME=/workspace/ashline/.runtime/data`.
+To capture: start Xorg using `tests/xorg.conf`; use `VK_ICD_FILENAMES=/workspace/ashline/.runtime/vulkan/lvp.json`, then Godot with `--script tests/capture_character_motion.gd -- --tag=service-final --weapon=0 --service`. Last display `:158`; use `:159` next. Source captures use the actual Fighter, CharacterMotion, GripIK and world weapon in the live map, with time advanced deterministically. Export templates: `XDG_DATA_HOME=/workspace/ashline/.runtime/data`.
 
 Next: create distinct movable magazines for other world weapons from their source bone weights; author their matching hand/finger poses. Review first-person forearm deformation and the ACR empty reload (currently the fast clip, without a dedicated charging action). Preserve the restored Claude sound recordings and processing. Continue from `WEAPON_ACTIONS_HANDOFF.md` for first-person clock/ADS details.
 
 World magazine audit: AK has one combined surface; sniper has Rifle/Other; SMG combines its magazine with the main surface. Split by source skin weights when rebaking; material-name splitting alone cannot support these safely. Raw bounds recorded in world-magazine-surfaces.log.
 
 Final native Linux build: seed 803, two matches completed, 959 shots, 31 headshots, 1 recoveries. Both final ZIPs passed CRC and payload SHA-256 checks; an extracted Linux executable booted.
+
+A second actual graphical pass sampled 21 normalized reload phases at 640x360, inspected in sequence-contact-sheet.jpg. Probe source is archived as capture_reload_sequence.gd.txt; copy to build/ to execute. This verifies poses and continuity at sampled phases, not subjective animation quality at full-speed human play.
