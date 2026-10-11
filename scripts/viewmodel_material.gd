@@ -36,6 +36,16 @@ static func convert_material(source: BaseMaterial3D) -> ShaderMaterial:
  if source.normal_enabled and source.normal_texture:
   m.set_shader_parameter('use_normal',true);m.set_shader_parameter('normal_tex',source.normal_texture);m.set_shader_parameter('normal_strength',source.normal_scale)
  m.set_shader_parameter('roughness',source.roughness);m.set_shader_parameter('metallic',source.metallic)
+ # Keep the imported dielectric response instead of implicitly using the shader default.
+ m.set_shader_parameter('specular',source.metallic_specular)
+ # Dry cloth/leather are non-metallic, including legacy spec/gloss converted arms.
+ # Floors retain texture variation while avoiding mirror-like worn coatings.
+ var arms=source.resource_name=='arms'
+ m.set_shader_parameter('roughness_floor',.62 if arms else (.0 if glass else .28))
+ m.set_shader_parameter('roughness_bias',.16 if arms else (.0 if glass else .12))
+ if arms:
+  m.set_shader_parameter('metallic',0.0)
+  m.set_shader_parameter('specular',.3)
  if source.roughness_texture:
   m.set_shader_parameter('roughness_tex',source.roughness_texture);m.set_shader_parameter('roughness_channel',channel(source.roughness_texture_channel))
  if source.metallic_texture:

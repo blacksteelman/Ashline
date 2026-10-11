@@ -11,6 +11,9 @@ uniform bool use_normal = false;
 uniform sampler2D roughness_tex : hint_default_white, filter_linear_mipmap;
 uniform vec4 roughness_channel = vec4(0.0, 1.0, 0.0, 0.0);
 uniform float roughness = 1.0;
+uniform float roughness_floor = 0.0;
+uniform float roughness_bias = 0.0;
+uniform float specular = 0.5;
 uniform sampler2D metallic_tex : hint_default_white, filter_linear_mipmap;
 uniform vec4 metallic_channel = vec4(0.0, 0.0, 1.0, 0.0);
 uniform float metallic = 0.0;
@@ -34,7 +37,9 @@ void fragment() {
 	vec4 a = texture(albedo_tex, UV) * albedo_color;
 	ALBEDO = a.rgb;
 	if (alpha_scissor > 0.0 && a.a < alpha_scissor) { discard; }
-	ROUGHNESS = dot(texture(roughness_tex, UV), roughness_channel) * roughness;
+	float r = dot(texture(roughness_tex, UV), roughness_channel) * roughness;
+	ROUGHNESS = clamp(mix(r, 1.0, roughness_bias), roughness_floor, 1.0);
+	SPECULAR = specular;
 	METALLIC = dot(texture(metallic_tex, UV), metallic_channel) * metallic;
 	if (use_normal) {
 		NORMAL_MAP = texture(normal_tex, UV).rgb;

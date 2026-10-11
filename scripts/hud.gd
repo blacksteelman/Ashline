@@ -3,7 +3,7 @@ var game: Node3D
 var font: Font=preload('res://assets/interface.ttf')
 var mono: Font=preload('res://assets/mono.ttf')
 var ivory=Color('#dedfce')
-var muted=Color('#94abaa')
+var muted=Color('#b5c3bd')
 var teal=Color('#73c0c4')
 var orange=Color('#dba477')
 func _ready():
@@ -11,7 +11,9 @@ func _ready():
  var minimap=load('res://scripts/minimap.gd').new();minimap.game=game;add_child(minimap)
 func _process(_dt):queue_redraw()
 func words(pos: Vector2, text: String, size_v: int=16, color: Color=Color('#dedfce'), fixed: bool=false):
- draw_string(mono if fixed else font,pos,text,HORIZONTAL_ALIGNMENT_LEFT,-1,size_v,Color(0,0,0,.8));draw_string(mono if fixed else font,pos+Vector2(0,-1),text,HORIZONTAL_ALIGNMENT_LEFT,-1,size_v,color)
+ var face=mono if fixed else font
+ draw_string_outline(face,pos,text,HORIZONTAL_ALIGNMENT_LEFT,-1,size_v,2,Color(0,0,0,.8))
+ draw_string(face,pos,text,HORIZONTAL_ALIGNMENT_LEFT,-1,size_v,color)
 func _draw():
  var sx=get_viewport_rect().size.x/1600.0;var sy=get_viewport_rect().size.y/900.0;draw_set_transform(Vector2.ZERO,0,Vector2(sx,sy))
  if game.menu_open:return
@@ -24,7 +26,8 @@ func _draw():
  words(Vector2(636,46),'AEGIS',17,teal);words(Vector2(902,46),'EMBER',17,orange)
  words(Vector2(712,74),'%3d' % game.scores[0],34,ivory,true);words(Vector2(822,74),'%-3d' % game.scores[1],34,ivory,true)
  var seconds=maxi(0,int(game.time_left));words(Vector2(768,44),'%02d:%02d' % [seconds/60,seconds%60],18,ivory,true)
- words(Vector2(668,108),('DOMINATION / ' if game.mode=='dom' else 'TEAM DEATHMATCH / ')+str(game.score_limit)+'   ·   FOUNDRY',15,muted)
+ draw_rect(Rect2(620,86,360,28),Color(.025,.04,.045,.7))
+ words(Vector2(636,106),('DOMINATION / ' if game.mode=='dom' else 'TEAM DEATHMATCH / ')+str(game.score_limit)+'   ·   FOUNDRY',15,muted)
  if game.domination:zones_overlay()
  for i in range(mini(game.feed.size(),5)):
   var f=game.feed[i];var y=130+i*30
@@ -52,19 +55,22 @@ func _draw():
  if game.kill_time>0:words(Vector2(712,512),'+100  '+('HEADSHOT' if game.kill_zone=='HEAD' else 'KILL'),22,orange if game.kill_zone=='HEAD' else ivory,true)
  if game.damage_flash>0:
   var red=Color(.6,.06,.025,game.damage_flash*.42);draw_rect(Rect2(0,0,1600,40),red);draw_rect(Rect2(0,860,1600,40),red);draw_rect(Rect2(0,0,40,900),red);draw_rect(Rect2(1560,0,40,900),red)
- # Ammo block: magazine count, reserve, a tick per round, weapon and grenades.
+ # Compact ammo block: numerical counts and a thin capacity bar.
  var mag=Arsenal.WEAPONS[p.weapon_id].mag;var left=p.ammo[p.weapon_id]
- draw_rect(Rect2(1270,770,310,112),Color(.02,.03,.035,.5))
- words(Vector2(1288,838),'%02d' % left,54,ivory if left>=mag*.25 else orange,true);words(Vector2(1386,834),'/ %03d' % p.reserves[p.weapon_id],26,muted,true)
- var tick=minf(5.0,270.0/mag)
- for i in range(mag):draw_rect(Rect2(1290+i*tick*1.0,788,maxf(1.0,tick-1.5),12),ivory if i<left else Color(.3,.34,.34,.6))
+ draw_rect(Rect2(1270,794,310,88),Color(.02,.03,.035,.65))
+ words(Vector2(1288,838),'%02d' % left,42,ivory if left>=mag*.25 else orange,true);words(Vector2(1370,836),'/ %03d' % p.reserves[p.weapon_id],24,muted,true)
+ draw_rect(Rect2(1288,849,270,3),Color(.3,.34,.34,.6))
+ draw_rect(Rect2(1288,849,270*clampf(float(left)/mag,0,1),3),ivory if left>=mag*.25 else orange)
  words(Vector2(1288,866),Arsenal.WEAPONS[p.weapon_id].name,18,muted)
  words(Vector2(1470,866),'G  '+str(p.grenades),18,ivory if p.grenades>0 else muted,true)
  if p.reload_left>0:words(Vector2(730,580),'RELOADING',20,ivory)
  elif left<maxi(3,mag/5):words(Vector2(712,580),'[R]  RELOAD',20,orange)
  # Health, class and streak.
- draw_rect(Rect2(24,800,470,82),Color(.02,.03,.035,.5))
- words(Vector2(40,826),p.loadout.get('name','')+'  /  '+Arsenal.perk_names(p.loadout),15,muted)
+ draw_rect(Rect2(24,784,520,98),Color(.02,.03,.035,.65))
+ words(Vector2(40,807),p.loadout.get('name',''),15,ivory)
+ var perks=Arsenal.perk_names(p.loadout)
+ var perk_size=mini(15,int(480.0/maxf(1,font.get_string_size(perks,HORIZONTAL_ALIGNMENT_LEFT,-1,15).x)*15))
+ words(Vector2(40,828),perks,perk_size,muted)
  draw_rect(Rect2(40,838,240,8),Color(.2,.25,.25));draw_rect(Rect2(40,838,p.health/p.max_health*240,8),teal if p.health>35 else orange)
  words(Vector2(292,848),str(int(p.health)),18,ivory,true)
  words(Vector2(40,872),'STREAK '+str(p.streak)+'  ›  '+('3 RECON' if p.streak<3 else ('5 MORTAR' if p.streak<5 else '7 OVERWATCH')),15,muted,true)
