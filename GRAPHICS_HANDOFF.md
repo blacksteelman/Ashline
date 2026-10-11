@@ -1,5 +1,7 @@
 # District art continuation
 
+Latest playable interior pass: see INTERIORS_HANDOFF.md.
+
 Worktree `/workspace/ashline-polish`, branch `codex/weapon-polish`.
 Gameplay/art commits `e8fe145`, `f5f2a58`, `f00868f`; previous work in
 FOUNDRY_HANDOFF.md and MOTION_HANDOFF.md. Original worktree untouched.

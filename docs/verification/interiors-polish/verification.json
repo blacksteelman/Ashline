@@ -1,0 +1,40 @@
+{
+  "game_commit": "476fcd817c65387719421cdebba36deed89a38d0",
+  "regression_assertions": 188,
+  "actual_fighter_routes": 18,
+  "route_recoveries": 0,
+  "renderer": "Godot 4.6.3 Forward+ Vulkan llvmpipe",
+  "resolution": [
+    1280,
+    720
+  ],
+  "graphics_preset": 1,
+  "before_after_matched_poses": [
+    0,
+    1,
+    2
+  ],
+  "final_only_views": [
+    3,
+    4
+  ],
+  "source_render_errors": 0,
+  "native_tdm_errors": 0,
+  "limitations": [
+    "Software rendering: no gaming GPU performance measurement",
+    "Dummy audio, not listened to",
+    "Windows exported, not executed",
+    "Two isolated bot route recoveries at existing corners in full matches",
+    "Graphics target not reached"
+  ],
+  "images": {
+    "after-0.png": "b195cf1764cb6784b099315d8e05e754eb3f035397b6fbf6977354a5f4b31d8c",
+    "after-1.png": "808af1b81d22d1f8534e2deb60fed5ec182af70786edf4dedaadf53521f732e7",
+    "after-2.png": "3019a6de99b9b71700e1df5e4ffb7b60f5dd6694f7b0bac1d13078a33dc59df7",
+    "after-3.png": "d52fd7adc366fc28d6d9cd553236a549e32de79ec4e513963abf79dc4694240c",
+    "after-4.png": "6520030e5f15b0dfb416199b9f2ade63d23692c364f6bb7d0d4a9d4251df29ec",
+    "before-0.png": "a583599fb68a7784b058690aa3c6162fc37f07af5370c833241a76be8ceb5dff",
+    "before-1.png": "9a86c31bb16b3412875a97138e14f352144cb4b7e4f1560c3e4cd66c6f560e36",
+    "before-2.png": "cd778ae42298fef66b2e4354f21537777423c99c2f54c00057ad3232780bb17f"
+  }
+}

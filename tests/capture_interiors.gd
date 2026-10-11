@@ -3,8 +3,10 @@ extends SceneTree
 func _initialize():call_deferred('run')
 func run():
  var tag='after'
+ var only=-1
  for arg in OS.get_cmdline_user_args():
   if arg.begins_with('--tag='):tag=arg.substr(6)
+  if arg.begins_with('--view='):only=int(arg.substr(7))
  var g=load('res://main.tscn').instantiate();root.add_child(g);g.start_match(false)
  for f in g.fighters:f.set_physics_process(false)
  var views=[[Vector3(-15,.18,-18),Vector3(-22,1.3,-24)],
@@ -14,6 +16,7 @@ func run():
   [Vector3(-22,3.15,18.3),Vector3(-17.2,4.0,14.8)]]
  DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path('res://build/interior-captures'))
  for i in views.size():
+  if only>=0 and i!=only:continue
   var p=g.player;p.global_position=views[i][0];p.rotation.y=0
   var d=views[i][1]-(p.position+Vector3.UP*1.62)
   p.yaw=atan2(-d.x,-d.z);p.pitch=atan2(d.y,Vector2(d.x,d.z).length())
