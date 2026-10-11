@@ -1,0 +1,47 @@
+{
+  "license": "CC0-1.0",
+  "source_library": "https://opengameart.org/content/the-free-firearm-sound-library",
+  "modification": "Downmix the existing processed stereo shot to mono and normalize peak to -0.8 dBFS.",
+  "files": [
+    {
+      "source": "acr.wav",
+      "source_sha256": "f7967af6494eed82d1b4feb3849ac2801ecfac6355c190358c138e81e2faa1ff",
+      "output": "acr_near.wav",
+      "output_sha256": "7e0804d8a7298b713f2e2610847d66ea4688843a429b053cfa766e425a0d80c3",
+      "channels": 1,
+      "sample_rate": 48000
+    },
+    {
+      "source": "ak.wav",
+      "source_sha256": "15ed2593e244c7318abdb718a13bdaf2dfa46be34ef70044b571023686416d36",
+      "output": "ak_near.wav",
+      "output_sha256": "2a161ebaaad58e398c94a1d13663a92d0f126a9f0eeeb07fe491c6306f00c218",
+      "channels": 1,
+      "sample_rate": 48000
+    },
+    {
+      "source": "sniper.wav",
+      "source_sha256": "5aef8fe1a14cb88a74a069b45a1be3d521118d35a8659bb041d6d9a70ed9fc29",
+      "output": "sniper_near.wav",
+      "output_sha256": "56fb8ad6d215b82f796b0c0b5d778c306381aee6bf4b8a22977f0f80d66b2747",
+      "channels": 1,
+      "sample_rate": 48000
+    },
+    {
+      "source": "pistol.wav",
+      "source_sha256": "878eeb92a36b1c9a6a9b84f34dddff4c1fee82074028cc190469de6a21f6dacb",
+      "output": "pistol_near.wav",
+      "output_sha256": "a65bdb5d747b73f6691631ae205dd7a2d1b66f2ad049ec0717f79db7db22e041",
+      "channels": 1,
+      "sample_rate": 48000
+    },
+    {
+      "source": "smg.wav",
+      "source_sha256": "6db30780d56779cf5abd39e1c6c29f4199d594b12a48ec0c5da0789f8290d326",
+      "output": "smg_near.wav",
+      "output_sha256": "9679b3722e2dd018a9bd2db9ccac6d3c0938f003c481759085208a01c756c683",
+      "channels": 1,
+      "sample_rate": 48000
+    }
+  ]
+}

@@ -3,7 +3,7 @@ name: Build game
 # Exports playable ASHLINE builds (Linux + Windows) with Godot 4.6.3 and attaches them as workflow artifacts.
 on:
   push:
-    branches: [main, master, 'claude/**']
+    branches: [main, master, 'claude/**', 'codex/weapon-polish']
   workflow_dispatch:
 
 env:
@@ -44,6 +44,17 @@ jobs:
           python3 tools/cap_textures.py
           ~/godot/godot --headless --editor --path . --import || true
 
+      - name: Gameplay and weapon regression checks
+        run: |
+          set -o pipefail
+          mkdir -p build/verification
+          for suite in functional fp_motion_regression fp_anchors_regression audio_distance_regression; do
+            ~/godot/godot --headless --audio-driver Dummy --path . --script tests/${suite}.gd 2>&1 | tee build/verification/${suite}.log
+            if grep -E '^(SCRIPT ERROR|ERROR):' build/verification/${suite}.log; then
+              exit 1
+            fi
+          done
+
       - name: Export Linux and Windows
         run: |
           mkdir -p build/linux build/windows
@@ -53,7 +64,18 @@ jobs:
           ls -la build/linux build/windows
 
       - name: Smoke test (Linux build runs a bot match headless)
-        run: timeout 600 build/linux/ASHLINE.x86_64 --headless -- --bot-test --seed=801 --matches=1 | tail -3
+        run: |
+          set -o pipefail
+          timeout 600 build/linux/ASHLINE.x86_64 --headless -- --bot-test --seed=801 --matches=1 2>&1 | tee build/verification/native-bot.log
+          if grep -E '^(SCRIPT ERROR|ERROR):' build/verification/native-bot.log; then
+            exit 1
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ASHLINE-verification
+          path: build/verification
 
       - uses: actions/upload-artifact@v4
         with:

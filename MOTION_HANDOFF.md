@@ -59,8 +59,35 @@ After the fonts were cached, a headless import completed successfully.
 
 Visual limitations: sleeve highlights and some road/concrete areas are overly
 bright; the environment still needs art direction and varied cover. No claim
-that COD4-quality presentation has been reached. No new audio work in this pass.
+that COD4-quality presentation has been reached.
 
 Next: inspect moving weapon footage at real frame rates, especially turning
 while ADS, firing into ADS and recovering after sprint. Continue from Claude's
 asset pipeline, not the older procedural weapon/character generators.
+
+## Spatial gunfire follow-up
+
+Nearby enemy shots now use mono close-recording variants. Between 10 and 50 m,
+the game blends close/far recordings with constant-power gains; farther shots
+use the existing distant recording. Both layers share pitch and emitter position.
+Selection uses the current viewport camera, including spectator views.
+Interior local fire now sends through the Weapons compressor; spatial interior
+fire has its own WorldInterior reverb bus feeding World.
+
+Rebuild positional close recordings without downloading the source library:
+`python3 tools/build_sounds.py --world-near-only`. This uses the included processed
+stereo WAVs and writes source/output hashes. Full source-library processing also
+generates the positional variants. Credits remain CC0 in LICENSES.md.
+
+`tests/audio_distance_regression.gd`: 34 passing assertions for power/continuity,
+near/far choice, mono resources, actual playback voices, shared pitch, current
+listener distance and physical roof-based audio routing. Dummy output was used;
+subjective audio quality still needs listening on a PC.
+
+The native build workflow now also builds codex/weapon-polish and runs all four
+regression suites. It fails on logged runtime errors even if an older test exits
+zero. Documentation screenshots are excluded from native exports.
+
+Final local regression total: 152 passing assertions (49 gameplay, 23 motion,
+46 model anchors, 34 spatial audio). Gameplay was repeated after the audio
+changes with no logged runtime errors.

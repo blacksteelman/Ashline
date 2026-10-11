@@ -7,7 +7,7 @@ Per gun, the near-distance recording (stereo) becomes the first-person shot: cut
 low-end weight and soft saturation for punch, a short sub thump, the room tail kept and faded. The mid-distance
 recording becomes the shot other players hear (mono for 3D positioning, darker, longer tail).
 """
-import os, sys, wave
+import os, sys, wave, json, hashlib
 import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -80,6 +80,25 @@ def write(path, x):
     w.writeframes(pcm.tobytes()); w.close()
 
 
+def world_near():
+    """Mono positional copies of the included near shots; preserve the stereo local mix."""
+    records = []
+    for key in GUNS:
+        source = os.path.join(OUT, key + '.wav')
+        target = os.path.join(OUT, key + '_near.wav')
+        x, rate = read(source)
+        assert rate == RATE, (key, rate)
+        write(target, normalize(x.mean(1, keepdims=True), -0.8))
+        records.append({'source': key + '.wav', 'source_sha256': hashlib.sha256(open(source, 'rb').read()).hexdigest(),
+                        'output': key + '_near.wav', 'output_sha256': hashlib.sha256(open(target, 'rb').read()).hexdigest(),
+                        'channels': 1, 'sample_rate': RATE})
+    with open(os.path.join(OUT, 'WORLD_NEAR_SOURCES.json'), 'w') as f:
+        json.dump({'license': 'CC0-1.0', 'source_library': 'https://opengameart.org/content/the-free-firearm-sound-library',
+                   'modification': 'Downmix the existing processed stereo shot to mono and normalize peak to -0.8 dBFS.',
+                   'files': records}, f, indent=2)
+        f.write('\n')
+
+
 def main():
     lib = sys.argv[1]
     os.makedirs(OUT, exist_ok=True)
@@ -98,7 +117,8 @@ def main():
         f = lowpass(f, 5200, RATE)
         write(os.path.join(OUT, key + '_far.wav'), normalize(f, -2.0))
         print('built', key)
+    world_near()
 
 
 if __name__ == '__main__':
-    main()
+    world_near() if '--world-near-only' in sys.argv else main()

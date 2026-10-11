@@ -11,6 +11,11 @@
     },
     "functional": {
       "passed": 49,
+      "failed": 0,
+      "note": "Repeated after spatial audio changes; no logged runtime errors."
+    },
+    "audio_distance": {
+      "passed": 34,
       "failed": 0
     }
   },
