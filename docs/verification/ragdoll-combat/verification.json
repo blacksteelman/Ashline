@@ -1,0 +1,23 @@
+{
+  "gameplay_commit": "47b1fec51eb5abd04f38471faee37e5768ce5f39",
+  "checks": 230,
+  "godot": "4.6.3",
+  "native_linux_sha256": "76b9005fcf57520e2b8d5e90e7b118dd03a8ed2bbd4b7ce6c6af63e787ed8175",
+  "native_matches": 2,
+  "visual_runtime": "Godot Forward+ Vulkan llvmpipe, 1280x720",
+  "audio_driver": "Dummy; no listening verification",
+  "capture_description": "Scripted actual Fighter/AnimationTree/RigidBody deaths, plus unmodified Linux executable showcase capture. Native headless bot matches disable cosmetic ragdolls.",
+  "screenshots": {
+    "respawn.png": "1221f8e6e16a7cc5b8f6e9ca2680edf69d925796769c0d72cdcbe6e7f48aa027",
+    "firing.png": "56c88c6f6e027872261492e33b52c25c5c68df7d90ed0e6d5bf530263d88ddfc",
+    "settled.png": "ce169ed69122adce15d1a4d46342fce84448b006868a1b7c9d0073caa9d46171",
+    "alive.png": "1221f8e6e16a7cc5b8f6e9ca2680edf69d925796769c0d72cdcbe6e7f48aa027",
+    "fall.png": "51b137ecf6393ded014ac9bedec99a5e823b7767c7026ed497267ecddfcd1816",
+    "first-person-respawn.png": "1491f8e06288244a8f7956bd78c09fe07d2c77ffad03261aa8b7d76e610d9a0f",
+    "hit.png": "f4eca96508b6da4ab755d167b645ce203574a9b7df5701afed700acf7d9e1f14",
+    "incoming-damage.png": "f652d93ce1331667c1662b3dea148f76fb89d04ab843eb859fdd3939ed77a0db",
+    "native-linux.png": "8a413a2ca87a59ae1c8bc669d77c7c3aae424a051c91c47ec941da1710760e03",
+    "death-camera.png": "bb19a9d1e495b99efaa4f79732b2f37993f163cc8d62a3616665dc0b56ecdb62",
+    "overhead.png": "74e305953af1d7355b2612b80f661e9bd2a6fe826f1d6b5ef97ff5df3fd37bcd"
+  }
+}

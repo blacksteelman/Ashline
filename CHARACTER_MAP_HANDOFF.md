@@ -1,3 +1,5 @@
+Latest work: see [RAGDOLL_COMBAT_HANDOFF.md](RAGDOLL_COMBAT_HANDOFF.md) for physical deaths, weapon drops, combat reactions and current verification.
+
 # ASHLINE — character, weapon assembly and map recovery
 
 User direction: leave Claude's audio alone and improve the rest. This is a concrete defect repair pass, not a claim that models, animation or graphics meet COD4 quality. The user rejected the earlier quality claims. Preserve that feedback.
