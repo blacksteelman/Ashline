@@ -1,0 +1,11 @@
+{
+  "platform": "linux",
+  "bytes": 436481855,
+  "sha256": "150b413e66ae57c1d177ee276f0ca20ef457a39492ad806c7159286edbd7c10f",
+  "files": [
+    "ASHLINE.x86_64",
+    "LICENSES.md",
+    "README.md"
+  ],
+  "crc_verified": true
+}

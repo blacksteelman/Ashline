@@ -1,0 +1,11 @@
+{
+  "platform": "windows",
+  "bytes": 445524350,
+  "sha256": "fa1b6b14110e1331e2c00584f1e9907fd2ea530b3b9e765ec178ecf6b8f458fc",
+  "files": [
+    "LICENSES.md",
+    "ASHLINE.exe",
+    "README.md"
+  ],
+  "crc_verified": true
+}
