@@ -119,16 +119,26 @@ func wall_piece(a: Vector3, dir: Vector3, yaw: float, u0: float, u1: float, v0: 
  solid(center,Vector3(u1-u0,v1-v0,t),key,v0<.5,yaw)
 
 func stairs(bottom: Vector3, dir: Vector3, run: float, rise: float, width: float, key: String='concrete'):
- # Visible treads with one continuous ramp collider so movement stays smooth.
+ # Continuous ramp collider keeps the camera smooth over individual treads.
  var steps=int(round(rise/.2));var yaw=atan2(dir.x,dir.z)
  for i in range(steps):
   var h=rise*(i+1)/steps;var d=run*(i+.5)/steps
-  solid(bottom+dir*d+Vector3.UP*(h/2),Vector3(width,h,run/steps),key,false,yaw,true,false)
- # A solid wedge: smooth to walk up, with vertical sides that cannot be stepped onto.
+  if key=='walkway':solid(bottom+dir*d+Vector3.UP*(h-.035),Vector3(width,.07,run/steps+.035),'steel',false,yaw,true,false)
+  else:solid(bottom+dir*d+Vector3.UP*(h/2),Vector3(width,h,run/steps),key,false,yaw,true,false)
+ if key=='walkway':
+  # Open industrial stair: thin treads on two inclined steel stringers.
+  var right=Vector3(dir.z,0,-dir.x)
+  for side in [-1.0,1.0]:
+   var beam=solid(bottom+dir*run*.5+Vector3.UP*(rise*.5-.16)+right*side*(width*.5-.09),Vector3(.14,.22,sqrt(run*run+rise*rise)),'steel',false,yaw,true,false)
+   beam.rotation.x=-atan2(rise,run)
+ # Concrete flights keep a solid wedge; the open steel flight uses a thin
+ # sloped slab so the space under its high end is genuinely traversable.
  var body=StaticBody3D.new();body.set_meta('surface',Surfaces.surface_of(key));add_child(body)
  body.position=bottom;body.basis=Basis(Vector3.UP,yaw)
  var hw=width/2;var wedge=ConvexPolygonShape3D.new()
- wedge.points=PackedVector3Array([Vector3(-hw,0,0),Vector3(hw,0,0),Vector3(-hw,0,run),Vector3(hw,0,run),Vector3(-hw,rise,run),Vector3(hw,rise,run)])
+ if key=='walkway':
+  wedge.points=PackedVector3Array([Vector3(-hw,0,0),Vector3(hw,0,0),Vector3(-hw,rise,run),Vector3(hw,rise,run),Vector3(-hw,-.26,0),Vector3(hw,-.26,0),Vector3(-hw,rise-.26,run),Vector3(hw,rise-.26,run)])
+ else:wedge.points=PackedVector3Array([Vector3(-hw,0,0),Vector3(hw,0,0),Vector3(-hw,0,run),Vector3(hw,0,run),Vector3(-hw,rise,run),Vector3(hw,rise,run)])
  var shape=CollisionShape3D.new();shape.shape=wedge;body.add_child(shape)
 
 # ---------------------------------------------------------------- facade kit

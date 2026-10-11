@@ -20,7 +20,9 @@ func run():
   [Vector3(31,.18,13),Vector3(31,3.2,26)],
   [Vector3(31,3.2,26),Vector3(31,.18,13)],
   [Vector3(30.46,.18,12.925),Vector3(31,3.2,26)],
-  [Vector3(30.449,.18,13.995),Vector3(31,3.2,26)]]
+  [Vector3(30.449,.18,13.995),Vector3(31,3.2,26)],
+  [Vector3(29,.18,18),Vector3(32,.18,18)],
+  [Vector3(32,.18,18),Vector3(29,.18,18)]]
  for i in cases.size():
   p.global_position=cases[i][0];p.velocity=Vector3.ZERO;p.stuck_time=0;p.recoveries=0;p.bot_target=null;p.bot_think=10000;p.cover_time=0;p.bot_pause=0;p.dead=false;p.health=100;p.respawn_time=10000;p.bot=true;p.local_player=false
   p.set_route(cases[i][1])
