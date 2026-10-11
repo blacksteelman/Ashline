@@ -22,6 +22,8 @@ var facade_open: Dictionary={}
 var lights_root: Node3D
 var structure: Node3D
 var facade_batches: Dictionary={}
+var district_meshes: Dictionary={}
+const DISTRICT_COLORS=[Color('#bcb5a4'),Color('#aebbb6'),Color('#c8ba9b'),Color('#aaa8a0')]
 
 func _ready():
  seed(4481)
@@ -35,6 +37,7 @@ func _ready():
  build_foundry_hall()
  build_container_yard()
  build_streets()
+ build_district_details()
  build_west_alley()
  build_spawn_zones()
  build_perimeter()
@@ -156,9 +159,25 @@ func load_facade():
    stripped.surface_set_material(stripped.get_surface_count()-1,m)
   if had_glass:facade_open[key]=stripped
 
-func piece(name: String, xform: Transform3D, broken: bool=false):
+func piece(name: String, xform: Transform3D, broken: bool=false, district: int=0):
  if not facade_meshes.has(name):push_warning('Missing facade piece '+name);return
  var mesh: Mesh=facade_open[name] if broken and facade_open.has(name) else facade_meshes[name]
+ var variant=str(mesh.get_instance_id())+'/'+str(district)
+ if not district_meshes.has(variant):
+  var copy: Mesh=mesh.duplicate()
+  for i in copy.get_surface_count():
+   var original=copy.surface_get_material(i)
+   if original is StandardMaterial3D and 'plaster' in original.resource_name.to_lower():
+    var plaster=ShaderMaterial.new();plaster.shader=load('res://assets/shaders/facade_weathering.gdshader')
+    plaster.set_shader_parameter('albedo_tex',original.albedo_texture)
+    plaster.set_shader_parameter('normal_tex',original.normal_texture)
+    plaster.set_shader_parameter('normal_scale',original.normal_scale)
+    plaster.set_shader_parameter('roughness_tex',original.roughness_texture)
+    plaster.set_shader_parameter('roughness_scale',original.roughness)
+    plaster.set_shader_parameter('district_color',DISTRICT_COLORS[district])
+    copy.surface_set_material(i,plaster)
+  district_meshes[variant]=copy
+ mesh=district_meshes[variant]
  # Group by mesh and by 24 m cell: instanced draws that still frustum-cull.
  var cell=Vector2i(floori(xform.origin.x/24.0),floori(xform.origin.z/24.0))
  var key=str(mesh.get_instance_id())+'/'+str(cell)
@@ -192,6 +211,7 @@ func upper_code(c: String, floor_i: int, top: bool) -> Array:
 # playable floors get interior walls with matching openings; others are sealed volumes.
 func building(x0: float, z0: float, x1: float, z1: float, floors: int, plan: Dictionary, upper: Dictionary, playable_floors: int, base_y: float=.15, interior_key: String='plaster_peel'):
  var top=base_y+floors*3.0
+ var district=1 if playable_floors==2 else (2 if playable_floors==1 else posmod(int(x0+z0),4))
  var sides={'s':[Vector3(0,0,-1)],'n':[Vector3(0,0,1)],'e':[Vector3(1,0,0)],'w':[Vector3(-1,0,0)]}
  for side in sides:
   var out: Vector3=sides[side][0];var right=Vector3.UP.cross(out)
@@ -209,7 +229,7 @@ func building(x0: float, z0: float, x1: float, z1: float, floors: int, plan: Dic
     var origin=p0+right*3.0*(i+1)+Vector3.UP*(y-base_y)
     var entry=GROUND_CODES.get(ground[i] if i<ground.length() else '-') if f==0 else upper_code(up_codes[i] if i<up_codes.length() else 'L',f,f==floors-1)
     var xf=Transform3D(basis,origin)
-    piece(entry[0],xf)
+    piece(entry[0],xf,false,district)
     var broken=f<playable_floors and f>0
     if entry[1]!='':piece(entry[1],xf,broken)
     var code=ground[i] if i<ground.length() else '-'
@@ -250,6 +270,10 @@ func building(x0: float, z0: float, x1: float, z1: float, floors: int, plan: Dic
  # Floor slabs and roof.
  var w=x1-x0;var d=z1-z0;var c=Vector3((x0+x1)/2,0,(z0+z1)/2)
  solid(Vector3(c.x,top-.15,c.z),Vector3(w,.3,d),'concrete',false)
+ # Rooftop services break the repeated rectangular skyline. No gameplay hulls.
+ prop('duct_fan',Vector3(c.x+.25,top+.3,c.z),-PI/2,false)
+ prop('duct_square',Vector3(c.x+1.2,top+.3,c.z),PI/2,false)
+ solid(Vector3(c.x-2.0,top+.55,c.z+2.0),Vector3(.7,1.1,.7),'brick_block',false,0,true,false)
  if playable_floors>0:solid(Vector3(c.x,base_y+.01,c.z),Vector3(w-.1,.04,d-.1),'tiles' if interior_key=='plaster_peel' else 'concrete_floor',false)
  for f in range(1,floors):
   if f>=playable_floors+1:break
@@ -274,7 +298,7 @@ func build_ground():
   solid(Vector3(street_x+(-.12 if street_x==-6 else .12),.09,(z0+z1)/2),Vector3(.24,.18,z1-z0),'curb',false)
   solid(Vector3((x0+x1)/2,.09,street_z+(.12 if street_z==5 else -.12)),Vector3(x1-x0,.18,.24),'curb',false)
  # Painted lane markings: worn dashes down the main street and a stop line.
- var paint=StandardMaterial3D.new();paint.albedo_color=Color(.78,.76,.68);paint.roughness=.8
+ var paint=ShaderMaterial.new();paint.shader=load('res://assets/shaders/road_paint.gdshader')
  for z in range(-44,45,6):
   if absf(z)<7:continue
   var dash=MeshInstance3D.new();var q=BoxMesh.new();q.size=Vector3(.14,.01,2.4);dash.mesh=q;dash.material_override=paint;add_child(dash);dash.position=Vector3(0,.005,z)
@@ -457,6 +481,78 @@ func rubble(center: Vector3, radius: float):
   var p=center+Vector3(randf_range(-radius,radius),size.y*.4,randf_range(-radius*.7,radius*.7))
   var m=MeshInstance3D.new();m.mesh=Ruins.fragment(size,hash(p)+i);m.material_override=Surfaces.get_material('concrete' if i%3 else 'brick');structure.add_child(m);m.position=p;m.rotation=Vector3(randf_range(-.3,.3),randf()*TAU,randf_range(-.3,.3))
  solid(center+Vector3(0,.25,0),Vector3(radius*1.4,.5,radius),'concrete',true,0,false,true)
+
+func district_sign(pos: Vector3, yaw: float, title: String, subtitle: String, width: float, color: Color):
+ var board=solid(pos,Vector3(width,.85,.10),'painted_metal',false,yaw,true,false)
+ # A quiet, matte painted panel: original district lettering, no neon/emission.
+ var mat=StandardMaterial3D.new();mat.albedo_color=color;mat.roughness=.94;board.material_override=mat
+ var basis=Basis(Vector3.UP,yaw)
+ for row in [[title,.12,130],[subtitle,-.25,32]]:
+  var text=Label3D.new();text.text=row[0];text.font_size=row[2];text.pixel_size=.004
+  text.modulate=Color('#d4cfb9');text.outline_size=0;text.no_depth_test=false
+  text.position=pos+basis*Vector3(0,row[1],.058);text.rotation.y=yaw;add_child(text)
+
+func service_cable(points: PackedVector3Array):
+ # Thin catenary-like spans, batched with structure; never obstruct visibility.
+ for i in range(points.size()-1):
+  var a=points[i];var b=points[i+1];var mesh=MeshInstance3D.new();var rod=CylinderMesh.new()
+  rod.top_radius=.012;rod.bottom_radius=.012;rod.height=(b-a).length();rod.radial_segments=5
+  mesh.mesh=rod;mesh.material_override=Surfaces.get_material('steel');structure.add_child(mesh)
+  mesh.position=(a+b)*.5;mesh.quaternion=Quaternion(Vector3.UP,(b-a).normalized())
+
+func build_district_details():
+ district_sign(Vector3(-8.82,2.8,-18.5),PI/2,'ROWAN SUPPLIES','TOOLS  /  HARDWARE  /  EST. 1984',5.8,Color('#394843'))
+ district_sign(Vector3(-8.82,2.8,18.5),PI/2,'KELN HOUSE','BLOCK 04  /  RESIDENTIAL',4.8,Color('#484844'))
+ district_sign(Vector3(22.5,5.8,11.84),PI,'VORDA METALWORKS','WORKSHOP 02  /  GOODS ENTRANCE',6.6,Color('#464b48'))
+ prop('fire_escape',Vector3(-20.0,2.55,10.76),PI,false,.65)
+ # Visible external frame and eaves give the hall a constructed silhouette.
+ for z in [13.5,17.5,25.5,30.5]:
+  solid(Vector3(11.86,4.1,z),Vector3(.12,5.5,.14),'steel',false,0,true,false)
+ for x in [13.5,17.0,24.0,28.5,31.5]:
+  solid(Vector3(x,4.1,11.86),Vector3(.14,5.5,.12),'steel',false,0,true,false)
+ solid(Vector3(11.85,7.48,22.5),Vector3(.18,.18,21.3),'steel',false,0,true,false)
+ solid(Vector3(22.5,7.48,11.85),Vector3(21.3,.18,.18),'steel',false,0,true,false)
+ # Flush, irregular asphalt repairs. Their perimeter follows the worn pavement
+ # rather than reading as another rectangular ground tile. No collision changes.
+ for patch in [[Vector3(-2,.014,-24),Vector2(1.8,3.1)],[Vector3(2.7,.014,-9),Vector2(1.5,2.2)],
+  [Vector3(-1.2,.014,19),Vector2(2.0,2.6)],[Vector3(-16,.014,0),Vector2(3.0,1.6)],
+  [Vector3(17,.014,1),Vector2(2.7,1.8)]]:
+  var mesh=ImmediateMesh.new();mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES,Surfaces.get_material('asphalt_patch'))
+  var ring=PackedVector3Array()
+  for i in range(17):
+   var angle=(i%16)*TAU/16.0;var radius=randf_range(.88,1.08) if i<16 else 1.0
+   ring.append(Vector3(cos(angle)*patch[1].x*radius,0,sin(angle)*patch[1].y*radius))
+  ring[16]=ring[0]
+  for i in range(16):
+   for p in [Vector3.ZERO,ring[i],ring[i+1]]:
+    mesh.surface_set_normal(Vector3.UP);mesh.surface_add_vertex(p)
+  mesh.surface_end();var node=MeshInstance3D.new();node.mesh=mesh;node.position=patch[0];add_child(node)
+ # Services attach to solid facade piers, away from the playable openings.
+ for block in [[-8.77,-26.0,-11.0],[-8.77,11.0,26.0]]:
+  for z in [block[1]+2.8,block[2]-2.4]:
+   for y in [4.2,7.2]:prop('aircon',Vector3(block[0],y,z),PI/2,false)
+  for y in [.65,1.65,2.65,3.65,4.65,5.65,6.65,7.65,8.65]:
+   prop('gutter_pipe',Vector3(block[0]+.06,y,block[1]+.35),0,false)
+  prop('security_light',Vector3(block[0],3.4,(block[1]+block[2])*.5),PI/2,false)
+ # Sheltered delivery alcove at the market, outside the doorway.
+ solid(Vector3(-8.3,3.3,-24.5),Vector3(1.6,.08,2.3),'corrugated',false,0,true,false)
+ for z in [-25.45,-23.55]:
+  solid(Vector3(-8.5,3.02,z),Vector3(.85,.08,.08),'steel',false,0,true,false)
+ prop('cardboard_box',Vector3(-8.1,.15,-25.0),.2,false)
+ prop('hand_truck',Vector3(-8.6,.15,-24.0),PI/2,false)
+ # Broken masonry at building edges: shallow fragments without invisible cover.
+ for edge in [Vector3(-8.5,.16,-11.8),Vector3(-8.5,.16,25.0),Vector3(12.4,.16,11.2),Vector3(32.0,.16,11.1)]:
+  for i in range(12):
+   var size=Vector3(randf_range(.08,.26),randf_range(.03,.08),randf_range(.08,.20))
+   var m=MeshInstance3D.new();m.mesh=Ruins.fragment(size,i+73);m.material_override=Surfaces.get_material('brick' if i%3 else 'concrete')
+   structure.add_child(m);m.position=edge+Vector3(randf_range(-.35,.35),.01,randf_range(-.7,.7));m.rotation.y=randf()*TAU
+ # Roof and pole cables, with a modest sag rather than straight floating lines.
+ for z in [-22.0,22.0]:
+  for offset in [0.0,.22]:
+   var span=PackedVector3Array()
+   for i in range(13):
+    var t=i/12.0;span.append(Vector3(lerpf(-8.3,8.3,t),5.8-sin(t*PI)*.65,z+offset))
+   service_cable(span)
 
 func build_west_alley():
  # Service alley behind the two west buildings: dumpster cover and a fence gate.

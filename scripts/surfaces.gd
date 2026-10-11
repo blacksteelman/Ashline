@@ -23,7 +23,7 @@ const DEFS={
  'container_blue':['corrugated',2.4,Color(.2,.33,.45),'metal',{'grime_height':.9}],
  'container_tan':['corrugated',2.4,Color(.66,.56,.4),'metal',{'grime_height':.9}],
  'container_green':['corrugated_green',2.4,Color(.75,.8,.75),'metal',{'grime_height':.9}],
- 'painted_metal':['painted_metal',1.5,Color(.75,.8,.78),'metal',{}],
+ 'painted_metal':['painted_metal',1.5,Color(.48,.51,.48),'metal',{'color_saturation':.18,'roughness_scale':1.2}],
  'hazard':['hazard',1.0,Color(1,1,1),'metal',{}],
  'steel':['metal_plates',2.0,Color(.8,.8,.8),'metal',{'grime_strength':.2}],
  'rust':['rust',1.5,Color(.9,.85,.8),'metal',{}],
@@ -31,7 +31,8 @@ const DEFS={
  'planks':['planks',1.6,Color(.85,.8,.75),'wood',{}],
  'tiles':['tiles_floor',1.2,Color(.5,.49,.45),'concrete',{'grime_strength':0.0,'roughness_scale':1.4,'variation_strength':.3}],
  'paving':['paving',2.0,Color(.88,.86,.82),'concrete',{'grime_strength':0.0}],
- 'facade_far':['facade_windows',9.0,Color(.55,.55,.54),'concrete',{'grime_strength':0.0,'variation_strength':.3}],
+ # The atlas spans six storeys. Nine metres made background windows half-size.
+ 'facade_far':['facade_windows',18.0,Color(.64,.66,.65),'concrete',{'grime_strength':0.0,'variation_strength':.12,'color_saturation':.35,'roughness_scale':1.2}],
 }
 static var cache: Dictionary={}
 static var variation: Texture2D

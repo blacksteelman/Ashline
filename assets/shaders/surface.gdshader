@@ -13,6 +13,7 @@ uniform float tile_size = 2.0;          // metres per texture repeat
 uniform float normal_strength = 1.0;
 uniform float roughness_scale = 1.0;
 uniform float metallic_scale = 1.0;
+uniform float color_saturation = 1.0;
 uniform float variation_strength = 0.18;
 uniform float grime_height = 0.7;       // metres of darkened base above floor_level
 uniform float grime_strength = 0.35;
@@ -59,6 +60,7 @@ void fragment() {
 	float grime = (1.0 - smoothstep(0.0, grime_height, above)) * grime_strength * (1.0 - w.y * 0.7);
 	grime *= 0.75 + v2 * 0.5;
 	alb = mix(alb, alb * vec3(0.46, 0.43, 0.38), grime);
+	alb = mix(vec3(dot(alb, vec3(0.2126, 0.7152, 0.0722))), alb, color_saturation);
 	ALBEDO = alb * tint.rgb;
 	AO = orm.r;
 	AO_LIGHT_AFFECT = 0.25;
