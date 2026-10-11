@@ -501,6 +501,7 @@ func service_cable(points: PackedVector3Array):
   mesh.position=(a+b)*.5;mesh.quaternion=Quaternion(Vector3.UP,(b-a).normalized())
 
 func build_district_details():
+ var rng=RandomNumberGenerator.new();rng.seed=9014
  district_sign(Vector3(-8.82,2.8,-18.5),PI/2,'ROWAN SUPPLIES','TOOLS  /  HARDWARE  /  EST. 1984',5.8,Color('#394843'))
  district_sign(Vector3(-8.82,2.8,18.5),PI/2,'KELN HOUSE','BLOCK 04  /  RESIDENTIAL',4.8,Color('#484844'))
  district_sign(Vector3(22.5,5.8,11.84),PI,'VORDA METALWORKS','WORKSHOP 02  /  GOODS ENTRANCE',6.6,Color('#464b48'))
@@ -520,7 +521,7 @@ func build_district_details():
   var mesh=ImmediateMesh.new();mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES,Surfaces.get_material('asphalt_patch'))
   var ring=PackedVector3Array()
   for i in range(17):
-   var angle=(i%16)*TAU/16.0;var radius=randf_range(.88,1.08) if i<16 else 1.0
+   var angle=(i%16)*TAU/16.0;var radius=rng.randf_range(.88,1.08) if i<16 else 1.0
    ring.append(Vector3(cos(angle)*patch[1].x*radius,0,sin(angle)*patch[1].y*radius))
   ring[16]=ring[0]
   for i in range(16):
@@ -543,9 +544,9 @@ func build_district_details():
  # Broken masonry at building edges: shallow fragments without invisible cover.
  for edge in [Vector3(-8.5,.16,-11.8),Vector3(-8.5,.16,25.0),Vector3(12.4,.16,11.2),Vector3(32.0,.16,11.1)]:
   for i in range(12):
-   var size=Vector3(randf_range(.08,.26),randf_range(.03,.08),randf_range(.08,.20))
+   var size=Vector3(rng.randf_range(.08,.26),rng.randf_range(.03,.08),rng.randf_range(.08,.20))
    var m=MeshInstance3D.new();m.mesh=Ruins.fragment(size,i+73);m.material_override=Surfaces.get_material('brick' if i%3 else 'concrete')
-   structure.add_child(m);m.position=edge+Vector3(randf_range(-.35,.35),.01,randf_range(-.7,.7));m.rotation.y=randf()*TAU
+   structure.add_child(m);m.position=edge+Vector3(rng.randf_range(-.35,.35),.01,rng.randf_range(-.7,.7));m.rotation.y=rng.randf()*TAU
  # Roof and pole cables, with a modest sag rather than straight floating lines.
  for z in [-22.0,22.0]:
   for offset in [0.0,.22]:
