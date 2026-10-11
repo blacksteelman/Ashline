@@ -1,5 +1,8 @@
 # Weapon presentation follow-up
 
+Latest continuation: see [FOUNDRY_HANDOFF.md](FOUNDRY_HANDOFF.md) for current
+map/navigation changes, newer builds, screenshots and remaining issues.
+
 Base: Claude branch `claude/multiplayer-military-fps-6avclq`, commit
 `3fbdbf8a4948e3638b87c6cb2a407e6e4e790aae`.
 Working branch: `codex/weapon-polish`. Original worktree remains untouched.

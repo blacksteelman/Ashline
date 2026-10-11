@@ -1,0 +1,147 @@
+{
+  "game_commit": "bf4eebc645d57db3da4d84d633f57ae9245c7835",
+  "base_commit": "0265af6",
+  "tests": {
+    "functional": 49,
+    "fp_motion": 23,
+    "fp_anchors": 46,
+    "audio_distance": 34,
+    "foundry_routes": 20
+  },
+  "total_assertions": 172,
+  "failures": 0,
+  "renderer": "Godot 4.6.3 Forward+ / software Vulkan llvmpipe",
+  "resolution": [
+    1280,
+    720
+  ],
+  "graphics_preset": 1,
+  "audio_driver": "Dummy",
+  "captures_are_actual_game_frames": true,
+  "comparison_capture_note": "Bots frozen for repeatable camera views; main.tscn is instantiated. Lighting captures precede the final open stair revision; final stair captures use the final game source.",
+  "screenshots": [
+    {
+      "path": "docs/verification/foundry-polish/lighting-after-0.png",
+      "sha256": "039ebfa9e2e6dd5b29e6a79bf93e87ecf9f9f96fe1575f38f366e5a6fa367916",
+      "bytes": 1356577,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/foundry-polish/lighting-after-1.png",
+      "sha256": "58dd01dcaaddd9a595acd2d031881a3217b1dcf4042df7b20f175924032e26e2",
+      "bytes": 1339221,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/foundry-polish/lighting-after-2.png",
+      "sha256": "19df45266815009400b957ee8553c604a9ae7164c97c60afbf2dd216af3ef368",
+      "bytes": 1444469,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/foundry-polish/lighting-before-0.png",
+      "sha256": "4f3038bdb90b8321125730afb84dbe52b6d994430c671f6ea71bd02f647e8faf",
+      "bytes": 1384082,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/foundry-polish/lighting-before-1.png",
+      "sha256": "ea7ab025dfff48f25c1542b1d4192d22b889a76435a26c431ac920b0361eb0f9",
+      "bytes": 1390500,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/foundry-polish/lighting-before-2.png",
+      "sha256": "4cf100bcd2f44da6462743b44250075ca96ae4d08fdd21009f00690f7dd8fa94",
+      "bytes": 1497740,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/foundry-polish/stair-after-0.png",
+      "sha256": "22df1300cffababb88c11ec02366e21033af57c822c72649d4f7efccdd15d1bf",
+      "bytes": 1480782,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/foundry-polish/stair-after-1.png",
+      "sha256": "1e16dc245732d9ea5078f14879f5c2f99f97697ab982351d9906bb0d59d1f7bd",
+      "bytes": 1622759,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/foundry-polish/stair-after-2.png",
+      "sha256": "21c83effe486f21061e871fbc6e3f9b849cbadf70e82c44c325d07b957b122bf",
+      "bytes": 1472621,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/foundry-polish/stair-before-0.png",
+      "sha256": "a9f7c84874813e77a8c4cfc1d02c615b6565b736c32dfd4c3d4336c5a29b20bd",
+      "bytes": 1518847,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/foundry-polish/stair-before-1.png",
+      "sha256": "66c8bddf746b244ece52fee09319b61dc647521e69dba06f773c72ee20b23e8c",
+      "bytes": 1629747,
+      "viewed": true
+    }
+  ],
+  "bot_reports": [
+    "bots-811.json",
+    "bots-813.json"
+  ],
+  "native_domination": "native-domination.json",
+  "limitations": [
+    "No gaming-GPU performance measurement",
+    "No audio listening test",
+    "Windows runtime untested",
+    "Map art still below COD4 target",
+    "Three isolated live-route recoveries in four final source TDM matches",
+    "Single native Domination sample ended 1:60; objective balance not established"
+  ],
+  "github_ci": {
+    "run_id": 38114938570,
+    "url": "https://github.com/blacksteelman/Ashline/actions/runs/38114938570",
+    "commit": "bf4eebc645d57db3da4d84d633f57ae9245c7835",
+    "conclusion": "success",
+    "assertions": 172,
+    "ci_native_tdm_score": [
+      40,
+      30
+    ],
+    "ci_native_tdm_shots": 475,
+    "downloads": [
+      {
+        "platform": "linux",
+        "artifact_id": 11693372388,
+        "bytes": 436601683,
+        "sha256": "38f3df350f3527f1a830fcbb6653ad4bc678e4e5bf1a0996c2f4f53fb3695350",
+        "zip_crc_verified": true
+      },
+      {
+        "platform": "windows",
+        "artifact_id": 11693357428,
+        "bytes": 445644467,
+        "sha256": "8a8b3d33c82be728cf6d70a782f620d735e7b8bc5ea642c2751b952bb4ed1161",
+        "zip_crc_verified": true
+      }
+    ],
+    "download_method": "Connected GitHub artifact tool and returned file URL",
+    "downloaded_linux_run": {
+      "exit": 0,
+      "success": true,
+      "seed": 814,
+      "score": [
+        40,
+        29
+      ],
+      "shots": 441,
+      "headshots": 14,
+      "logged_runtime_errors": false,
+      "report": "downloaded-linux-tdm.json"
+    }
+  },
+  "local_linux_export_exit": 0,
+  "local_windows_export_exit": 0
+}
