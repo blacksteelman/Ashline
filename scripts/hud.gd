@@ -59,10 +59,10 @@ func _draw():
  var mag=Arsenal.WEAPONS[p.weapon_id].mag;var left=p.ammo[p.weapon_id]
  draw_rect(Rect2(1270,794,310,88),Color(.02,.03,.035,.65))
  words(Vector2(1288,838),'%02d' % left,42,ivory if left>=mag*.25 else orange,true);words(Vector2(1370,836),'/ %03d' % p.reserves[p.weapon_id],24,muted,true)
- draw_rect(Rect2(1288,849,270,3),Color(.3,.34,.34,.6))
- draw_rect(Rect2(1288,849,270*clampf(float(left)/mag,0,1),3),ivory if left>=mag*.25 else orange)
- words(Vector2(1288,866),Arsenal.WEAPONS[p.weapon_id].name,18,muted)
- words(Vector2(1470,866),'G  '+str(p.grenades),18,ivory if p.grenades>0 else muted,true)
+ draw_rect(Rect2(1288,846,270,3),Color(.3,.34,.34,.6))
+ draw_rect(Rect2(1288,846,270*clampf(float(left)/mag,0,1),3),ivory if left>=mag*.25 else orange)
+ words(Vector2(1288,874),Arsenal.WEAPONS[p.weapon_id].name,18,muted)
+ words(Vector2(1470,874),'G  '+str(p.grenades),18,ivory if p.grenades>0 else muted,true)
  if p.reload_left>0:words(Vector2(730,580),'RELOADING',20,ivory)
  elif left<maxi(3,mag/5):words(Vector2(712,580),'[R]  RELOAD',20,orange)
  # Health, class and streak.

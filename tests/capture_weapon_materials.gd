@@ -5,8 +5,10 @@ func frames(n):
  for i in n:await process_frame
 func run():
  var tag='review'
+ var only=-1
  for a in OS.get_cmdline_user_args():
   if a.begins_with('--tag='):tag=a.substr(6)
+  if a.begins_with('--view='):only=int(a.substr(7))
  var g=load('res://main.tscn').instantiate();root.add_child(g);g.start_match(false)
  g.set_physics_process(false);g.set_process(false)
  for f in g.fighters:f.set_physics_process(false)
@@ -20,6 +22,7 @@ func run():
  var folder='res://build/material-captures'
  DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(folder))
  for i in views.size():
+  if only>=0 and only!=i:continue
   p.set_process(true);p.weapon_id=views[i][0];p.build_gun()
   p.global_position=views[i][1];p.rotation.y=0
   var d=views[i][2]-(p.global_position+Vector3(0,1.62,0))
@@ -32,7 +35,7 @@ func run():
   p.set_process(false)
   g.scores=[23,19];g.time_left=413;g.feed=[];p.streak=2
   if i==5:
-   p.ammo[0]=4;p.grenades=0;p.health=28;p.rewards=[3]
+   p.ammo[0]=4;p.grenades=0;p.health=28;p.rewards.assign([3])
    g.hit_time=.3;g.kill_time=.8;g.kill_zone='HEAD'
    g.feed=[{'killer':'SABLE','victim':'SLATE','head':true,'team':0,'time':4.0},
     {'killer':'ROOK','victim':'BRACE','head':false,'team':1,'time':4.0}]
