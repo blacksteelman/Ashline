@@ -21,6 +21,12 @@ func run():
     expect(rig.camera_in_root().is_finite(),name+' camera pose stays finite in '+action)
   if kind==2:
    expect(rig.cam_bone==-1 and rig.camera_in_root().is_equal_approx(rig.skeleton_in_root()),'Sniper uses the authored rig-origin frame without an invalid bone lookup')
+  var camera=rig.camera_in_root();camera.basis=camera.basis.orthonormalized()*rig.view_fix
+  var align=Transform3D(Basis.IDENTITY.scaled(Vector3.ONE*rig.cfg.get('scale',1.0)),Vector3.ZERO)*FPSetRig.eye_fix(rig.cfg).affine_inverse()*camera.affine_inverse()
+  var barrel=align*rig.bone_in_root(rig.weapon_bone)*rig.cfg.frame
+  var sight=FPSetRig.ads_offset(rig.cfg,barrel)*barrel
+  var rear=sight*rig.cfg.rear;var front=sight*rig.cfg.front
+  expect(Vector2(rear.x,rear.y).length()<.0001 and Vector2(front.x,front.y).length()<.0001 and absf(rear.z+rig.cfg.eye)<.0001,name+' hip framing preserves the ADS sight line')
   gun.queue_free();await process_frame
  print('FP_ANCHORS ',checks,' checks, ',failures,' failures')
  quit(0 if failures==0 else 1)

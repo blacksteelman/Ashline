@@ -32,10 +32,22 @@ six-shot automatic bursts, a two-second stall, paused time, and retained kick.
 The tests exercise FPSetRig, which is active for the new weapons. The older
 regression_v3 spring test exercises the retired WeaponView implementation.
 
-`tests/fp_anchors_regression.gd`: 41 passing assertions on all five imported
-weapon sets, camera/weapon anchors, and idle/fire/reload poses. `functional.gd`:
+`tests/fp_anchors_regression.gd`: 46 passing assertions on all five imported
+weapon sets, camera/weapon anchors, idle/fire/reload poses, and ADS alignment. `functional.gd`:
 49 passing assertions. The first functional run passed but emitted bone-index
 errors; after the camera fix the same test passed with no ERROR entries.
+
+Sniper hip framing now uses eye offset (-.04,.27,.12), rotation (3,-2,0), FOV 62.
+This removes the cut-off sleeve in the lower-left corner. ADS settings are
+unchanged; the sight-line assertions check its alignment after hip framing.
+The fp_frame capture tool now disables animation crossfading for a frozen pose
+and exits with code 2 for a missing clip instead of hanging on a null animation.
+
+Viewed three actual 1280x720 Forward+ match captures and sniper before/after,
+reload and Walk poses. Images are committed in `docs/verification/weapon-polish`.
+The sniper has no Run clip; FPSetRig uses Walk as its sprint fallback.
+Bot seed 810 completed a 6v6 TDM at 40:30, 376 shots, 17 headshots, five route
+recoveries and five early spawn deaths. This is not a map-balance certification.
 
 Runtime logs and captures for this worktree belong in `build/verification/`
 and `build/screenshots-v8/`; these directories are ignored by Git.
@@ -43,6 +55,11 @@ and `build/screenshots-v8/`; these directories are ignored by Git.
 Environment: Godot 4.6.3, software Vulkan/llvmpipe, Dummy audio. No conclusions
 about gaming-GPU FPS or listening quality can be drawn here. A cold headless
 import crashed at the font importer; the graphical editor import was used next.
+After the fonts were cached, a headless import completed successfully.
+
+Visual limitations: sleeve highlights and some road/concrete areas are overly
+bright; the environment still needs art direction and varied cover. No claim
+that COD4-quality presentation has been reached. No new audio work in this pass.
 
 Next: inspect moving weapon footage at real frame rates, especially turning
 while ADS, firing into ADS and recovering after sprint. Continue from Claude's

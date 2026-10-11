@@ -35,7 +35,11 @@ func run():
  var clip=''
  for n in rig.player.get_animation_list():
   if clipword in n and clip=='':clip=n
- rig.player.play(clip);rig.player.seek(rig.player.get_animation(clip).length*at,true);rig.player.pause()
+ if clip=='':
+  push_error('No animation matching '+clipword+' in weapon '+str(kind));quit(2);return
+ # A paused crossfade otherwise leaves the old pose in the capture indefinitely.
+ rig.player.play(clip,0.0);rig.player.seek(rig.player.get_animation(clip).length*at,true);rig.player.advance(0);rig.player.pause()
+ rig.skeleton.force_update_all_bone_transforms()
  for i in 3:await process_frame
  var s=cfg.get('scale',1.0)
  var cb=rig.camera_in_root();cb.basis=cb.basis.orthonormalized()*rig.view_fix

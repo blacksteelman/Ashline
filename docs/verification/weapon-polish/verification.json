@@ -1,0 +1,74 @@
+{
+  "base_commit": "3fbdbf8a4948e3638b87c6cb2a407e6e4e790aae",
+  "tests": {
+    "motion": {
+      "passed": 23,
+      "failed": 0
+    },
+    "anchors_and_ads": {
+      "passed": 46,
+      "failed": 0
+    },
+    "functional": {
+      "passed": 49,
+      "failed": 0
+    }
+  },
+  "renderer": "Forward+ / Vulkan / llvmpipe",
+  "resolution": [
+    1280,
+    720
+  ],
+  "audio_driver": "Dummy",
+  "screenshots": [
+    {
+      "path": "docs/verification/weapon-polish/look_motion-polish_0.png",
+      "sha256": "1a9e0a8f7b45372884d8c626334c684338a37ba25853a058626b4752bf03f4e5",
+      "bytes": 1387265,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/weapon-polish/look_motion-polish_1.png",
+      "sha256": "2507625745a1bc78f869047bc716044a3735aed6bc90761d12ec8f9971db6e52",
+      "bytes": 1396708,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/weapon-polish/look_motion-polish_2.png",
+      "sha256": "7fc7dfb64d515c20d7ef1a76f88a509108b6298a2bab4d7cf684093b2146ce25",
+      "bytes": 1502807,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/weapon-polish/sniper-final-before.png",
+      "sha256": "776f37a2f2eba0420052f1bec2b9bfac20f2fa9f41251051910b36488f28ee21",
+      "bytes": 364763,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/weapon-polish/sniper-final-idle.png",
+      "sha256": "77c333a15485b6a7c7b507d9594f0c6482a1323aa769ef700413d335173bc467",
+      "bytes": 154710,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/weapon-polish/sniper-final-reload.png",
+      "sha256": "be7e00760299fa7640f444c37f99c1483a2d48e565a8857ec250a28366576b0b",
+      "bytes": 146173,
+      "viewed": true
+    },
+    {
+      "path": "docs/verification/weapon-polish/sniper-final-walk.png",
+      "sha256": "6a5a4e8478b1f75382a68a1618f3e90f63395601ed248c6dbaa38c941471e95d",
+      "bytes": 157905,
+      "viewed": true
+    }
+  ],
+  "bot_report": "tests/bot_report_810.json",
+  "limitations": [
+    "Gaming GPU performance not measured",
+    "Windows runtime not tested",
+    "No audio listening test",
+    "COD4 visual target not reached"
+  ]
+}
