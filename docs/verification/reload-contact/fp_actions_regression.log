@@ -1,0 +1,68 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS Weapon 0 draw finishes before the first ADS transition
+PASS Weapon 0 firing clip actually advances
+PASS Weapon 0 repeated shot restarts its mechanical animation
+PASS Weapon 0 rig evaluates its own animation before framing
+PASS Weapon 0 tactical reload follows gameplay clock exactly
+PASS Weapon 0 empty reload follows gameplay clock exactly
+PASS Weapon 0 reload completion returns to locomotion
+PASS Weapon 0 tactical reload sounds play once in handling order
+PASS Weapon 0 empty reload sounds play once in handling order
+PASS Weapon 0 ADS preserves its pre-shot alignment during recoil
+ADS_RECOIL 0 angle=0.01855649799109
+PASS Weapon 0 ADS shows bounded authored recoil
+PASS Weapon 0 sprint interrupts firing recovery while preserving bolt cycle
+PASS Weapon 1 draw finishes before the first ADS transition
+PASS Weapon 1 firing clip actually advances
+PASS Weapon 1 repeated shot restarts its mechanical animation
+PASS Weapon 1 rig evaluates its own animation before framing
+PASS Weapon 1 tactical reload follows gameplay clock exactly
+PASS Weapon 1 empty reload follows gameplay clock exactly
+PASS Weapon 1 reload completion returns to locomotion
+PASS Weapon 1 tactical reload sounds play once in handling order
+PASS Weapon 1 empty reload sounds play once in handling order
+PASS Weapon 1 ADS preserves its pre-shot alignment during recoil
+ADS_RECOIL 1 angle=0.00530360266566
+PASS Weapon 1 ADS shows bounded authored recoil
+PASS Weapon 1 sprint interrupts firing recovery while preserving bolt cycle
+PASS Weapon 2 draw finishes before the first ADS transition
+PASS Weapon 2 firing clip actually advances
+PASS Weapon 2 repeated shot restarts its mechanical animation
+PASS Weapon 2 rig evaluates its own animation before framing
+PASS Weapon 2 tactical reload follows gameplay clock exactly
+PASS Weapon 2 empty reload follows gameplay clock exactly
+PASS Weapon 2 reload completion returns to locomotion
+PASS Weapon 2 tactical reload sounds play once in handling order
+PASS Weapon 2 empty reload sounds play once in handling order
+PASS Weapon 2 ADS preserves its pre-shot alignment during recoil
+ADS_RECOIL 2 angle=0.02606037259102
+PASS Weapon 2 ADS shows bounded authored recoil
+PASS Weapon 2 sprint interrupts firing recovery while preserving bolt cycle
+PASS Weapon 3 draw finishes before the first ADS transition
+PASS Weapon 3 firing clip actually advances
+PASS Weapon 3 repeated shot restarts its mechanical animation
+PASS Weapon 3 rig evaluates its own animation before framing
+PASS Weapon 3 tactical reload follows gameplay clock exactly
+PASS Weapon 3 empty reload follows gameplay clock exactly
+PASS Weapon 3 reload completion returns to locomotion
+PASS Weapon 3 tactical reload sounds play once in handling order
+PASS Weapon 3 empty reload sounds play once in handling order
+PASS Weapon 3 ADS preserves its pre-shot alignment during recoil
+ADS_RECOIL 3 angle=0.06983630359173
+PASS Weapon 3 ADS shows bounded authored recoil
+PASS Weapon 3 sprint interrupts firing recovery while preserving bolt cycle
+PASS Weapon 4 draw finishes before the first ADS transition
+PASS Weapon 4 firing clip actually advances
+PASS Weapon 4 repeated shot restarts its mechanical animation
+PASS Weapon 4 rig evaluates its own animation before framing
+PASS Weapon 4 tactical reload follows gameplay clock exactly
+PASS Weapon 4 empty reload follows gameplay clock exactly
+PASS Weapon 4 reload completion returns to locomotion
+PASS Weapon 4 tactical reload sounds play once in handling order
+PASS Weapon 4 empty reload sounds play once in handling order
+PASS Weapon 4 ADS preserves its pre-shot alignment during recoil
+ADS_RECOIL 4 angle=0.00411792239174
+PASS Weapon 4 ADS shows bounded authored recoil
+PASS Weapon 4 sprint interrupts firing recovery while preserving bolt cycle
+FP_ACTIONS 60 checks, 0 failures

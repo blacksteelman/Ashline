@@ -1,3 +1,5 @@
+Latest continuation: [RELOAD_CONTACT_HANDOFF.md](RELOAD_CONTACT_HANDOFF.md).
+
 # Weapon actions and PC packages — 2026-10-11
 
 Working tree `/workspace/ashline-polish`, branch `codex/weapon-polish`.

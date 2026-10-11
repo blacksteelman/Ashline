@@ -1,0 +1,247 @@
+{
+  "revision": "4421b5f3117328626732c63c0779a545d0ab72f6",
+  "checks": 295,
+  "packages": [
+    {
+      "platform": "Linux",
+      "bytes": 377234986,
+      "crc": true,
+      "file_hashes": true,
+      "build_info": {
+        "game": "ASHLINE",
+        "revision": "4421b5f3117328626732c63c0779a545d0ab72f6",
+        "godot": "4.6.3",
+        "platform": "Linux",
+        "created_utc": "2026-10-11T17:07:45.306908+00:00",
+        "files": {
+          "ASHLINE.x86_64": {
+            "bytes": 472398248,
+            "sha256": "6f0721cdf8b4206cfc702c828250061a83785c4f23f74202b86279e4cae102cf"
+          },
+          "LICENSES.md": {
+            "bytes": 6405,
+            "sha256": "63f8038698970bbd2980d131db35049a7b3d48630b651e9127f133b08559259f"
+          },
+          "README.md": {
+            "bytes": 21983,
+            "sha256": "115071352d664ce9a30b6497b9ca79219857006864b45044c79e6812234c004a"
+          },
+          "START_HERE_RU.txt": {
+            "bytes": 1458,
+            "sha256": "5f1bbeb9b75baeeaa52bc309ccd6a6d88a4c591088d39496a543606001d048ad"
+          }
+        }
+      }
+    },
+    {
+      "platform": "Windows",
+      "bytes": 387408317,
+      "crc": true,
+      "file_hashes": true,
+      "build_info": {
+        "game": "ASHLINE",
+        "revision": "4421b5f3117328626732c63c0779a545d0ab72f6",
+        "godot": "4.6.3",
+        "platform": "Windows",
+        "created_utc": "2026-10-11T17:08:00.900370+00:00",
+        "files": {
+          "ASHLINE.exe": {
+            "bytes": 505841048,
+            "sha256": "54fc67609e676adc510f22f6fa73b8e27399b10660a80feeb339082de61e7b2c"
+          },
+          "LICENSES.md": {
+            "bytes": 6405,
+            "sha256": "63f8038698970bbd2980d131db35049a7b3d48630b651e9127f133b08559259f"
+          },
+          "README.md": {
+            "bytes": 21983,
+            "sha256": "115071352d664ce9a30b6497b9ca79219857006864b45044c79e6812234c004a"
+          },
+          "START_HERE_RU.txt": {
+            "bytes": 1458,
+            "sha256": "5f1bbeb9b75baeeaa52bc309ccd6a6d88a4c591088d39496a543606001d048ad"
+          }
+        }
+      }
+    }
+  ],
+  "native_bot": {
+    "fighters": [
+      {
+        "deaths": 4,
+        "id": 0,
+        "kills": 6,
+        "position": [
+          2.53306579589844,
+          0.000310505740344524,
+          -0.883652746677399
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 288.594755263999
+      },
+      {
+        "deaths": 4,
+        "id": 1,
+        "kills": 6,
+        "position": [
+          3.30060648918152,
+          0.000881128013134003,
+          -2.28039360046387
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 268.593946110457
+      },
+      {
+        "deaths": 3,
+        "id": 2,
+        "kills": 5,
+        "position": [
+          -26.9999885559082,
+          0.140234395861626,
+          -28.553882598877
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 248.797796718776
+      },
+      {
+        "deaths": 3,
+        "id": 3,
+        "kills": 7,
+        "position": [
+          3.15350103378296,
+          0.000390671193599701,
+          -1.33633232116699
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 256.900528885657
+      },
+      {
+        "deaths": 4,
+        "id": 4,
+        "kills": 6,
+        "position": [
+          -14.292049407959,
+          0.180234476923943,
+          15.0010967254639
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 254.136490406701
+      },
+      {
+        "deaths": 3,
+        "id": 5,
+        "kills": 10,
+        "position": [
+          2.83063411712646,
+          0.000709660351276398,
+          -0.168996199965477
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 248.880762276938
+      },
+      {
+        "deaths": 7,
+        "id": 6,
+        "kills": 3,
+        "position": [
+          15.0738468170166,
+          0.180234402418137,
+          22.0
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 230.076866248914
+      },
+      {
+        "deaths": 8,
+        "id": 7,
+        "kills": 6,
+        "position": [
+          9.73760509490967,
+          0.14094278216362,
+          32.8968200683594
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 220.547817002283
+      },
+      {
+        "deaths": 5,
+        "id": 8,
+        "kills": 3,
+        "position": [
+          13.9192132949829,
+          0.140546888113022,
+          34.0001220703125
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 236.904404053581
+      },
+      {
+        "deaths": 7,
+        "id": 9,
+        "kills": 3,
+        "position": [
+          23.9759674072266,
+          0.180234402418137,
+          27.5759716033936
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 254.872236179421
+      },
+      {
+        "deaths": 8,
+        "id": 10,
+        "kills": 3,
+        "position": [
+          -26.9898242950439,
+          0.140234395861626,
+          37.989013671875
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 251.658780250698
+      },
+      {
+        "deaths": 5,
+        "id": 11,
+        "kills": 3,
+        "position": [
+          9.75956630706787,
+          0.140234395861626,
+          31.7024173736572
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 234.092804547399
+      }
+    ],
+    "headshots": 31,
+    "matches": 2,
+    "reason": "completed",
+    "recoveries": [
+      {
+        "actor": 2,
+        "cover": false,
+        "position": "(20.11859, 0.140943, -20.16906)",
+        "waypoint": "(20.0, -20.0)"
+      }
+    ],
+    "score": [
+      40,
+      21
+    ],
+    "seed": 803,
+    "shots": 959,
+    "simulation_seconds": 139.399999999997,
+    "success": true
+  }
+}
