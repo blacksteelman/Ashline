@@ -38,7 +38,12 @@ Actual renders inspected: ACR/pistol reload phases, ADS shots/recovery and expor
 Raw evidence: `docs/verification/weapon-actions/`. The initial all-idle `before-*` probe was invalid because its manual AnimationPlayer blend had not advanced; it is not included as proof. Corrected `baseline-*` poses are retained. Equal normalized reload poses are expected to look similar: this iteration fixes clock/contact synchronization, not imported mesh geometry.
 
 New CI run: https://github.com/blacksteelman/Ashline/actions/runs/38132781333
-At initial handoff: importing assets. Fetch final artifact IDs after successful completion and link this exact revision, not the previous ragdoll build.
+Completed successfully. Both platform artifacts include the executable, BUILD_INFO.json and Russian launch instructions.
+
+- Windows: https://github.com/blacksteelman/Ashline/actions/runs/38132781333/artifacts/11700166478
+- Linux: https://github.com/blacksteelman/Ashline/actions/runs/38132781333/artifacts/11700041746
+
+GitHub artifact sizes differ from local packages because CI imports/exports assets independently. Revision metadata identifies the same gameplay source. Download verification is recorded in `docs/verification/weapon-actions/ci-artifacts.json`.
 
 ## Next work
 

@@ -1,0 +1,73 @@
+{
+  "run_id": 38132781333,
+  "conclusion": "success",
+  "revision": "35dd113017d735a9748d130932cf956c98ae6f24",
+  "artifacts": [
+    {
+      "platform": "linux",
+      "id": 11700041746,
+      "bytes": 477556824,
+      "download_verified": true,
+      "crc_verified": true,
+      "file_hashes_verified": true,
+      "build_info": {
+        "game": "ASHLINE",
+        "revision": "35dd113017d735a9748d130932cf956c98ae6f24",
+        "godot": "4.6.3",
+        "platform": "Linux",
+        "created_utc": "2026-10-11T10:49:41.463515+00:00",
+        "files": {
+          "ASHLINE.x86_64": {
+            "bytes": 528887072,
+            "sha256": "a5c169b6c71687421ad920075f18c405fc274af2cad9091db5c8b237cb0462cf"
+          },
+          "LICENSES.md": {
+            "bytes": 6405,
+            "sha256": "63f8038698970bbd2980d131db35049a7b3d48630b651e9127f133b08559259f"
+          },
+          "README.md": {
+            "bytes": 21983,
+            "sha256": "115071352d664ce9a30b6497b9ca79219857006864b45044c79e6812234c004a"
+          },
+          "START_HERE_RU.txt": {
+            "bytes": 1458,
+            "sha256": "5f1bbeb9b75baeeaa52bc309ccd6a6d88a4c591088d39496a543606001d048ad"
+          }
+        }
+      }
+    },
+    {
+      "platform": "windows",
+      "id": 11700166478,
+      "bytes": 486598335,
+      "download_verified": true,
+      "crc_verified": true,
+      "file_hashes_verified": true,
+      "build_info": {
+        "game": "ASHLINE",
+        "revision": "35dd113017d735a9748d130932cf956c98ae6f24",
+        "godot": "4.6.3",
+        "platform": "Windows",
+        "created_utc": "2026-10-11T10:49:41.878268+00:00",
+        "files": {
+          "ASHLINE.exe": {
+            "bytes": 562329872,
+            "sha256": "53c7d591efe6c4f1599b4f468df824f717b557a9818a56e89558be9a8c54957d"
+          },
+          "LICENSES.md": {
+            "bytes": 6405,
+            "sha256": "63f8038698970bbd2980d131db35049a7b3d48630b651e9127f133b08559259f"
+          },
+          "README.md": {
+            "bytes": 21983,
+            "sha256": "115071352d664ce9a30b6497b9ca79219857006864b45044c79e6812234c004a"
+          },
+          "START_HERE_RU.txt": {
+            "bytes": 1458,
+            "sha256": "5f1bbeb9b75baeeaa52bc309ccd6a6d88a4c591088d39496a543606001d048ad"
+          }
+        }
+      }
+    }
+  ]
+}
