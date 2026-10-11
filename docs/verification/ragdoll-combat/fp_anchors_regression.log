@@ -1,0 +1,49 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS ACR 6.8 declares a valid camera anchor
+PASS ACR 6.8 has its weapon joint
+PASS ACR 6.8 provides idle
+PASS ACR 6.8 camera pose stays finite in idle
+PASS ACR 6.8 provides fire
+PASS ACR 6.8 camera pose stays finite in fire
+PASS ACR 6.8 provides reload
+PASS ACR 6.8 camera pose stays finite in reload
+PASS ACR 6.8 hip framing preserves the ADS sight line
+PASS AK-74M declares a valid camera anchor
+PASS AK-74M has its weapon joint
+PASS AK-74M provides idle
+PASS AK-74M camera pose stays finite in idle
+PASS AK-74M provides fire
+PASS AK-74M camera pose stays finite in fire
+PASS AK-74M provides reload
+PASS AK-74M camera pose stays finite in reload
+PASS AK-74M hip framing preserves the ADS sight line
+PASS BOLT-ACTION .308 declares a valid camera anchor
+PASS BOLT-ACTION .308 has its weapon joint
+PASS BOLT-ACTION .308 provides idle
+PASS BOLT-ACTION .308 camera pose stays finite in idle
+PASS BOLT-ACTION .308 provides fire
+PASS BOLT-ACTION .308 camera pose stays finite in fire
+PASS BOLT-ACTION .308 provides reload
+PASS BOLT-ACTION .308 camera pose stays finite in reload
+PASS Sniper uses the authored rig-origin frame without an invalid bone lookup
+PASS BOLT-ACTION .308 hip framing preserves the ADS sight line
+PASS SPRINGFIELD XD declares a valid camera anchor
+PASS SPRINGFIELD XD has its weapon joint
+PASS SPRINGFIELD XD provides idle
+PASS SPRINGFIELD XD camera pose stays finite in idle
+PASS SPRINGFIELD XD provides fire
+PASS SPRINGFIELD XD camera pose stays finite in fire
+PASS SPRINGFIELD XD provides reload
+PASS SPRINGFIELD XD camera pose stays finite in reload
+PASS SPRINGFIELD XD hip framing preserves the ADS sight line
+PASS MPA 30 SST declares a valid camera anchor
+PASS MPA 30 SST has its weapon joint
+PASS MPA 30 SST provides idle
+PASS MPA 30 SST camera pose stays finite in idle
+PASS MPA 30 SST provides fire
+PASS MPA 30 SST camera pose stays finite in fire
+PASS MPA 30 SST provides reload
+PASS MPA 30 SST camera pose stays finite in reload
+PASS MPA 30 SST hip framing preserves the ADS sight line
+FP_ANCHORS 46 checks, 0 failures

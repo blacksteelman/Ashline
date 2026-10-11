@@ -1,0 +1,42 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+NAV_READY points=7534 ms=1308
+PASS Original indoor routing
+PASS No added spatial indoor bus
+PASS Original weapon compressor
+PASS Original room reverb
+PASS acr original local recording
+PASS acr local bus and gain
+PASS acr original pitch range
+PASS acr original distant recording
+PASS acr spatial routing
+PASS acr original attenuation
+PASS ak original local recording
+PASS ak local bus and gain
+PASS ak original pitch range
+PASS ak original distant recording
+PASS ak spatial routing
+PASS ak original attenuation
+PASS sniper original local recording
+PASS sniper local bus and gain
+PASS sniper original pitch range
+PASS sniper original distant recording
+PASS sniper spatial routing
+PASS sniper original attenuation
+PASS pistol original local recording
+PASS pistol local bus and gain
+PASS pistol original pitch range
+PASS pistol original distant recording
+PASS pistol spatial routing
+PASS pistol original attenuation
+PASS smg original local recording
+PASS smg local bus and gain
+PASS smg original pitch range
+PASS smg original distant recording
+PASS smg spatial routing
+PASS smg original attenuation
+PASS Original indoor playback routing local=true
+PASS Original indoor playback routing local=false
+PASS Burst keeps three local tails
+PASS Oldest burst tail fades and frees
+AUDIO_DISTANCE 38 checks, 0 failures
