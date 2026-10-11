@@ -48,7 +48,7 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p build/verification
-          for suite in functional fp_motion_regression fp_anchors_regression audio_distance_regression character_motion_regression foundry_routes_regression ragdoll_regression; do
+          for suite in functional fp_motion_regression fp_anchors_regression fp_actions_regression audio_distance_regression character_motion_regression foundry_routes_regression ragdoll_regression; do
             ~/godot/godot --headless --audio-driver Dummy --path . --script tests/${suite}.gd 2>&1 | tee build/verification/${suite}.log
             if grep -E '^(SCRIPT ERROR|ERROR):' build/verification/${suite}.log; then
               exit 1
@@ -60,7 +60,7 @@ jobs:
           mkdir -p build/linux build/windows
           ~/godot/godot --headless --path . --export-release "Linux PC" build/linux/ASHLINE.x86_64
           ~/godot/godot --headless --path . --export-release "Windows PC" build/windows/ASHLINE.exe
-          cp README.md LICENSES.md build/linux/; cp README.md LICENSES.md build/windows/
+          python3 tools/package_builds.py --linux-dir build/linux --windows-dir build/windows --revision "$GITHUB_SHA" --no-archives
           ls -la build/linux build/windows
 
       - name: Smoke test (Linux build runs a bot match headless)

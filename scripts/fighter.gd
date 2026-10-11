@@ -381,6 +381,8 @@ func local_fire_feedback(w: Dictionary, direction: Vector3):
  var previous_pitch=pitch
  pitch=clampf(pitch+rise,-1.45,1.45);yaw+=lateral
  recoil_return+=Vector2((pitch-previous_pitch)*.65,lateral);shot_age=0
+ # Resolve the newly restarted pose before locating flash/ejection sockets.
+ if view is FPSetRig:view.update(self,0)
  game.muzzle(muzzle_world(),direction,weapon_id,view is FPSetRig)
  game.shell(ejector_world(),camera.global_basis.x)
 func react_to_hit(attacker: Fighter, zone: String):

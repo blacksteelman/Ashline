@@ -29,6 +29,8 @@ var breath=0.0
 var reload_stage=-1
 var muzzle_local=Vector3.ZERO
 var view_fix=Basis.IDENTITY
+var ads_reference=Transform3D.IDENTITY
+var ads_reference_valid=false
 
 const WORDS={'idle':['Idle'],'walk':['Walk'],'sprint':['Run'],'draw':['Draw'],'fire':['Shot_nosight','Shoot','Shot','Fire','OneShot'],
  'fire_ads':['Shot_sight'],'reload':['Reload_Fast','Reload_fast','Reload_easy','AK_Reload','SRifle_Reload','Reload'],'reload_empty':['Reload_full','Reload_Full'],'inspect':['inspect','Ispect']}
@@ -100,9 +102,10 @@ func bind(node: Node3D, kind: int=-1):
   if clips.has(loop):player.get_animation(clips[loop]).loop_mode=Animation.LOOP_LINEAR
  view_fix=axes_basis(cfg.get('fwd','+z'),cfg.get('up','+y'))
  muzzle_local=cfg.get('muzzle',Vector3.ZERO)
+ player.callback_mode_process=AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
  player.playback_default_blend_time=.18
  set_base('idle')
- if clips.has('draw'):play_action('draw',-1)
+ if clips.has('draw'):play_action('draw',cfg.get('equip_duration',.28))
 
 # Columns of the camera bone that look forward / up, as a basis whose -Z is forward.
 static func axes_basis(fwd: String, up: String) -> Basis:
@@ -157,7 +160,9 @@ func play_action(clip: String, duration: float):
  action=clip;action_time=0.0;reload_stage=-1
  var native=player.get_animation(clips[clip]).length
  action_length=native if duration<=0 else duration
- player.play(clips[clip],.06,native/action_length)
+ player.play(clips[clip],0.0 if clip in ['fire','fire_ads'] else .06,native/action_length)
+ # AnimationPlayer.play() resumes the same clip; every shot needs a fresh cycle.
+ player.seek(0,true)
 
 func stop_action():
  action=''
@@ -228,13 +233,14 @@ func update(owner: Fighter, dt: float):
  spring_step(dt)
  var w=Arsenal.WEAPONS[owner.weapon_id]
  var reload_duration=owner.reload_time(owner.weapon_id)
+ var reload_position=-1.0
  if owner.reload_left>0:
   var clip='reload_empty' if owner.ammo[owner.weapon_id]==0 and clips.has('reload_empty') else 'reload'
   if action!=clip:play_action(clip,reload_duration)
   action_time=reload_duration-owner.reload_left
   var native=player.get_animation(clips[clip]).length
   var expected=clampf(action_time/maxf(.01,reload_duration),0,1)*native
-  if absf(player.current_animation_position-expected)>.08:player.seek(expected,true)
+  reload_position=expected
  elif action in ['reload','reload_empty']:stop_action()
  elif action!='':action_time+=dt
  if action!='' and action_time>=action_length:stop_action()
@@ -242,13 +248,19 @@ func update(owner: Fighter, dt: float):
  # Loops by movement.
  var speed=Vector2(owner.velocity.x,owner.velocity.z).length()
  var aim=owner.ads and not owner.sprinting and owner.reload_left<=0 and action in ['','fire','fire_ads']
- if owner.sprinting and speed>1:set_base('sprint')
+ if owner.sprinting and speed>1:
+  set_base('sprint')
+  if action in ['fire','fire_ads'] and not w.get('bolt',false):stop_action()
  elif speed>.8 and owner.is_on_floor() and not aim:set_base('walk')
  else:set_base('idle')
  if action=='' and clips.has(base):player.speed_scale=clampf(speed/4.5,.7,1.3) if base!='idle' else 1.0
  elif action!='':player.speed_scale=1.0
  aim_blend=move_toward(aim_blend,1.0 if aim else 0.0,dt*(6.0 if aim else 8.0))
  var a=smoothstep(0,1,aim_blend)
+ # Evaluate the pose before querying camera/sight/muzzle bones.
+ # Reload uses the authoritative timer; other actions advance once per display update.
+ player.advance(dt)
+ if reload_position>=0:player.seek(reload_position,true)
  # Authored camera -> our camera.
  var s=cfg.get('scale',1.0)
  var cam=camera_in_root();cam.basis=cam.basis.orthonormalized()*view_fix
@@ -256,7 +268,17 @@ func update(owner: Fighter, dt: float):
  # ADS: sight line (weapon-bone frame) onto the view axis.
  var ads=Transform3D.IDENTITY
  if a>0 and weapon_bone>=0 and cfg.has('rear'):
-  ads=ads_offset(cfg,align*bone_in_root(weapon_bone)*cfg.frame)
+  var measured=ads_offset(cfg,align*bone_in_root(weapon_bone)*cfg.frame)
+  if action not in ['fire','fire_ads'] or not ads_reference_valid:
+   ads_reference=measured;ads_reference_valid=true
+  # Re-solving sights against the firing pose cancels authored weapon recoil.
+  ads=measured
+  if action in ['fire','fire_ads']:
+   var barrel=align*bone_in_root(weapon_bone)*cfg.frame
+   var recoiling=ads_reference*barrel
+   var deviation=(recoiling*cfg.front-recoiling*cfg.rear).normalized().angle_to(Vector3.FORWARD)
+   var limit=deg_to_rad(cfg.get('ads_recoil_limit',4.0))
+   ads=measured.interpolate_with(ads_reference,minf(1,limit/maxf(.00001,deviation)))
  # Procedural feel.
  var target_inertia=owner.sway*(1.0-a*.7)
  inertia_step(target_inertia,dt)
@@ -273,8 +295,17 @@ func update(owner: Fighter, dt: float):
  gun.transform=Transform3D.IDENTITY.interpolate_with(ads,a)*procedural*align
  ViewmodelMaterial.update_projection(lerpf(cfg.get('fov',50.0),cfg.get('fov_ads',40.0),a),owner.camera.fov)
 
+# Normalized extraction/seating times measured from the actual magazine-bone tracks.
+# Keep the original recordings and routing; only align playback to each weapon's motion.
+const RELOAD_CUES={
+ 'fp_acr':{'reload':[.27,.58,0.0]},
+ 'fp_ak74m':{'reload':[.44,.72,0.0],'reload_empty':[.34,.55,.78]},
+ 'fp_sniper':{'reload':[.25,.68,0.0],'reload_empty':[.36,.65,.78]},
+ 'fp_pistol':{'reload':[.24,.81,0.0],'reload_empty':[.19,.65,.78]},
+ 'fp_smg':{'reload':[.19,.68,0.0],'reload_empty':[.17,.61,.78]}
+}
 func sounds(owner: Fighter):
- var marks={'reload':[.2,.62,.0],'reload_empty':[.15,.5,.78]}
+ var marks=RELOAD_CUES.get(cfg.get('set',''),{'reload':[.2,.62,0.0],'reload_empty':[.15,.5,.78]})
  if not marks.has(action):return
  var p=action_time/maxf(.01,action_length)
  var keys=['mag_out','mag_in','bolt']
