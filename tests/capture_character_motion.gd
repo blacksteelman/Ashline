@@ -7,9 +7,11 @@ func run():
  var tag='before'
  var noik=false
  var weapon=-1
+ var service=false
  for a in OS.get_cmdline_user_args():
   if a.begins_with('--tag='):tag=a.substr(6)
   if a=='--noik':noik=true
+  if a=='--service':service=true
   if a.begins_with('--weapon='):weapon=int(a.substr(9))
  var g=load('res://main.tscn').instantiate();root.add_child(g);g.start_match(false)
  g.set_process(false);g.set_physics_process(false);g.hud.visible=false
@@ -23,10 +25,10 @@ func run():
  g.menu_camera.global_position=a.global_position+Vector3(2.1,1.45,-3.2)
  g.menu_camera.look_at(a.global_position+Vector3(0,1.0,0))
  DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path('res://build/character-review'))
- for pose in ['idle','sprint','reload','aim']:
+ for pose in (['extract','carry','insert','seated'] if service else ['idle','sprint','reload','aim']):
   a.velocity=Vector3(0,0,-7.8) if pose=='sprint' else Vector3.ZERO
   a.sprinting=pose=='sprint';a.pitch=.45 if pose=='aim' else 0.0
-  a.reload_left=a.reload_time(a.weapon_id)*.55 if pose=='reload' else 0.0
+  a.reload_left=a.reload_time(a.weapon_id)*(1.0-{'extract':.21,'carry':.30,'insert':.55,'seated':.80}.get(pose,.45)) if pose=='reload' or service else 0.0
   motion.reset()
   for i in 35:
    motion.update(1.0/60);motion.tree.set('parameters/Air/blend_amount',0.0);motion.tree.advance(1.0/60)

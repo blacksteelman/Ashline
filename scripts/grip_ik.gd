@@ -14,6 +14,13 @@ var grip=AUTHORED_GRIP
 var support=AUTHORED_SUPPORT
 var weapon_bone=-1
 var arms={}
+var magazine: MeshInstance3D
+var reload_progress=-1.0
+var magazine_contact=Vector3.ZERO
+
+static func service_contact_weight(t: float) -> float:
+ if t<0:return 0.0
+ return smoothstep(0,.125,t)*(1.0-smoothstep(.21,.375,t))+smoothstep(.475,.65,t)*(1.0-smoothstep(.725,.89,t))
 
 static func attach(holder: Node3D, socket_node: Node3D, weapon: Node3D) -> GripIK:
  var sk: Skeleton3D=holder.find_child('Skeleton3D',true,false)
@@ -21,6 +28,12 @@ static func attach(holder: Node3D, socket_node: Node3D, weapon: Node3D) -> GripI
  var ik: GripIK=sk.get_node_or_null('GripIK')
  if not ik:ik=GripIK.new();ik.name='GripIK';sk.add_child(ik)
  ik.socket=socket_node;ik.weapon_bone=sk.find_bone('Weapon')
+ ik.magazine=weapon.find_child('MagazineRig',true,false) as MeshInstance3D if weapon else null
+ ik.reload_progress=-1.0
+ if ik.magazine:
+  var bounds=ik.magazine.get_aabb()
+  # Wrist beside the actual magazine, with fingers wrapped around its middle.
+  ik.magazine_contact=bounds.get_center()+Vector3(-.05,-.025,0)
  ik.grip=weapon.get_meta('grip',AUTHORED_GRIP) if weapon else AUTHORED_GRIP
  ik.support=weapon.get_meta('support',AUTHORED_SUPPORT) if weapon else AUTHORED_SUPPORT
  # The first-person hands reach further forward than this stance allows (ACR handguard ~0.40 m): cap it.
@@ -44,7 +57,18 @@ func _process_modification():
   var target: Vector3
   if side=='R':target=intended.lerp(grip,1.0-smoothstep(.06,.16,intended.distance_to(AUTHORED_GRIP)))
   else:target=intended.lerp(support,1.0-smoothstep(.06,.16,intended.distance_to(AUTHORED_SUPPORT)))
+  if side=='L' and is_instance_valid(magazine) and reload_progress>=0:
+   target=target.lerp(magazine_contact,service_contact_weight(reload_progress))
   solve(sk,b,to_socket*target)
+ if is_instance_valid(magazine):
+  var t=reload_progress
+  magazine.visible=not (t>=.375 and t<.475)
+  magazine.position=Vector3.ZERO
+  if t>=.21 and t<.65 and arms.has('L'):
+   # Evaluate after the arm solve: the carried magazine follows the actual wrist,
+   # including the animation's weapon tilt and the chest aim modifier.
+   var hand=sk.get_bone_global_pose(arms.L[2]).origin
+   magazine.position=to_socket.affine_inverse()*hand-magazine_contact
 
 func solve(sk: Skeleton3D, b: Array, target: Vector3):
  var upper=sk.get_bone_global_pose(b[0]);var fore=sk.get_bone_global_pose(b[1]);var hand=sk.get_bone_global_pose(b[2])

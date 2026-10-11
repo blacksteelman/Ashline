@@ -80,7 +80,7 @@ func reset():
  if ragdoll:ragdoll.stop()
  if is_instance_valid(actor.world_gun):actor.world_gun.visible=true
  grip=actor.model.find_child('GripIK',true,false)
- if grip:grip.active=true
+ if grip:grip.active=true;grip.reload_progress=-1.0
  death_age=0;was_dead=false;previous_position=actor.global_position;rendered_velocity=Vector3.ZERO
  sprint_blend=0;reload_blend=0;crouch_blend=0;air_blend=0;air_age=0
  if tree:tree.set('parameters/Down/blend_amount',0.0)
@@ -132,11 +132,6 @@ func update(dt: float):
   if not was_dead:death_age=0
   death_age+=dt;tree.set('parameters/DeathClock/seek_request',minf(.999,death_age))
  tree.set('parameters/Down/blend_amount',1.0 if actor.dead else 0.0);was_dead=actor.dead
- if actor.world_gun:
-  var magazine=actor.world_gun.find_child('MagazineRig',true,false)
-  if magazine:
-   var t=clampf(1-actor.reload_left/(actor.reload_time(actor.weapon_id)),0,1)
-   # Match the authored hand: extract, stow, fetch, insert (2-second source clip).
-   var extraction=smoothstep(.21,.375,t)*(1.0-smoothstep(.65,.725,t)) if actor.reload_left>0 else 0.0
-   magazine.position=Vector3(0,-.16,.09)*extraction
-   magazine.visible=not (actor.reload_left>0 and t>=.375 and t<.475)
+ grip=actor.model.find_child('GripIK',true,false)
+ if grip:
+  grip.reload_progress=clampf(1-actor.reload_left/actor.reload_time(actor.weapon_id),0,1) if actor.reload_left>0 else -1.0
