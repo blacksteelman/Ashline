@@ -76,5 +76,26 @@ Export templates locally require XDG_DATA_HOME=/workspace/ashline/.runtime/data.
 5. Measure on a real GPU and listen to native audio when that environment is available.
 
 The final local Linux executable was also rendered and viewed (native-linux.png).
-Native render exited zero with no errors. CI build/evidence details will be appended
-after its final verification.
+Native render exited zero with no errors. CI also succeeded; details below.
+
+## Final CI builds
+
+Successful run: https://github.com/blacksteelman/Ashline/actions/runs/38116227337
+Game commit f00868f36e466775522cb31cb27520a1700c1136. All 172 assertions passed;
+CI native TDM seed 801 ended 40:30, 475 shots, 22 headshots, zero recoveries.
+Both ZIPs were downloaded through the GitHub connector and full CRC-checked:
+
+- Windows: https://github.com/blacksteelman/Ashline/actions/runs/38116227337/artifacts/11693720685
+- Linux: https://github.com/blacksteelman/Ashline/actions/runs/38116227337/artifacts/11693895376
+
+GitHub links require access to the private repository. Local downloaded archives
+are build/ci-district/{windows,linux}.zip; Linux extracted in build/ci-district/linux.
+Windows was not executed here. The downloaded Linux binary completed an additional
+TDM (seed 823) without runtime errors. Archive sizes/hashes and bot report are in
+verification.json and downloaded-linux-tdm.json. Regression/CI logs are retained
+in the evidence directory (force-added because *.log is generally ignored).
+
+The connector provides signed File Service download URLs; they are temporary,
+not Sediment IDs. Do not print or commit those URLs. Direct gh run download has
+previously failed with an Azure redirect 403 in this environment; use the connector
+as needed. The archive checks do not prove downloading works on the user's device.

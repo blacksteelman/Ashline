@@ -1,0 +1,26 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS Recoil response at 15 FPS
+PASS Angular recoil at 15 FPS
+PASS Mouse inertia at 15 FPS
+PASS Recoil response at 30 FPS
+PASS Angular recoil at 30 FPS
+PASS Mouse inertia at 30 FPS
+PASS Recoil response at 60 FPS
+PASS Angular recoil at 60 FPS
+PASS Mouse inertia at 60 FPS
+PASS Recoil response at 144 FPS
+PASS Angular recoil at 144 FPS
+PASS Mouse inertia at 144 FPS
+PASS Recoil response at 240 FPS
+PASS Angular recoil at 240 FPS
+PASS Mouse inertia at 240 FPS
+PASS Six-shot burst at 15 FPS
+PASS Six-shot burst at 30 FPS
+PASS Six-shot burst at 60 FPS
+PASS Six-shot burst at 144 FPS
+PASS Recoil settles through a two-second hitch
+PASS Hands settle through a two-second hitch
+PASS Paused frame does not move the weapon
+PASS Visible recoil impulse retained near its peak
+FP_MOTION 23 checks, 0 failures

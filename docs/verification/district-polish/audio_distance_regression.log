@@ -1,0 +1,38 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS Indoor local fire keeps weapon compression
+PASS Indoor enemy fire remains on the spatial world channel
+PASS Weapon bus retains its compressor
+PASS Gunshot transition preserves layer power at 0m
+PASS Gunshot transition preserves layer power at 10m
+PASS Gunshot transition preserves layer power at 20m
+PASS Gunshot transition preserves layer power at 30m
+PASS Gunshot transition preserves layer power at 40m
+PASS Gunshot transition preserves layer power at 50m
+PASS Gunshot transition preserves layer power at 100m
+PASS Close enemy shot uses the close recording
+PASS Distant enemy shot uses the far recording
+PASS Close shot layer fades monotonically without an abrupt distance switch
+PASS acr close positional recording is mono 48kHz
+PASS acr far positional recording remains mono
+PASS acr creates the actual positional playback voice
+PASS ak close positional recording is mono 48kHz
+PASS ak far positional recording remains mono
+PASS ak creates the actual positional playback voice
+PASS sniper close positional recording is mono 48kHz
+PASS sniper far positional recording remains mono
+PASS sniper creates the actual positional playback voice
+PASS pistol close positional recording is mono 48kHz
+PASS pistol far positional recording remains mono
+PASS pistol creates the actual positional playback voice
+PASS smg close positional recording is mono 48kHz
+PASS smg far positional recording remains mono
+PASS smg creates the actual positional playback voice
+PASS Actual listener distance selects both recordings in the transition
+PASS Both layers share the same shot pitch
+NAV_READY points=7562 ms=1022
+PASS Roof ray routes local fire through indoor weapon effects
+PASS Roof ray routes enemy fire through indoor spatial effects
+PASS Open street restores the local weapon bus
+PASS Open street restores the spatial world bus
+AUDIO_DISTANCE 34 checks, 0 failures

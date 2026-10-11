@@ -25,5 +25,36 @@
     "native-linux.png": "f2b2d83e9b0c608b80bbd5afb5d4e58d38cc95903941d0550049c0d072aabedb"
   },
   "native_render_exit": 0,
-  "native_render_errors": 0
+  "native_render_errors": 0,
+  "local_native_files": {
+    "ASHLINE.x86_64": {
+      "bytes": 444744032,
+      "sha256": "db0f5770355ccda75df058ab10d6e92a4cacfd8ba1fda65919cfb22e6120364a"
+    },
+    "windows/ASHLINE.exe": {
+      "bytes": 478186896,
+      "sha256": "823b89672bc57b2031b7ae4728b8a2fc69d337af001a6dfbe10548b3f2ace1ea"
+    }
+  },
+  "ci": {
+    "run_id": 38116227337,
+    "conclusion": "success",
+    "game_commit": "f00868f36e466775522cb31cb27520a1700c1136",
+    "assertions": 172,
+    "artifacts": {
+      "linux": {
+        "id": 11693895376,
+        "bytes": 450048600,
+        "sha256": "a7dec243ae8bdbc7da7337d68100b20e52f9064a41d14e74d86e7cf7c64d2ca7",
+        "zip_crc": "passed"
+      },
+      "windows": {
+        "id": 11693720685,
+        "bytes": 459090373,
+        "sha256": "74fdad3ae5a89c0bed435356f1633c49ed676ca00e48df0b79cbaee90e54cb68",
+        "zip_crc": "passed"
+      }
+    },
+    "downloaded_linux_tdm_errors": 0
+  }
 }

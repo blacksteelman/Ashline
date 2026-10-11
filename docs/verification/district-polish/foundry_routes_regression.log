@@ -1,0 +1,44 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+NAV_READY points=7553 ms=927
+ROUTE 0 [(14.0, 19.0), (13.0, 20.0), (12.0, 20.0), (11.0, 20.0), (10.0, 19.0)]
+PASS Foundry passage 0 traversed by actual Fighter
+PASS Foundry passage 0 needs no stuck recovery
+END 0 pos=(10.26472, 0.140995, 19.3285) recoveries=0
+ROUTE 1 [(10.0, 19.0), (11.0, 20.0), (12.0, 20.0), (13.0, 20.0), (14.0, 19.0)]
+PASS Foundry passage 1 traversed by actual Fighter
+PASS Foundry passage 1 needs no stuck recovery
+END 1 pos=(13.73523, 0.180625, 19.32852) recoveries=0
+ROUTE 2 [(18.0, 21.0), (17.0, 22.0), (16.0, 22.0), (15.0, 22.0), (15.0, 21.0)]
+PASS Foundry passage 2 traversed by actual Fighter
+PASS Foundry passage 2 needs no stuck recovery
+END 2 pos=(14.50302, 0.180937, 21.16433) recoveries=0
+ROUTE 3 [(15.0, 21.0), (15.0, 22.0), (16.0, 22.0), (17.0, 22.0), (18.0, 21.0)]
+PASS Foundry passage 3 traversed by actual Fighter
+PASS Foundry passage 3 needs no stuck recovery
+END 3 pos=(17.8018, 0.180937, 21.465) recoveries=0
+ROUTE 4 [(31.0, 13.0), (31.0, 14.0), (31.0, 15.0), (31.0, 17.0), (31.0, 18.0), (31.0, 20.0), (31.0, 21.0), (31.0, 22.0), (31.0, 23.0), (31.0, 24.0), (31.0, 25.0), (31.0, 26.0)]
+PASS Foundry passage 4 traversed by actual Fighter
+PASS Foundry passage 4 needs no stuck recovery
+END 4 pos=(31.0, 3.2, 25.51745) recoveries=0
+ROUTE 5 [(31.0, 26.0), (31.0, 25.0), (31.0, 24.0), (31.0, 23.0), (31.0, 22.0), (31.0, 21.0), (31.0, 20.0), (31.0, 18.0), (31.0, 17.0), (31.0, 15.0), (31.0, 14.0), (31.0, 13.0)]
+PASS Foundry passage 5 traversed by actual Fighter
+PASS Foundry passage 5 needs no stuck recovery
+END 5 pos=(31.0, 0.354376, 13.47738) recoveries=0
+ROUTE 6 [(30.0, 13.0), (31.0, 13.0), (31.0, 14.0), (31.0, 15.0), (31.0, 17.0), (31.0, 18.0), (31.0, 20.0), (31.0, 21.0), (31.0, 22.0), (31.0, 23.0), (31.0, 24.0), (31.0, 25.0), (31.0, 26.0)]
+PASS Foundry passage 6 traversed by actual Fighter
+PASS Foundry passage 6 needs no stuck recovery
+END 6 pos=(31.0, 3.2, 25.5735) recoveries=0
+ROUTE 7 [(30.0, 14.0), (30.0, 13.0), (31.0, 13.0), (31.0, 14.0), (31.0, 15.0), (31.0, 17.0), (31.0, 18.0), (31.0, 20.0), (31.0, 21.0), (31.0, 22.0), (31.0, 23.0), (31.0, 24.0), (31.0, 25.0), (31.0, 26.0)]
+PASS Foundry passage 7 traversed by actual Fighter
+PASS Foundry passage 7 needs no stuck recovery
+END 7 pos=(31.0, 3.200001, 25.54028) recoveries=0
+ROUTE 8 [(29.0, 18.0), (30.0, 18.0), (31.0, 18.0), (32.0, 18.0)]
+PASS Foundry passage 8 traversed by actual Fighter
+PASS Foundry passage 8 needs no stuck recovery
+END 8 pos=(31.50749, 0.18, 18.0) recoveries=0
+ROUTE 9 [(32.0, 18.0), (31.0, 18.0), (30.0, 18.0), (29.0, 18.0)]
+PASS Foundry passage 9 traversed by actual Fighter
+PASS Foundry passage 9 needs no stuck recovery
+END 9 pos=(29.49251, 0.18, 18.0) recoveries=0
+FOUNDRY_ROUTES 20 checks, 0 failures
