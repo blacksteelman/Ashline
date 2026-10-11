@@ -66,10 +66,19 @@ Dummy audio. Windows is exported but not executed. No listening test or gaming
 GPU performance claim. Source screenshots are actual game renders, not release
 executable captures; the separate native showcase checks the exported renderer.
 
-CI for 490d61b: https://github.com/blacksteelman/Ashline/actions/runs/38122152195
-Check its final status before calling the remote build successful or linking a
-Windows artifact as ready. The earlier run 38122032721 is an intermediate HUD.
-GitHub artifact links require access to this private repository.
+CI for 490d61b succeeded: https://github.com/blacksteelman/Ashline/actions/runs/38122152195
+All 188 checks passed; its native Linux TDM seed 801 ended 35:41, 547 shots,
+16 headshots, zero recoveries/errors. CI logs and report are in the evidence folder.
+Windows: https://github.com/blacksteelman/Ashline/actions/runs/38122152195/artifacts/11696265359
+Linux: https://github.com/blacksteelman/Ashline/actions/runs/38122152195/artifacts/11696320269
+Windows archive was downloaded and fully CRC-checked, containing ASHLINE.exe,
+README.md and LICENSES.md: 486654536 bytes; SHA-256
+2cb58789a84a09b511802b2d16cc511b91e3fdd519c289e83dfa09a9a301daa3.
+Local download: build/ci-viewmodel-hud/windows.zip. Linux CI ZIP was not downloaded;
+the local Linux export was rendered and ran TDM, and CI ran its Linux executable.
+Windows was not executed here. Downloads here do not prove the user's device can
+download; GitHub links require access to the private repository. The earlier run
+38122032721 is an intermediate HUD, so prefer the artifact links above.
 
 ## Next priorities
 

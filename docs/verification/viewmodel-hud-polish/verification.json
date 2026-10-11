@@ -30,5 +30,24 @@
       "bytes": 505906240,
       "sha256": "7b90a63123af61ff0bf90c3e057248d3f06d2f05314276693e547eb9d6a130ed"
     }
+  },
+  "ci": {
+    "run_id": 38122152195,
+    "conclusion": "success",
+    "game_commit": "490d61bf5fb415101165d2b8ada4dedabd20ba95",
+    "assertions": 188,
+    "windows_artifact_id": 11696265359,
+    "linux_artifact_id": 11696320269,
+    "linux_archive_downloaded": false,
+    "windows_archive": {
+      "bytes": 486654536,
+      "sha256": "2cb58789a84a09b511802b2d16cc511b91e3fdd519c289e83dfa09a9a301daa3",
+      "full_crc_verified": true,
+      "files": [
+        "ASHLINE.exe",
+        "LICENSES.md",
+        "README.md"
+      ]
+    }
   }
 }
