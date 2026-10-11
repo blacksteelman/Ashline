@@ -50,7 +50,8 @@ Sketchfab models (CC BY 4.0, https://creativecommons.org/licenses/by/4.0/), down
   - FPS pistol animations — Springfield Armory XD Mod.2 by raimeiyonke
   - Modified: the arms texture is repainted per team (sleeve camo, glove colour) by tools/paint_fp_arms.py
     -> assets/viewmodels/arms_{aegis,ember}_albedo.jpg (derivative of the FP Arms texture, same licence).
-  Textures re-encoded (tools/prepare_fp_sets.py); third-person weapons are baked from these sets at runtime.
+  Textures re-encoded (tools/prepare_fp_sets.py); third-person weapons are baked offline from these sets.
+  Modified third-person copies omit the parked spare AK/SMG reload magazines; the ACR magazine is separated for runtime reload movement.
 - Soldiers by jeandiz (https://sketchfab.com/jeandiz), built from clothing shared by ErhanMatur, Bzovius, SrGeneroso,
   shedmon, Albin and Mayess: "S.W.A.T. Operator" (Aegis; uniform recoloured to OCP, gear to coyote, carried rifle
   removed) and "FSB Operator" (Ember; carried rifle removed). Re-animated in tools/build_soldiers.py.

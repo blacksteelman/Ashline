@@ -72,10 +72,13 @@ var life_age=0.0
 var bot_target: Fighter
 var path=PackedVector2Array()
 var path_index=0
+var route_destination=Vector3.ZERO
+var repath_attempted=false
 var bot_reaction=0.0
 var move_wish=Vector2.ZERO
 var last_position=Vector3.ZERO
 var stuck_time=0.0
+var progress_window=0.0
 var last_shot=0.0
 var cover_point=Vector3.ZERO
 var cover_time=0.0
@@ -385,7 +388,7 @@ func hurt(amount: float, attacker: Fighter, zone: String):
 func spawn():
  if death_motion:death_motion.kill()
  dead=false;pending_fire=false;pending_remote_shots.clear();pending_predictions.clear();reload_requested=false;health=max_health;collision_layer=2;damage_age=0;velocity=Vector3.ZERO;model.rotation=Vector3.ZERO;model.position=Vector3.ZERO;model.visible=not local_player
- global_position=game.safe_spawn(team);yaw=PI if global_position.z<0 else 0;pitch=0;life_age=0;stuck_time=0;cover_time=0;bot_pause=0;bot_burst=0;load_class(queued_class if queued_class>=0 else class_id);queued_class=-1;path.clear();bot_target=null;bot_think=0
+ global_position=game.safe_spawn(team);yaw=PI if global_position.z<0 else 0;pitch=0;life_age=0;stuck_time=0;progress_window=0;repath_attempted=false;cover_time=0;bot_pause=0;bot_burst=0;load_class(queued_class if queued_class>=0 else class_id);queued_class=-1;path.clear();bot_target=null;bot_think=0
  if body_motion:body_motion.reset()
  if local_player:gun.visible=true;recoil_return=Vector2.ZERO;recoil_sequence=0;shot_age=1;sprint_blend=0;view.aim_blend=0
 func throw_grenade():
@@ -397,6 +400,7 @@ func activate_streak():
  if dead or rewards.is_empty():return
  var reward=rewards.pop_front();game.use_streak(self,reward)
 func set_route(destination: Vector3):
+ route_destination=destination;repath_attempted=false
  path=game.arena.route(global_position,destination);path_index=0
 func follow_route(dt: float, face_path: bool=true):
  move_wish=Vector2.ZERO
@@ -461,9 +465,21 @@ func think_bot(dt: float):
  else:
   ads=false;crouched=false;sprinting=cover_time<=0
   follow_route(dt)
- if global_position.distance_to(last_position)<dt*.25 and move_wish.length()>.7 and (not is_instance_valid(bot_target) or cover_time>0):stuck_time+=dt
- else:stuck_time=0
- last_position=global_position
+ # Step-up attempts bob and rebound at a stair side. Measure net horizontal
+ # progress over a quarter second, rather than counting every rebound as travel.
+ if move_wish.length()>.7 and (not is_instance_valid(bot_target) or cover_time>0):
+  if progress_window==0:last_position=global_position
+  progress_window+=dt
+  if progress_window>=.25:
+   var progress=Vector2(global_position.x-last_position.x,global_position.z-last_position.z).length()
+   if progress<progress_window*.25:stuck_time+=progress_window
+   else:stuck_time=0;repath_attempted=false
+   progress_window=0
+ else:stuck_time=0;progress_window=0;repath_attempted=false
+ # Combat strafing and ally separation can push us off a cleared stair approach.
+ # Rejoin the same destination from the actual position before abandoning it.
+ if stuck_time>.30 and not repath_attempted and path_index<path.size():
+  set_route(route_destination);repath_attempted=true
  if stuck_time>1.1:
   if game.bot_test and game.test_recoveries.size()<80:game.test_recoveries.append({'actor':id,'position':str(position),'waypoint':str(path[path_index]) if path_index<path.size() else 'none','cover':cover_time>0})
   recoveries+=1;cover_time=0;bot_target=null;bot_think=0;stuck_time=0

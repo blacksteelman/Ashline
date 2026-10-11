@@ -33,7 +33,7 @@ func run():
   [Vector3(-21,3.15,14.1),Vector3(-18,3.15,14.1)],
   [Vector3(-18,3.15,14.1),Vector3(-21,3.15,14.1)]]
  for i in cases.size():
-  p.global_position=cases[i][0];p.velocity=Vector3.ZERO;p.stuck_time=0;p.recoveries=0;p.bot_target=null;p.bot_think=10000;p.cover_time=0;p.bot_pause=0;p.dead=false;p.health=100;p.respawn_time=10000;p.bot=true;p.local_player=false
+  p.global_position=cases[i][0];p.velocity=Vector3.ZERO;p.stuck_time=0;p.progress_window=0;p.recoveries=0;p.bot_target=null;p.bot_think=10000;p.cover_time=0;p.bot_pause=0;p.dead=false;p.health=100;p.respawn_time=10000;p.bot=true;p.local_player=false
   p.set_route(cases[i][1])
   print('ROUTE ',i,' ',p.path)
   var reached=false
@@ -44,6 +44,20 @@ func run():
   expect(reached,'Map passage '+str(i)+' traversed by actual Fighter')
   expect(p.recoveries==0,'Map passage '+str(i)+' needs no stuck recovery')
   print('END ',i,' pos=',p.position,' recoveries=',p.recoveries)
+ # Displacement after planning: reproduce combat/separation pushing a bot
+ # below the stair side while its old next waypoint remains on the tread.
+ p.global_position=Vector3(31,.18,13);p.velocity=Vector3.ZERO;p.stuck_time=0;p.progress_window=0;p.recoveries=0;p.bot_target=null;p.bot_think=10000;p.cover_time=0;p.bot_pause=0
+ p.set_route(Vector3(31,3.2,26))
+ var found=false
+ for index in p.path.size():
+  if p.path[index]==Vector2(31,14):p.path_index=index;found=true;break
+ expect(found,'Displacement scenario starts with the original stair waypoint')
+ p.global_position=Vector3(30.449,.18,13.995)
+ var rejoined=false
+ for tick in 360:
+  await physics_frame
+  if p.position.distance_to(Vector3(31,3.2,26))<.55:rejoined=true;break
+ expect(rejoined and p.recoveries==0,'Displaced bot replans to the same upper-floor destination without random recovery')
  p.set_physics_process(false)
  print('FOUNDRY_ROUTES ',checks,' checks, ',failures,' failures')
  quit(0 if failures==0 else 1)
