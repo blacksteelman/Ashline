@@ -403,7 +403,8 @@ func follow_route(dt: float, face_path: bool=true):
  while path_index<path.size():
   var point=Vector3(path[path_index].x,global_position.y,path[path_index].y)
   var direction=point-global_position
-  if direction.length()<.48:path_index+=1;continue
+  # Tight arrival radius keeps the capsule on the cleared route at door jambs.
+  if direction.length()<.18:path_index+=1;continue
   if face_path:yaw=lerp_angle(yaw,atan2(-direction.x,-direction.z),dt*12);pitch=0
   var local_direction=direction.normalized().rotated(Vector3.UP,-yaw)
   move_wish=Vector2(local_direction.x,local_direction.z)

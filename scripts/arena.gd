@@ -12,6 +12,10 @@ var patrol: Array[Vector3]=[]
 var navigation=AStar3D.new()
 var nav_columns: Dictionary={}
 var nav_ready=false
+# Match the standing fighter hull, with 2 cm of lateral clearance.
+const NAV_RADIUS=.32
+const NAV_HEIGHT=1.8
+const NAV_FLOOR_CLEARANCE=.06 # Capsule clearance above sloped floors.
 var kit: Dictionary={}
 var facade_meshes: Dictionary={}
 var facade_open: Dictionary={}
@@ -345,7 +349,9 @@ func build_foundry_hall():
  solid(Vector3(x1-2.75,cy+1.0,25.5),Vector3(.06,.06,13.0),'hazard',false,0,true,false)
  for z in [19.4,22.5,25.5,28.5,31.6]:solid(Vector3(x1-2.75,cy+.5,z),Vector3(.05,1.0,.05),'hazard',false,0,true,false)
  clip(Vector3(x1-2.8,cy+.6,25.5),Vector3(.1,1.2,13.0))
- stairs(Vector3(x1-1.5,.17,12.4),Vector3(0,0,1),6.6,cy-.17,1.5,'walkway')
+ # Leave a full ground-level entry cell before the ramp. Its former start at
+ # z=12.4 put the only grid node above the ramp's inaccessible vertical side.
+ stairs(Vector3(x1-1.5,.17,13.2),Vector3(0,0,1),5.8,cy-.17,1.5,'walkway')
  # Overhead crane on the portal frames.
  prop('crane',Vector3((x0+x1)/2,h-.75,22.0),0,false,1.0)
  # Floor: machinery islands that create cover lines across the hall.
@@ -527,7 +533,7 @@ func build_navigation():
  # Sample walkable surfaces from physics so stairs, catwalks and upper floors
  # are navigable exactly where players can stand.
  var space=get_world_3d().direct_space_state
- var capsule=CapsuleShape3D.new();capsule.radius=.28;capsule.height=1.6
+ var capsule=CapsuleShape3D.new();capsule.radius=NAV_RADIUS;capsule.height=NAV_HEIGHT
  var query=PhysicsShapeQueryParameters3D.new();query.shape=capsule;query.collision_mask=1|CLIP_LAYER
  var id=0;var started=Time.get_ticks_msec()
  for x in range(int(BOUNDS.position.x)+1,int(BOUNDS.end.x)):
@@ -538,7 +544,7 @@ func build_navigation():
     var hit=space.intersect_ray(ray)
     if hit.is_empty():break
     if hit.normal.y>.65:
-     query.transform=Transform3D(Basis.IDENTITY,hit.position+Vector3.UP*.9)
+     query.transform=Transform3D(Basis.IDENTITY,hit.position+Vector3.UP*(NAV_HEIGHT*.5+NAV_FLOOR_CLEARANCE))
      if space.intersect_shape(query,1).is_empty():
       navigation.add_point(id,hit.position);levels.append([id,hit.position.y]);id+=1
     top=hit.position.y-.08
@@ -554,17 +560,28 @@ func build_navigation():
     if skip and column_has(key+d/2,a.y):continue
     for e2 in nav_columns[other]:
      var b=navigation.get_point_position(e2[0])
-     if absf(a.y-b.y)>(.6 if skip else .46):continue
+     # Scale rise allowance with link length so authored ramps stay connected;
+     # individual vertical steps are checked separately below.
+     var horizontal=Vector2(a.x,a.z).distance_to(Vector2(b.x,b.z))
+     if absf(a.y-b.y)>horizontal*.7:continue
      if d.x!=0 and d.y!=0 and not (column_has(key+Vector2i(d.x,0),a.y) and column_has(key+Vector2i(0,d.y),a.y)):continue
      # Walk the floor profile: no step between samples may exceed what a player can climb.
      if not floor_profile_ok(space,a,b):continue
-     var knee=PhysicsRayQueryParameters3D.create(a+Vector3.UP*.45,b+Vector3.UP*.45,1|CLIP_LAYER)
-     if not space.intersect_ray(knee).is_empty():continue
-     var chest=PhysicsRayQueryParameters3D.create(a+Vector3.UP*1.3,b+Vector3.UP*1.3,1|CLIP_LAYER)
-     if not space.intersect_ray(chest).is_empty():continue
+     if not edge_clearance_ok(space,a,b,query):continue
      navigation.connect_points(entry[0],e2[0])
  nav_ready=true
  print('NAV_READY points=',navigation.get_point_count(),' ms=',Time.get_ticks_msec()-started)
+
+func edge_clearance_ok(space: PhysicsDirectSpaceState3D, a: Vector3, b: Vector3, query: PhysicsShapeQueryParameters3D) -> bool:
+ # Sweep the whole hull, not its centreline: tangent doorway links and corners
+ # are otherwise accepted even though a moving fighter clips the jamb.
+ # Raise to the higher floor to allow steps already checked by floor_profile_ok.
+ var origin=Vector3(a.x,maxf(a.y,b.y)+NAV_HEIGHT*.5+NAV_FLOOR_CLEARANCE,a.z)
+ query.transform=Transform3D(Basis.IDENTITY,origin)
+ query.motion=Vector3(b.x-a.x,0,b.z-a.z)
+ if not space.intersect_shape(query,1).is_empty():return false
+ var fractions=space.cast_motion(query)
+ return fractions[0]>=.9999
 
 func floor_profile_ok(space: PhysicsDirectSpaceState3D, a: Vector3, b: Vector3) -> bool:
  var previous=a.y;var top=maxf(a.y,b.y)+.55;var bottom=minf(a.y,b.y)-.6
@@ -572,9 +589,9 @@ func floor_profile_ok(space: PhysicsDirectSpaceState3D, a: Vector3, b: Vector3) 
   var p=a.lerp(b,i/5.0)
   var hit=space.intersect_ray(PhysicsRayQueryParameters3D.create(Vector3(p.x,top,p.z),Vector3(p.x,bottom,p.z),1))
   if hit.is_empty():return false
-  if absf(hit.position.y-previous)>.3:return false
+  if absf(hit.position.y-previous)>.24:return false
   previous=hit.position.y
- return absf(previous-b.y)<.3
+ return absf(previous-b.y)<.24
 
 func column_has(c: Vector2i, y: float) -> bool:
  if not nav_columns.has(c):return false
@@ -586,7 +603,27 @@ func route(from: Vector3, to: Vector3) -> PackedVector2Array:
  var result=PackedVector2Array()
  if not nav_ready or navigation.get_point_count()==0:return result
  var start=navigation.get_closest_point(from+Vector3.UP*.1);var end=navigation.get_closest_point(to+Vector3.UP*.1)
- for point in navigation.get_point_path(start,end):result.append(Vector2(point.x,point.z))
+ var points=navigation.get_point_path(start,end)
+ var space=get_world_3d().direct_space_state
+ var hull=CapsuleShape3D.new();hull.radius=.30;hull.height=NAV_HEIGHT
+ var query=PhysicsShapeQueryParameters3D.new();query.shape=hull;query.collision_mask=1|CLIP_LAYER
+ var entry=navigation.get_point_position(start)
+ if points.is_empty() or not (floor_profile_ok(space,from,entry) and edge_clearance_ok(space,from,entry,query)):
+  # Combat/separation can push a bot beside a ramp. Project onto a nearby point
+  # it can actually approach, not directly onto the ramp's vertical side.
+  var candidates=[];var cell=Vector2i(roundi(from.x),roundi(from.z))
+  for x in range(-2,3):
+   for z in range(-2,3):
+    for e in nav_columns.get(cell+Vector2i(x,z),[]):
+     var p=navigation.get_point_position(e[0])
+     candidates.append({'id':e[0],'point':p,'distance':p.distance_squared_to(from)})
+  candidates.sort_custom(func(a,b):return a.distance<b.distance)
+  for candidate in candidates:
+   if not floor_profile_ok(space,from,candidate.point) or not edge_clearance_ok(space,from,candidate.point,query):continue
+   var alternative=navigation.get_point_path(candidate.id,end)
+   if alternative.is_empty():continue
+   points=alternative;break
+ for point in points:result.append(Vector2(point.x,point.z))
  return result
 
 func random_patrol() -> Vector3:return patrol.pick_random()

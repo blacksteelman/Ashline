@@ -1,7 +1,7 @@
 class_name Atmosphere
 extends RefCounted
 # Physically based outdoor lighting: CC0 Poly Haven HDRI sky, sun aligned to the
-# HDRI's sun, filmic AgX response and per-preset screen-space / global illumination.
+# HDRI's sun, filmic ACES response and per-preset screen-space / global illumination.
 const SKY_PATH='res://assets/sky/kloofendal_38d_partly_cloudy_puresky.hdr'
 # Sun position measured in the HDRI: elevation 38 deg, equirect azimuth 216 deg.
 const SUN_ELEVATION=38.0
@@ -17,9 +17,9 @@ static func build(game: Node3D) -> Environment:
  e.ambient_light_source=Environment.AMBIENT_SOURCE_SKY;e.ambient_light_sky_contribution=1.0;e.ambient_light_energy=.8
  e.reflected_light_source=Environment.REFLECTION_SOURCE_SKY
  # ACES: the punchier, higher-contrast filmic curve of 2007-2011 shooters (AgX read flat and milky).
- e.tonemap_mode=Environment.TONE_MAPPER_ACES;e.tonemap_exposure=1.12;e.tonemap_white=6.0
+ e.tonemap_mode=Environment.TONE_MAPPER_ACES;e.tonemap_exposure=.95;e.tonemap_white=6.0
  # Slightly desaturated, cool shadows and warm highlights: the 2007-2011 military grade.
- e.adjustment_enabled=true;e.adjustment_brightness=1.0;e.adjustment_contrast=1.12;e.adjustment_saturation=1.02
+ e.adjustment_enabled=true;e.adjustment_brightness=1.0;e.adjustment_contrast=1.06;e.adjustment_saturation=.94
  e.glow_enabled=true;e.glow_intensity=.55;e.glow_strength=.9;e.glow_bloom=.04;e.glow_hdr_threshold=1.6;e.glow_blend_mode=Environment.GLOW_BLEND_MODE_SOFTLIGHT
  e.set_glow_level(0,0.0);e.set_glow_level(1,1.0);e.set_glow_level(2,.6);e.set_glow_level(3,.35);e.set_glow_level(4,.15)
  # Distance haze ties the skyline into the sky colour.
@@ -32,7 +32,7 @@ static func build(game: Node3D) -> Environment:
  e.volumetric_fog_density=.0018;e.volumetric_fog_albedo=Color('#d9dcd6');e.volumetric_fog_anisotropy=.55;e.volumetric_fog_length=48;e.volumetric_fog_detail_spread=2.0;e.volumetric_fog_gi_inject=.4;e.volumetric_fog_sky_affect=.0;e.volumetric_fog_ambient_inject=.15
  var sun=DirectionalLight3D.new();sun.name='Sun';game.add_child(sun)
  sun.rotation_degrees=Vector3(-SUN_ELEVATION,SUN_AZIMUTH,0)
- sun.light_color=Color('#ffe6c4');sun.light_energy=2.7;sun.light_angular_distance=.6
+ sun.light_color=Color('#ffe6c4');sun.light_energy=2.2;sun.light_angular_distance=.6
  sun.shadow_enabled=true;sun.shadow_bias=.03;sun.shadow_normal_bias=.9;sun.shadow_blur=1.2
  sun.directional_shadow_mode=DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS;sun.directional_shadow_max_distance=110
  sun.directional_shadow_split_1=.06;sun.directional_shadow_split_2=.18;sun.directional_shadow_split_3=.45;sun.directional_shadow_blend_splits=true
@@ -67,4 +67,4 @@ static func apply(game: Node3D, e: Environment, preset: int):
   sun.directional_shadow_max_distance=[70,100,120,150][preset]
   sun.directional_shadow_mode=DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS if preset==0 else DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
  # Without GI, a little more sky ambient keeps interiors readable.
- e.ambient_light_energy=.75 if e.sdfgi_enabled else 1.0
+ e.ambient_light_energy=.70 if e.sdfgi_enabled else .85
