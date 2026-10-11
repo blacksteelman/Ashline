@@ -16,6 +16,8 @@ var air_blend=0.0
 var air_age=0.0
 var sprint_blend=0.0
 var graphical=false
+var ragdoll: CharacterRagdoll
+var grip: GripIK
 var ref_walk=1.7
 var ref_sprint=2.46
 var ref_crouch=.95
@@ -53,6 +55,7 @@ func bind(fighter: Fighter) -> bool:
  blend(graph,'Down','Service','DeathClock');graph.connect_node('output',0,'Down')
  anchor=BoneAttachment3D.new();anchor.name='WeaponAnchor';anchor.bone_name='Chest';skeleton.add_child(anchor)
  var aim=load('res://scripts/character_aim.gd').new();aim.actor=actor;skeleton.add_child(aim)
+ ragdoll=CharacterRagdoll.new();ragdoll.active=false;skeleton.add_child(ragdoll)
  previous_position=actor.global_position;graphical=DisplayServer.get_name()!='headless';tree.active=graphical
  return true
 static func reload_bone(sk: Skeleton3D, name: String) -> bool:
@@ -74,6 +77,10 @@ func attach_weapon(gun: Node3D):
  gun.reparent(anchor,false)
  gun.transform=rest.affine_inverse()*Transform3D(Basis.IDENTITY.scaled(Vector3.ONE*.8),Vector3(.13,1.17,-.37))
 func reset():
+ if ragdoll:ragdoll.stop()
+ if is_instance_valid(actor.world_gun):actor.world_gun.visible=true
+ grip=actor.model.find_child('GripIK',true,false)
+ if grip:grip.active=true
  death_age=0;was_dead=false;previous_position=actor.global_position;rendered_velocity=Vector3.ZERO
  sprint_blend=0;reload_blend=0;crouch_blend=0;air_blend=0;air_age=0
  if tree:tree.set('parameters/Down/blend_amount',0.0)
@@ -82,7 +89,16 @@ func update(dt: float):
  # Dedicated servers and automated headless clients need no pose evaluation.
  # The hidden local body is animated again when shown during death.
  if not graphical:return
- tree.active=not actor.local_player or actor.dead
+ if actor.dead:
+  if not ragdoll.running:
+   tree.active=true;tree.advance(0)
+   grip=actor.model.find_child('GripIK',true,false)
+   if grip:grip.active=false
+   tree.active=false
+   ragdoll.start(actor.game,actor.velocity,actor.last_hit_direction,actor.last_hit_zone)
+   ragdoll.drop_weapon(actor.world_gun,actor.velocity,actor.last_hit_direction)
+  return
+ tree.active=not actor.local_player
  if not tree.active:return
  var remote=not actor.game.authority() and not actor.local_player
  var displacement=actor.global_position-previous_position;previous_position=actor.global_position

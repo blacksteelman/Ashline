@@ -55,6 +55,10 @@ func _draw():
  if game.kill_time>0:words(Vector2(712,512),'+100  '+('HEADSHOT' if game.kill_zone=='HEAD' else 'KILL'),22,orange if game.kill_zone=='HEAD' else ivory,true)
  if game.damage_flash>0:
   var red=Color(.6,.06,.025,game.damage_flash*.42);draw_rect(Rect2(0,0,1600,40),red);draw_rect(Rect2(0,860,1600,40),red);draw_rect(Rect2(0,0,40,900),red);draw_rect(Rect2(1560,0,40,900),red)
+ if game.damage_direction_time>0 and not p.dead:
+  var incoming=game.damage_origin-p.global_position
+  var bearing=atan2(incoming.x,-incoming.z)+p.yaw-PI*.5
+  draw_arc(c,76,bearing-.32,bearing+.32,16,Color(.85,.16,.08,minf(1,game.damage_direction_time*2)),4,true)
  # Compact ammo block: numerical counts and a thin capacity bar.
  var mag=Arsenal.WEAPONS[p.weapon_id].mag;var left=p.ammo[p.weapon_id]
  draw_rect(Rect2(1270,794,310,88),Color(.02,.03,.035,.65))

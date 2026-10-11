@@ -1,10 +1,8 @@
 class_name GripIK
 extends SkeletonModifier3D
-# Puts a soldier's hands on this world weapon. The clips (tools/build_soldiers.py) hold one generic rifle:
-# wrists at GRIP / SUPPORT. Each gun's pistol grip and handguard sit elsewhere (measured on the first-person
-# sets, world_<set>.cfg), so the wrists move by (this gun's point - the authored point); the left one only
-# near the handguard, so magazine changes keep their path. Two-bone solve per arm keeps the clip's elbow
-# plane and the hand's animated rotation.
+# Locks wrists to each weapon's grip/support near the authored holding pose.
+# Blend the lock away during magazine handling so the reload clip keeps its path.
+# Two-bone solves preserve the animated elbow plane and hand rotation.
 
 # Authored wrist points in socket space (build_soldiers.py GRIP / SUPPORT: weapon (x,y,z) -> socket (x,z,-y)).
 const AUTHORED_GRIP=Vector3(0.04,-0.07,0.04)
@@ -44,8 +42,8 @@ func _process_modification():
   var intended=to_socket.affine_inverse()*wrist
   if measure:print('GRIPIK ',side,' intended ',intended)
   var target: Vector3
-  if side=='R':target=intended+(grip-AUTHORED_GRIP)
-  else:target=intended+(support-AUTHORED_SUPPORT)*(1.0-smoothstep(.06,.16,intended.distance_to(AUTHORED_SUPPORT)))
+  if side=='R':target=intended.lerp(grip,1.0-smoothstep(.06,.16,intended.distance_to(AUTHORED_GRIP)))
+  else:target=intended.lerp(support,1.0-smoothstep(.06,.16,intended.distance_to(AUTHORED_SUPPORT)))
   solve(sk,b,to_socket*target)
 
 func solve(sk: Skeleton3D, b: Array, target: Vector3):

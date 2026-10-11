@@ -80,6 +80,9 @@ var last_position=Vector3.ZERO
 var stuck_time=0.0
 var progress_window=0.0
 var last_shot=0.0
+var hit_reaction=0.0
+var last_hit_direction=Vector3.FORWARD
+var last_hit_zone='TORSO'
 var cover_point=Vector3.ZERO
 var cover_time=0.0
 var col: CollisionShape3D
@@ -189,8 +192,6 @@ func _physics_process(dt):
  if not game.authority() and not local_player:return
  cooldown=maxf(-dt,cooldown-dt);shot_age+=dt;last_shot=maxf(0,last_shot-dt);damage_age+=dt;life_age+=dt
  if dead:
-  if local_player:
-   camera.position.y=lerpf(camera.position.y,.85,dt*3);camera.rotation.x=lerpf(camera.rotation.x,-.18,dt*2)
   respawn_time-=dt
   if respawn_time<=0 and game.authority():spawn()
   return
@@ -290,16 +291,20 @@ func can_stand() -> bool:
  var query=PhysicsShapeQueryParameters3D.new();query.shape=standing_clearance;query.transform=Transform3D(Basis.IDENTITY,global_position+Vector3.UP*1.49);query.collision_mask=1;query.exclude=[get_rid()]
  return get_world_3d().direct_space_state.intersect_shape(query,1).is_empty()
 func _process(dt: float):
+ hit_reaction=maxf(0,hit_reaction-dt)
  if not game.authority() and not local_player and network_pose_ready:interpolate_network(game.view_clock())
  if body_motion and game.state=='match':
   body_motion.update(dt)
   if not dead:model.rotation.z=lerpf(model.rotation.z,0,1-exp(-dt*9))
  if not game.authority() and not local_player:last_shot=maxf(0,last_shot-dt)
- if not local_player or not camera or game.state!='match' or dead:return
+ if not local_player or not camera or game.state!='match':return
+ if dead:
+  update_death_camera(dt);return
  # Presentation follows the display rate; authoritative motion and weapon timers stay at 60 Hz.
  var blend=1-exp(-dt*14)
  camera.rotation=Vector3(pitch,yaw-rotation.y,0)
  step_visual=move_toward(step_visual,0,dt*1.6)
+ camera.position.x=lerpf(camera.position.x,0,blend);camera.position.z=lerpf(camera.position.z,0,blend)
  camera.position.y=lerpf(camera.position.y,(1.03 if crouched else 1.62)-step_visual,blend)
  var aiming=ads and not sprinting and reload_left<=0
  camera.fov=lerpf(camera.fov,game.settings.fov*(Arsenal.WEAPONS[weapon_id].get('zoom',.72) if aiming else 1.0),1-exp(-dt*20))
@@ -308,6 +313,18 @@ func _process(dt: float):
  view.update(self,dt)
  # The viewmodel draws over everything (near depth), so only through our own camera.
  gun.visible=camera.current and not (Arsenal.scoped(weapon_id) and aiming and view.aim_blend>.98)
+func update_death_camera(dt: float):
+ if not body_motion or not body_motion.ragdoll.running:return
+ var rag=body_motion.ragdoll;var chest=body_motion.skeleton.find_bone('Chest')
+ if not rag.bodies.has(chest):return
+ var focus=rag.bodies[chest].global_position
+ var desired=focus+Vector3.UP*1.15-aim_dir()*2.2
+ var query=PhysicsRayQueryParameters3D.create(focus+Vector3.UP*.2,desired,1|8)
+ var obstruction=get_world_3d().direct_space_state.intersect_ray(query)
+ if not obstruction.is_empty():desired=obstruction.position+obstruction.normal*.15
+ camera.global_position=camera.global_position.lerp(desired,1-exp(-dt*8))
+ if camera.global_position.distance_to(focus)>.1:camera.look_at(focus)
+ camera.fov=lerpf(camera.fov,game.settings.fov,1-exp(-dt*12))
 func recover_recoil(dt: float):
  if shot_age<.14:return
  var correction=recoil_return*(1-exp(-dt*8))
@@ -335,7 +352,7 @@ func shoot():
  dir=(dir+Vector3(randf_range(-spread,spread),randf_range(-spread,spread),randf_range(-spread,spread))).normalized()
  var origin=eye();var hit=game.trace(origin,origin+dir*140,self)
  if local_player:local_fire_feedback(w,dir)
- else:game.sound(w.sound,origin,false,-3);game.muzzle(eye()+dir*.55,dir,weapon_id)
+ else:game.sound(w.sound,origin,false,-3);game.muzzle(world_muzzle(eye()+dir*.55),dir,weapon_id)
  if not hit.is_empty():
   var target=hit.collider
   if target is Fighter:
@@ -366,12 +383,17 @@ func local_fire_feedback(w: Dictionary, direction: Vector3):
  recoil_return+=Vector2((pitch-previous_pitch)*.65,lateral);shot_age=0
  game.muzzle(muzzle_world(),direction,weapon_id,view is FPSetRig)
  game.shell(ejector_world(),camera.global_basis.x)
+func react_to_hit(attacker: Fighter, zone: String):
+ last_hit_direction=(global_position-attacker.global_position).normalized() if attacker and attacker!=self else Vector3.FORWARD
+ last_hit_zone=zone;hit_reaction=.22
+ if local_player and attacker and attacker!=self:
+  game.damage_origin=attacker.eye();game.damage_direction_time=.8
 func hurt(amount: float, attacker: Fighter, zone: String):
  if dead or not game.authority() or game.state!='match':return
  if local_player and game.showcase:return
+ react_to_hit(attacker,zone)
  health-=amount;damage_age=0
  if local_player:game.damage_flash=.5
- model.rotation.z=randf_range(-.06,.06)
  if game.net_mode=='host':game.damage_event.rpc(id,attacker.id,eye(),zone)
  if health<=0:
   dead=true;health=0;deaths+=1;streak=0;rewards.clear();respawn_time=2.3;model.visible=true;collision_layer=0
@@ -387,10 +409,13 @@ func hurt(amount: float, attacker: Fighter, zone: String):
   if attacker.perk('scavenger'):attacker.reserves=Arsenal.full_reserves()
 func spawn():
  if death_motion:death_motion.kill()
- dead=false;pending_fire=false;pending_remote_shots.clear();pending_predictions.clear();reload_requested=false;health=max_health;collision_layer=2;damage_age=0;velocity=Vector3.ZERO;model.rotation=Vector3.ZERO;model.position=Vector3.ZERO;model.visible=not local_player
+ dead=false;hit_reaction=0;pending_fire=false;pending_remote_shots.clear();pending_predictions.clear();reload_requested=false;health=max_health;collision_layer=2;damage_age=0;velocity=Vector3.ZERO;model.rotation=Vector3.ZERO;model.position=Vector3.ZERO;model.visible=not local_player
  global_position=game.safe_spawn(team);yaw=PI if global_position.z<0 else 0;pitch=0;life_age=0;stuck_time=0;progress_window=0;repath_attempted=false;cover_time=0;bot_pause=0;bot_burst=0;load_class(queued_class if queued_class>=0 else class_id);queued_class=-1;path.clear();bot_target=null;bot_think=0
  if body_motion:body_motion.reset()
- if local_player:gun.visible=true;recoil_return=Vector2.ZERO;recoil_sequence=0;shot_age=1;sprint_blend=0;view.aim_blend=0
+ if local_player:
+  camera.position=Vector3(0,1.62,0);camera.rotation=Vector3(0,yaw-rotation.y,0)
+  game.damage_direction_time=0;game.damage_flash=0
+  gun.visible=true;recoil_return=Vector2.ZERO;recoil_sequence=0;shot_age=1;sprint_blend=0;view.aim_blend=0
 func throw_grenade():
  if not game.authority():game.send_action('grenade');return
  if dead or grenades<=0:return

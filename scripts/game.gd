@@ -18,6 +18,8 @@ var head_time=0.0
 var kill_zone='TORSO'
 var kill_time=0.0
 var damage_flash=0.0
+var damage_origin=Vector3.ZERO
+var damage_direction_time=0.0
 var radar_time=[0.0,0.0]
 var fx: Array=[]
 var grenades: Array=[]
@@ -262,7 +264,7 @@ func _process(dt):
  if '--net-test' in OS.get_cmdline_user_args():
   net_test_age+=dt
   if net_test_age>40:push_error('NETWORK_TIMEOUT snapshots='+str(snapshot_count));get_tree().quit(1)
- head_time=maxf(0,head_time-dt);hit_time=maxf(0,hit_time-dt);kill_time=maxf(0,kill_time-dt);damage_flash=maxf(0,damage_flash-dt*1.7)
+ head_time=maxf(0,head_time-dt);hit_time=maxf(0,hit_time-dt);kill_time=maxf(0,kill_time-dt);damage_flash=maxf(0,damage_flash-dt*1.7);damage_direction_time=maxf(0,damage_direction_time-dt)
  if state=='match':
   if authority():
    for i in range(2):radar_time[i]=maxf(0,radar_time[i]-dt)
@@ -666,7 +668,7 @@ func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array,
  else:clock_offset=lerpf(clock_offset,sample,.02)
  clock_synced=true
  for i in range(12):
-  var f=fighters[i];var s=data[i]
+  var f=fighters[i];var s=data[i];var was_dead=f.dead
   var displacement=f.position.distance_to(s[0])
   if not f.local_player and not s[4] and not f.body_motion:
    f.walk_phase+=displacement*1.8
@@ -680,6 +682,10 @@ func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array,
    while f.net_buffer.size()>24:f.net_buffer.pop_front()
    f.network_pose_ready=true;f.yaw=s[1];f.pitch=s[2]
   f.health=s[3];f.dead=s[4];f.kills=s[5];f.deaths=s[6];f.streak=s[7];f.ammo=s[8];f.reserves=s[9];f.respawn_time=s[11];f.rewards.assign(s[12]);f.class_id=s[13]
+  if was_dead and not f.dead:
+   if f.body_motion:f.body_motion.reset()
+   if f.local_player:
+    f.camera.position=Vector3(0,1.62,0);damage_direction_time=0;damage_flash=0
   if s.size()>17 and (f.loadout.is_empty() or f.loadout.perks!=s[17][1] or f.loadout.primary!=s[17][0]):f.set_loadout({'name':f.loadout.get('name',''),'primary':s[17][0],'perks':s[17][1]})
   f.reload_left=s[14];f.crouched=s[15];f.col.shape.height=1.2 if f.crouched else 1.8;f.col.position.y=.6 if f.crouched else .9;f.model.visible=not f.local_player or f.dead;f.model.rotation.x=0 if f.body_motion else (-1.48 if f.dead else 0);f.model.position.y=0 if f.body_motion else (.12 if f.dead else (-.42 if f.crouched else 0));f.collision_layer=0 if f.dead else 2
   if f.local_player:
@@ -694,6 +700,8 @@ func snapshot(packed: PackedByteArray, score: Array, clock: float, radar: Array,
 @rpc('authority','call_remote','unreliable')
 func damage_event(target: int, shooter: int, pos: Vector3, zone: String):
  if fighters.size()!=12 or state!='match':return
+ if target<0 or target>=fighters.size() or shooter<0 or shooter>=fighters.size():return
+ fighters[target].react_to_hit(fighters[shooter],zone)
  if target==local_id:damage_flash=.5
  if shooter==local_id:
   hit_time=.16;sound('hit',player.eye(),true,-7)
