@@ -1,3 +1,5 @@
+Latest continuation: see [CHARACTER_MAP_HANDOFF.md](CHARACTER_MAP_HANDOFF.md) for actual reload/weapon assembly/asphalt and bot recovery fixes. Earlier quality rejection below still applies.
+
 # Weapon material / HUD continuation
 
 ## Latest user feedback — quality rejected

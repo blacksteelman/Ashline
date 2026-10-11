@@ -1,0 +1,26 @@
+{
+  "gameplay_revision": "eaee5f64432939b74b28386d7acd25a6ae3af284",
+  "checks": 213,
+  "failed": 0,
+  "native_match_report": "native-bot.json",
+  "files": [
+    {
+      "file": "build/character-native/ASHLINE.x86_64",
+      "bytes": 472387728,
+      "sha256": "67a6e381fe3a9330f14d9079d7cfa95ca44fdad562273186d4fe7ad415533936"
+    },
+    {
+      "file": "assets/viewmodels/world_fp_ak74m.res",
+      "bytes": 570194,
+      "sha256": "4c2f9b28ba3876c383dfe30870fd3a2ccde4480f37252c134ee49978801de408"
+    },
+    {
+      "file": "assets/viewmodels/world_fp_smg.res",
+      "bytes": 319002,
+      "sha256": "598fb73c33e93dc3b8d763dc664b7aacbf7c53f3fd8a62b0c542e40765f46272"
+    }
+  ],
+  "visual_review": "Actual Godot and exported Linux frames viewed. Software Vulkan; Dummy audio. No Windows runtime or auditory quality assessment.",
+  "ci_url": "https://github.com/blacksteelman/Ashline/actions/runs/38129341065",
+  "ci_status_at_recording": "in_progress"
+}
