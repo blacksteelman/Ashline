@@ -1,5 +1,7 @@
 # Foundry map, bot navigation and lighting continuation
 
+Latest district graphics pass: see GRAPHICS_HANDOFF.md.
+
 Worktree: `/workspace/ashline-polish`, branch `codex/weapon-polish`.
 Game commits: `1e5d593` and `bf4eebc`. Original worktree and master untouched.
 Prior weapon/audio work is described in MOTION_HANDOFF.md.

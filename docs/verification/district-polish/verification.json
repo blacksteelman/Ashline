@@ -1,0 +1,29 @@
+{
+  "game_commit": "f00868f36e466775522cb31cb27520a1700c1136",
+  "renderer": "Godot 4.6.3 Forward+ Vulkan llvmpipe",
+  "resolution": [
+    1280,
+    720
+  ],
+  "graphics_preset": 1,
+  "regression_assertions": 172,
+  "source_capture_errors": 0,
+  "native_tdm_errors": 0,
+  "limitations": [
+    "Software renderer: no gaming GPU performance measurement",
+    "Dummy audio: no listening test",
+    "Windows exported, not run here",
+    "Before/after poses match; HUD clocks and weapon idle pose differ"
+  ],
+  "images": {
+    "after-0.png": "548c86a733029a80e387a66be5b640b22b0b16efdca54982e4e3c6951ebc11c1",
+    "after-1.png": "a28293ea2eb413631d5662e225e3c70edd635b3d9d3e471e38930afce3ca14bb",
+    "after-2.png": "8a59df81b05bf9f85b081714ca4a2157f7357613c6be6240f743a50b1f8553af",
+    "before-0.png": "039ebfa9e2e6dd5b29e6a79bf93e87ecf9f9f96fe1575f38f366e5a6fa367916",
+    "before-1.png": "58dd01dcaaddd9a595acd2d031881a3217b1dcf4042df7b20f175924032e26e2",
+    "before-2.png": "19df45266815009400b957ee8553c604a9ae7164c97c60afbf2dd216af3ef368",
+    "native-linux.png": "f2b2d83e9b0c608b80bbd5afb5d4e58d38cc95903941d0550049c0d072aabedb"
+  },
+  "native_render_exit": 0,
+  "native_render_errors": 0
+}
