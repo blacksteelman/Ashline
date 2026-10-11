@@ -66,6 +66,15 @@ func run():
  for tick in 90:
   await physics_frame
   if p.position.distance_to(Vector3(31,3.2,26))<.55:arrived=true;break
+ # A 19.5 cm approach produces an input magnitude just over sqrt(.1).
+ # Separation must preserve this braking input instead of normalizing it to sprint.
+ p.global_position=Vector3(-22,.18,12.19528);p.velocity=Vector3.ZERO;p.stuck_time=0;p.progress_window=0;p.recoveries=0;p.bot_target=null;p.bot_think=10000
+ p.path=PackedVector2Array([Vector2(-22,12),Vector2(-22,10)]);p.path_index=0;p.route_destination=Vector3(-22,.18,10)
+ var passed_corner=false
+ for tick in 90:
+  await physics_frame
+  if p.position.distance_to(Vector3(-22,.18,10))<.4:passed_corner=true;break
+ expect(passed_corner and p.recoveries==0,'Bot preserves braking through separation near 19.5 cm waypoint at 4x time')
  Engine.time_scale=1
  expect(arrived and p.recoveries==0,'Sprint brakes into tight waypoints with 4x simulation steps')
  p.set_physics_process(false)

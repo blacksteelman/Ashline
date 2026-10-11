@@ -228,7 +228,8 @@ func _physics_process(dt):
    var separation=global_position-ally.global_position;separation.y=0
    var distance=separation.length()
    if distance>.05 and distance<.8:direction+=separation.normalized()*(.8-distance)*1.2
-  direction=direction.normalized()
+  # Separation changes heading, but must preserve the route braking input.
+  direction=direction.normalized()*minf(1.0,move_wish.length())
  var speed=7.8 if sprinting else (2.5 if crouched else (3.2 if ads else 5.1))
  if perk('lightweight'):speed*=1.10
  velocity.x=move_toward(velocity.x,direction.x*speed,dt*45);velocity.z=move_toward(velocity.z,direction.z*speed,dt*45)
