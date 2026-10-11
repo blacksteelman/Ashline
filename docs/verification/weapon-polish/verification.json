@@ -67,6 +67,13 @@
       "sha256": "6a5a4e8478b1f75382a68a1618f3e90f63395601ed248c6dbaa38c941471e95d",
       "bytes": 157905,
       "viewed": true
+    },
+    {
+      "path": "docs/verification/weapon-polish/native-match.png",
+      "sha256": "0e2f0b9bdfcff79f5ded2cd7bfc5a199c15e7979e12f5aab4776f2c4f0551cc1",
+      "bytes": 1379342,
+      "viewed": true,
+      "source": "Exported Linux executable, --showcase --capture=1"
     }
   ],
   "bot_report": "tests/bot_report_810.json",
@@ -75,5 +82,68 @@
     "Windows runtime not tested",
     "No audio listening test",
     "COD4 visual target not reached"
-  ]
+  ],
+  "native_local": {
+    "commit": "5b5a10f3af94be0b152aa81a751fcdf70e663863",
+    "linux_export_exit": 0,
+    "linux_visual_exit": 0,
+    "linux_bot_matches": 2,
+    "bot_report": "docs/verification/weapon-polish/native-bot-report.json",
+    "logged_runtime_errors": false,
+    "windows_runtime_tested": false,
+    "windows_export_exit": 0,
+    "binaries": [
+      {
+        "platform": "Linux",
+        "bytes": 433938704,
+        "sha256": "da256e395a9c9cff51f281d8721c929085ffbb3379883a3840f474c65ab32eeb"
+      },
+      {
+        "platform": "Windows",
+        "bytes": 467381040,
+        "sha256": "838357c2e30d235880072d70575dfc771609b991ae21e5024fce6b608bbedbc4"
+      }
+    ]
+  },
+  "github_ci": {
+    "run_id": 38112911021,
+    "url": "https://github.com/blacksteelman/Ashline/actions/runs/38112911021",
+    "commit": "5b5a10f3af94be0b152aa81a751fcdf70e663863",
+    "conclusion": "success",
+    "regression_assertions": 152,
+    "ci_bot_score": [
+      40,
+      35
+    ],
+    "ci_bot_shots": 531,
+    "downloads": [
+      {
+        "platform": "linux",
+        "artifact_id": 11691774567,
+        "bytes": 436600367,
+        "sha256": "4b8101aff258fe1cd1beff69667d83c404cec8d8cec4c7874e0cd9f17e74ec9f",
+        "zip_crc_verified": true
+      },
+      {
+        "platform": "windows",
+        "artifact_id": 11692083903,
+        "bytes": 445642501,
+        "sha256": "8b05d55f5d08dc4a41bd09a9f69597fcff989917a1cb80163249cafe8f413ae1",
+        "zip_crc_verified": true
+      }
+    ],
+    "download_method": "GitHub connector; gh artifact storage redirect returned HTTP 403 in this environment",
+    "downloaded_linux_run": {
+      "exit": 0,
+      "success": true,
+      "score": [
+        40,
+        30
+      ],
+      "shots": 475,
+      "headshots": 18,
+      "seed": 812,
+      "logged_runtime_errors": false
+    }
+  }
 }

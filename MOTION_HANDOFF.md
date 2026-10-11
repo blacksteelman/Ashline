@@ -91,3 +91,48 @@ zero. Documentation screenshots are excluded from native exports.
 Final local regression total: 152 passing assertions (49 gameplay, 23 motion,
 46 model anchors, 34 spatial audio). Gameplay was repeated after the audio
 changes with no logged runtime errors.
+
+## Native executable verification
+
+Local Linux export at 5b5a10f completed with no logged errors. The exported
+executable ran two sequential TDM matches (seed 811): 30:40, then 19:40;
+742 shots and 31 headshots across 122.53 simulation seconds. No runtime errors.
+Its Forward+ graphical showcase also exited zero and saved a 1280x720 frame;
+the frame was viewed and is committed as `docs/verification/weapon-polish/native-match.png`.
+The bot report is beside it. Windows execution and real audio listening are
+still untested here.
+
+Windows export also completed locally with no logged errors.
+
+Concrete next map/AI issue: repeated route recoveries around (12.476, .180, 19)
+toward waypoint (11,19), and around (16.492,.180,21) toward (15,21).
+Check collision geometry and navigation connectivity at those foundry passages;
+do not treat the completed matches as proof the routes are good. The final match
+also recorded six early spawn deaths across fighters.
+
+## Downloadable builds
+
+GitHub Actions run [38112911021](https://github.com/blacksteelman/Ashline/actions/runs/38112911021)
+completed successfully for game commit `5b5a10f3af94be0b152aa81a751fcdf70e663863`.
+All 152 regression assertions passed there. Its exported Linux build completed
+a 6v6 match at 40:35 (531 shots).
+
+- [Windows ZIP](https://github.com/blacksteelman/Ashline/actions/runs/38112911021/artifacts/11692083903)
+- [Linux ZIP](https://github.com/blacksteelman/Ashline/actions/runs/38112911021/artifacts/11691774567)
+- [Verification logs](https://github.com/blacksteelman/Ashline/actions/runs/38112911021/artifacts/11692298511)
+
+Both game ZIPs were downloaded via the connected GitHub tool and their entire
+ZIP CRC checks passed. SHA256/byte counts are in verification.json. This private
+repository requires a GitHub account with repository access. In this environment
+`gh run download` received HTTP 403 from the artifact storage redirect; the
+connector download succeeded. This does not establish the cause of earlier
+user-side download failures.
+
+The executable extracted from the downloaded Linux artifact was launched locally
+and completed seed 812 at 40:30, 475 shots and 18 headshots, exit zero with no
+logged runtime errors. This verifies the downloaded build, not just a local export.
+
+Windows: extract the ZIP and run ASHLINE.exe. Linux: extract the ZIP, then
+`chmod +x ASHLINE.x86_64` and `./ASHLINE.x86_64`. These are native executables.
+The original worktree and master remain untouched. Continue implementation in
+`/workspace/ashline-polish` on `codex/weapon-polish`.
