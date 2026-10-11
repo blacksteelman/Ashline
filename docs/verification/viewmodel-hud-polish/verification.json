@@ -1,0 +1,34 @@
+{
+  "game_commit": "490d61bf5fb415101165d2b8ada4dedabd20ba95",
+  "resolution": [
+    1280,
+    720
+  ],
+  "renderer": "Forward+ / llvmpipe",
+  "graphics_preset": 1,
+  "audio": "Dummy",
+  "source_views": 6,
+  "matched_before_views": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "final_only_views": [
+    4,
+    5
+  ],
+  "hud_clock_frozen_only_in_after": true,
+  "assertions": 188,
+  "windows_runtime_tested": false,
+  "builds": {
+    "build/material-native/ASHLINE.x86_64": {
+      "bytes": 472463440,
+      "sha256": "7cc0bceb2d000df7ef4c94dd972e3c37c24e193a1d545f31412fd52f8dcc6735"
+    },
+    "build/material-native/windows/ASHLINE.exe": {
+      "bytes": 505906240,
+      "sha256": "7b90a63123af61ff0bf90c3e057248d3f06d2f05314276693e547eb9d6a130ed"
+    }
+  }
+}
