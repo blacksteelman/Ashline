@@ -41,6 +41,7 @@ func _ready():
  build_west_alley()
  build_spawn_zones()
  build_perimeter()
+ build_interior_details()
  build_patrol()
  flush_facades()
  if not '--no-batching' in OS.get_cmdline_user_args():StaticBatch.bake(structure)
@@ -72,7 +73,7 @@ func add_obstacle(pos: Vector3, size: Vector3, yaw: float=0.0):
  var w=size.x*c+size.z*s;var d=size.x*s+size.z*c
  obstacles.append(Rect2(pos.x-w/2,pos.z-d/2,w,d))
 
-const PROP_SURFACE={'jersey_barrier':'concrete','jersey_barrier_plain':'concrete','cement_bag':'concrete','cardboard_box':'wood','crate_wood':'wood','crate_wood_long':'wood','crate_military':'wood','military_crate':'wood','military_crate_open':'wood','trashbag':'wood','tyre':'wood','plastic_crate':'wood','covered_car':'metal'}
+const PROP_SURFACE={'worn_chair':'wood','worn_bookshelf':'wood','coffee_table':'wood','worn_sofa':'wood','jersey_barrier':'concrete','jersey_barrier_plain':'concrete','cement_bag':'concrete','cardboard_box':'wood','crate_wood':'wood','crate_wood_long':'wood','crate_military':'wood','military_crate':'wood','military_crate_open':'wood','trashbag':'wood','tyre':'wood','plastic_crate':'wood','covered_car':'metal'}
 func prop(name: String, pos: Vector3, yaw: float=0.0, collide: bool=true, scale_v: float=1.0) -> Node3D:
  var scene: Node3D=load('res://assets/kit/'+name+'.glb').instantiate()
  add_child(scene);scene.position=pos;scene.rotation.y=yaw;scene.scale=Vector3.ONE*scale_v
@@ -574,6 +575,57 @@ func build_west_alley():
  # Parking yard (SW) with covered cars.
  prop('covered_car',Vector3(-31.0,.15,-29.0),.05);prop('covered_car',Vector3(-24.5,.15,-41.0),PI/2+.1)
  prop('covered_car',Vector3(-22.0,.15,-33.5),PI/2-.1)
+
+func interior_notice(pos: Vector3, yaw: float, heading: String, details: String):
+ var panel=solid(pos,Vector3(.65,.55,.018),'planks',false,yaw,true,false)
+ var paper=StandardMaterial3D.new();paper.albedo_color=Color('#b6af98');paper.roughness=1.0;panel.material_override=paper
+ var face=Basis(Vector3.UP,yaw)
+ var label=Label3D.new();label.text=heading+'\n'+details;label.font_size=32;label.pixel_size=.0015
+ label.modulate=Color('#252a25');label.outline_size=0;label.shaded=true
+ label.position=pos+face*Vector3(0,0,.011);label.rotation.y=yaw;add_child(label)
+
+func room_trim(pos: Vector3, length: float, yaw: float, floor_y: float):
+ # Thin paint band and skirting on an existing solid wall, never across a door.
+ solid(Vector3(pos.x,floor_y+.43,pos.z),Vector3(length,.78,.012),'room_paint',false,yaw,true,false)
+ solid(Vector3(pos.x,floor_y+.085,pos.z),Vector3(length,.12,.035),'planks',false,yaw,true,false)
+
+func build_interior_details():
+ # Larger furniture has physical cover hulls. Entrances/stairs remain clear.
+ prop('worn_bookshelf',Vector3(-17.0,3.15,20.8),-PI/2,true)
+ prop('worn_sofa',Vector3(-17.1,3.15,14.1),-PI/2,true)
+ prop('coffee_table',Vector3(-18.65,3.15,14.1),0,true)
+ prop('worn_chair',Vector3(-12.55,3.15,15.4),PI/2,true,.80)
+ prop('worn_chair',Vector3(-12.6,.17,22.0),PI,true,.80)
+ prop('cassette_player',Vector3(-11.4,3.94,15.8),PI/2,false)
+ prop('cardboard_box',Vector3(-17.05,3.15,22.0),.25,true)
+ # Shop stock is clustered against its back wall, away from through routes.
+ prop('worn_bookshelf',Vector3(-22.5,.17,-25.28),0,true)
+ prop('worn_chair',Vector3(-12.7,.17,-25.08),0,true,.80)
+ prop('cassette_player',Vector3(-12.4,.958,-24.3),.1,false)
+ prop('cardboard_box',Vector3(-24.1,.17,-24.9),.25,true)
+ prop('jerrycan',Vector3(-21.0,.17,-25.28),.1,true)
+ # Detailed metal benches, real CC0 vise and hardware. North door stays clear.
+ prop('desk',Vector3(22.0,.17,32.22),0,true)
+ prop('bench_vice',Vector3(22.65,.958,32.0),.3,false)
+ prop('ammo_box',Vector3(21.65,.958,32.3),.4,false)
+ prop('desk',Vector3(13.0,.17,28.0),PI/2,true)
+ prop('bench_vice',Vector3(13.1,.958,28.6),PI/2,false)
+ prop('tool_cart',Vector3(14.4,.17,28.5),PI,true)
+ interior_notice(Vector3(-22.5,1.85,-25.57),0,'ROWAN SUPPLIES','DELIVERY HOURS\n06:00 - 18:00')
+ interior_notice(Vector3(-16.37,1.8,16.7),PI/2,'KELN HOUSE','SERVICE DESK\nSTAIRS / FIRST FLOOR')
+ interior_notice(Vector3(22.0,2.05,32.76),PI,'WORKSHOP 02','EYE PROTECTION\nKEEP AISLES CLEAR')
+ # Lower wall paint breaks the repeated peeling-plaster fields.
+ room_trim(Vector3(-18.0,0,-25.585),17.4,0,.15)
+ for span in [[13.0,2.6],[17.7,3.0]]:
+  room_trim(Vector3(-16.37,0,span[0]),span[1],PI/2,.15)
+ for span in [[14.17,5.8],[21.0,4.6]]:
+  room_trim(Vector3(-16.63,0,span[0]),span[1],PI/2,3.15)
+ for span in [[-23.625,3.75],[-17.875,4.25],[-12.75,2.5]]:
+  room_trim(Vector3(-17.885,0,span[0]),span[1],PI/2,.15)
+ interior_notice(Vector3(-17.865,1.85,-23.9),PI/2,'STOCK ROOM','DELIVERIES\nWEST ENTRANCE')
+ service_cable(PackedVector3Array([Vector3(-26.5,2.72,-25.5),Vector3(-18.3,2.72,-25.5),Vector3(-18.3,2.72,-11.5)]))
+ prop('power_box',Vector3(-26.55,1.25,-23.4),PI/2,false)
+ prop('extinguisher',Vector3(20.2,.17,32.5),PI,false)
 
 func build_spawn_zones():
  # Aegis (south) and Ember (north) deploy behind field barricades at the street ends.

@@ -74,6 +74,21 @@
   "source_tris": 1473,
   "tris": 1473
  },
+ "bench_vice": {
+  "aabb_max": [
+   0.1002,
+   0.2851,
+   0.1979
+  ],
+  "aabb_min": [
+   -0.1002,
+   0.0,
+   -0.1979
+  ],
+  "source": "bench_vice_01",
+  "source_tris": 2863,
+  "tris": 2863
+ },
  "cardboard_box": {
   "aabb_max": [
    0.1933,
@@ -89,6 +104,21 @@
   "source_tris": 16952,
   "tris": 2500
  },
+ "cassette_player": {
+  "aabb_max": [
+   0.0861,
+   0.1303,
+   0.0198
+  ],
+  "aabb_min": [
+   -0.0863,
+   -0.0003,
+   -0.0198
+  ],
+  "source": "portable_cassette_player",
+  "source_tris": 13307,
+  "tris": 4000
+ },
  "cement_bag": {
   "aabb_max": [
    0.2312,
@@ -103,6 +133,21 @@
   "source": "cement_bag",
   "source_tris": 844,
   "tris": 844
+ },
+ "coffee_table": {
+  "aabb_max": [
+   0.3,
+   0.39,
+   0.6009
+  ],
+  "aabb_min": [
+   -0.3,
+   0.0,
+   -0.6009
+  ],
+  "source": "modern_coffee_table_01",
+  "source_tris": 4504,
+  "tris": 4504
  },
  "compressor": {
   "aabb_max": [
@@ -2757,5 +2802,50 @@
   "source": "rusted_wheel_rim_01",
   "source_tris": 16440,
   "tris": 2500
+ },
+ "worn_bookshelf": {
+  "aabb_max": [
+   0.687,
+   2.0634,
+   0.2907
+  ],
+  "aabb_min": [
+   -0.687,
+   -0.0,
+   -0.2907
+  ],
+  "source": "wooden_bookshelf_worn",
+  "source_tris": 10106,
+  "tris": 5000
+ },
+ "worn_chair": {
+  "aabb_max": [
+   0.3197,
+   1.2638,
+   0.331
+  ],
+  "aabb_min": [
+   -0.3197,
+   0.0,
+   -0.331
+  ],
+  "source": "painted_wooden_chair_02",
+  "source_tris": 1246,
+  "tris": 1246
+ },
+ "worn_sofa": {
+  "aabb_max": [
+   0.9036,
+   0.7095,
+   0.4089
+  ],
+  "aabb_min": [
+   -0.9036,
+   0.0,
+   -0.4089
+  ],
+  "source": "sofa_02",
+  "source_tris": 2728,
+  "tris": 2728
  }
 }

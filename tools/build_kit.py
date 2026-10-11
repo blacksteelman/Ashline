@@ -19,6 +19,12 @@ OUT = os.path.join(ROOT, 'assets', 'kit')
 # selector: None = all meshes, list = exact names, str 'has:x' = names containing x,
 # 'not:x' = names not containing x.
 KIT = {
+    'worn_chair': ('painted_wooden_chair_02', None, 5000, 1, 1024),
+    'worn_bookshelf': ('wooden_bookshelf_worn', None, 5000, 1, 1024),
+    'cassette_player': ('portable_cassette_player', None, 4000, 1, 1024),
+    'bench_vice': ('bench_vice_01', None, 4000, 1, 1024),
+    'worn_sofa': ('sofa_02', None, 12000, 1, 1024),
+    'coffee_table': ('modern_coffee_table_01', None, 5000, 1, 1024),
     'barrel_red': ('Barrel_01', None, 3000, 1, 1024),
     'barrel_blue': ('Barrel_02', None, 3000, 1, 1024),
     'barrel_steel': ('barrel_03', None, 3000, 1, 1024),

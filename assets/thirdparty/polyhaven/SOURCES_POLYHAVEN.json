@@ -63,6 +63,23 @@
   "resolution": "1k",
   "source": "https://polyhaven.com/a/barrel_03"
  },
+ "bench_vice_01": {
+  "authors": {
+   "Antanas Kep": "Modeling & Texturing",
+   "Yann Kervran": "Rigging"
+  },
+  "files": {
+   "bench_vice_01.bin": "47b80c649a7791a7f3ea95d3dca929506a8c2e89506d3982a1a3380dcd3333ee",
+   "bench_vice_01.gltf": "52e61b473f1a7840ddbdabf024cca8dd32e07f694bd247e3a74e8ef5d9a101e2",
+   "textures/bench_vice_01_arm_1k.jpg": "49d396c052622c12864e3cbfa7dc982e0bb4117bc37fccc15703a97af1b9f24c",
+   "textures/bench_vice_01_diff_1k.jpg": "e453c1bc7c283fb6a9c8da0638173809dfafb8310f5e81112705f5ecf88b5ab7",
+   "textures/bench_vice_01_nor_gl_1k.jpg": "691b3a3888e689785bdd792522769839cd662d841071e2ea11184b70c012a65e"
+  },
+  "license": "CC0-1.0",
+  "name": "Bench Vice 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/bench_vice_01"
+ },
  "bolt_action_rifle_7_62": {
   "authors": {
    "Mateusz Sadek": "All"
@@ -350,6 +367,22 @@
   "resolution": "1k",
   "source": "https://polyhaven.com/a/metal_trash_can"
  },
+ "modern_coffee_table_01": {
+  "authors": {
+   "Amin": "All"
+  },
+  "files": {
+   "modern_coffee_table_01.bin": "b8fe0d49041b879a5d5962685a39e3daf009679f7b6a88ced1347e6dc6c0851e",
+   "modern_coffee_table_01.gltf": "a35d811da4c174d0c888f23353dda21501763dbf5505c66f57fef4b3f613e50c",
+   "textures/modern_coffee_table_01_diff_1k.jpg": "069b89dd3ef03ddcbb7b2e6a124b1903aa7848394509121aa19f87bd0ef0218c",
+   "textures/modern_coffee_table_01_nor_gl_1k.jpg": "43e0d317d0f8418b130c0058c645225ee83b808b1dc0e5e7236bead3bdd77139",
+   "textures/modern_coffee_table_01_rough_1k.jpg": "8013b48b0ebb845907f840afcae9cbc915a5205ac82ed99cbba31771febacb0f"
+  },
+  "license": "CC0-1.0",
+  "name": "Modern Coffee Table 01",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/modern_coffee_table_01"
+ },
  "modular_airduct_circular_01": {
   "authors": {
    "Riley Queen": "All"
@@ -606,6 +639,22 @@
   "resolution": "1k",
   "source": "https://polyhaven.com/a/overhead_crane"
  },
+ "painted_wooden_chair_02": {
+  "authors": {
+   "Kirill Sannikov": "All"
+  },
+  "files": {
+   "painted_wooden_chair_02.bin": "6125c4ac10e1b53803bf468eb21769fd43a3669564bfc8885a9346c8302e121f",
+   "painted_wooden_chair_02.gltf": "e69f4558d236e0fcc9d31a85ab75117e75d224d21e04836aa438821ccf1fd2c1",
+   "textures/painted_wooden_chair_02_arm_1k.jpg": "7b0b2254ab2ea3dae685207b8b591bbb10cca47d0157ce8e515f03ff61ccb5d9",
+   "textures/painted_wooden_chair_02_diff_1k.jpg": "bc944fc83f440198658199080d761b19c3e2f42daa793062aa283563683a732b",
+   "textures/painted_wooden_chair_02_nor_gl_1k.jpg": "2c2c2f92e4aebadf06c7c675a3c903c1a647dde6f875ac55aa4945d47e053d9a"
+  },
+  "license": "CC0-1.0",
+  "name": "Painted Wooden Chair 02",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/painted_wooden_chair_02"
+ },
  "plastic_crate_03": {
   "authors": {
    "Pacific Penguin": "All"
@@ -621,6 +670,22 @@
   "name": "Plastic Crate 03",
   "resolution": "1k",
   "source": "https://polyhaven.com/a/plastic_crate_03"
+ },
+ "portable_cassette_player": {
+  "authors": {
+   "Mateusz Sadek": "All"
+  },
+  "files": {
+   "portable_cassette_player.bin": "c56e64a87077f7969202acad96de59e9a2423579ab1f0acc5de64bd3daade716",
+   "portable_cassette_player.gltf": "7ef3e7b815429601a462fef9cca46639bfc90c0768bc61e0f7a6814ed27ef1e5",
+   "textures/portable_cassette_player_arm_1k.jpg": "ebbb6ec6f5b5c75b87b1b72160d35a9b94d27d6b44e8be8c5cf7460ad1361f3d",
+   "textures/portable_cassette_player_diff_1k.jpg": "bea3b6d37788842c414e49cb618d84d5aa3da08853170ecc6e79b9b70707c8ee",
+   "textures/portable_cassette_player_nor_gl_1k.jpg": "0c2ded713627055753d65d2344abfb7284cd7963f77f5b6f0924997edaba84cd"
+  },
+  "license": "CC0-1.0",
+  "name": "Portable Cassette Player",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/portable_cassette_player"
  },
  "portable_generator": {
   "authors": {
@@ -803,6 +868,22 @@
   "resolution": "1k",
   "source": "https://polyhaven.com/a/small_lpg_tank"
  },
+ "sofa_02": {
+  "authors": {
+   "Kirill Sannikov": "All"
+  },
+  "files": {
+   "sofa_02.bin": "cb337e03211be0309afa1ded2b6cbb2d402c0f794aaf8828fba559d27a42d3f5",
+   "sofa_02.gltf": "5df114209f9b956ccd4831eaeef469a81339ab371d0056eb6d5d29eee08eb431",
+   "textures/sofa_02_arm_1k.jpg": "f2813f32cd9ec42a9080590d0953ac9e272d9baa0b22fdb5910bf325157393c6",
+   "textures/sofa_02_diff_1k.jpg": "4ff65c782578b52eee89cb96cc4e258ce1b6848e1a7655019af1f7207c749840",
+   "textures/sofa_02_nor_gl_1k.jpg": "c97a359703a8ce1cee62cbd9dc4013b611d821afb7769810983b464ebc5d0cfe"
+  },
+  "license": "CC0-1.0",
+  "name": "Sofa 02",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/sofa_02"
+ },
  "steel_frame_shelves_01": {
   "authors": {
    "James Ray Cock": "All"
@@ -914,6 +995,22 @@
   "name": "Water Manhole Cover",
   "resolution": "1k",
   "source": "https://polyhaven.com/a/water_manhole_cover"
+ },
+ "wooden_bookshelf_worn": {
+  "authors": {
+   "Ulan Cabanilla": "All"
+  },
+  "files": {
+   "textures/wooden_bookshelf_worn_arm_1k.jpg": "41b3aca38fb55cb300d971016a597c80425da3744a6d33d82fe78f9dbe609eaa",
+   "textures/wooden_bookshelf_worn_diff_1k.jpg": "970f60178decadd0d8fb1e5872f718350a49b027fd69469210c41ead350cba56",
+   "textures/wooden_bookshelf_worn_nor_gl_1k.jpg": "90ffb1b3f7bb638d5a7e1a2b244a260d623e314a6010a6b8c23c57203e510ac9",
+   "wooden_bookshelf_worn.bin": "170758113b50132380ab46943f6eab18f2714460dead065aae37241a94abf0f9",
+   "wooden_bookshelf_worn.gltf": "a1c5b3f1e71ae0b5eb73047e8097bceaa5f17e5d2d0d7ae1b8053d5ec0878fc6"
+  },
+  "license": "CC0-1.0",
+  "name": "Wooden Bookshelf Worn",
+  "resolution": "1k",
+  "source": "https://polyhaven.com/a/wooden_bookshelf_worn"
  },
  "wooden_crate_01": {
   "authors": {

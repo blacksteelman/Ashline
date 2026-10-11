@@ -13,6 +13,9 @@ API = 'https://api.polyhaven.com'
 
 # id: texture resolution. Large hero structures get 2k, small clutter 1k.
 CURATED = {
+    'painted_wooden_chair_02': '1k', 'wooden_bookshelf_worn': '1k',
+    'portable_cassette_player': '1k', 'bench_vice_01': '1k',
+    'sofa_02': '1k', 'modern_coffee_table_01': '1k',
     'concrete_road_barrier': '2k', 'concrete_road_barrier_02': '2k',
     'modular_chainlink_fence': '1k', 'modular_electricity_poles': '1k',
     'modular_fire_escape': '2k', 'modular_metal_gutter': '1k',

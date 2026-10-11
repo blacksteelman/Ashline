@@ -22,7 +22,16 @@ func run():
   [Vector3(30.46,.18,12.925),Vector3(31,3.2,26)],
   [Vector3(30.449,.18,13.995),Vector3(31,3.2,26)],
   [Vector3(29,.18,18),Vector3(32,.18,18)],
-  [Vector3(32,.18,18),Vector3(29,.18,18)]]
+  [Vector3(32,.18,18),Vector3(29,.18,18)],
+  # Interior furniture must leave through routes and bench access usable.
+  [Vector3(-22,.18,-23.5),Vector3(-14,.18,-18)],
+  [Vector3(-14,.18,-18),Vector3(-22,.18,-23.5)],
+  [Vector3(-22,3.15,21.5),Vector3(-17,3.15,22.7)],
+  [Vector3(-10.5,3.15,14),Vector3(-13.5,3.15,17)],
+  [Vector3(24,.18,32),Vector3(20,.18,32)],
+  [Vector3(20,.18,32),Vector3(24,.18,32)],
+  [Vector3(-21,3.15,14.1),Vector3(-18,3.15,14.1)],
+  [Vector3(-18,3.15,14.1),Vector3(-21,3.15,14.1)]]
  for i in cases.size():
   p.global_position=cases[i][0];p.velocity=Vector3.ZERO;p.stuck_time=0;p.recoveries=0;p.bot_target=null;p.bot_think=10000;p.cover_time=0;p.bot_pause=0;p.dead=false;p.health=100;p.respawn_time=10000;p.bot=true;p.local_player=false
   p.set_route(cases[i][1])
@@ -32,8 +41,8 @@ func run():
    await physics_frame
    if p.position.distance_to(cases[i][1])<.55:
     reached=true;break
-  expect(reached,'Foundry passage '+str(i)+' traversed by actual Fighter')
-  expect(p.recoveries==0,'Foundry passage '+str(i)+' needs no stuck recovery')
+  expect(reached,'Map passage '+str(i)+' traversed by actual Fighter')
+  expect(p.recoveries==0,'Map passage '+str(i)+' needs no stuck recovery')
   print('END ',i,' pos=',p.position,' recoveries=',p.recoveries)
  p.set_physics_process(false)
  print('FOUNDRY_ROUTES ',checks,' checks, ',failures,' failures')

@@ -15,6 +15,7 @@ const DEFS={
  'plaster_peel':['plaster_peel',1.6,Color(.86,.84,.8),'plaster',{'normal_strength':.8}],
  'plaster':['plaster_clean',2.4,Color(.74,.72,.66),'plaster',{'grime_height':1.0,'variation_strength':.28}],
  'plaster_dark':['plaster_clean',2.4,Color(.45,.47,.45),'plaster',{}],
+ 'room_paint':['plaster_clean',2.4,Color(.37,.44,.4),'plaster',{'grime_strength':.18,'normal_strength':.45,'roughness_scale':1.15}],
  'gravel':['gravel',2.0,Color(.9,.9,.9),'asphalt',{'grime_strength':0.0}],
  'dirt':['dirt',3.0,Color(.75,.72,.65),'asphalt',{'grime_strength':0.0}],
  'corrugated':['corrugated',2.0,Color(.5,.5,.47),'metal',{'grime_height':1.2,'grime_strength':.5}],
@@ -28,8 +29,8 @@ const DEFS={
  'steel':['metal_plates',2.0,Color(.8,.8,.8),'metal',{'grime_strength':.2}],
  'rust':['rust',1.5,Color(.9,.85,.8),'metal',{}],
  'walkway':['walkway',1.0,Color(.85,.85,.85),'metal',{'grime_strength':0.0}],
- 'planks':['planks',1.6,Color(.85,.8,.75),'wood',{}],
- 'tiles':['tiles_floor',1.2,Color(.5,.49,.45),'concrete',{'grime_strength':0.0,'roughness_scale':1.4,'variation_strength':.3}],
+ 'planks':['planks',1.6,Color(.58,.5,.4),'wood',{'variation_strength':.24}],
+ 'tiles':['tiles_floor',1.2,Color(.42,.42,.38),'concrete',{'grime_strength':0.0,'roughness_scale':1.4,'variation_strength':.3}],
  'paving':['paving',2.0,Color(.88,.86,.82),'concrete',{'grime_strength':0.0}],
  # The atlas spans six storeys. Nine metres made background windows half-size.
  'facade_far':['facade_windows',18.0,Color(.64,.66,.65),'concrete',{'grime_strength':0.0,'variation_strength':.12,'color_saturation':.35,'roughness_scale':1.2}],

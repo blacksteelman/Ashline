@@ -23,6 +23,9 @@ All three source pages explicitly designate the assets CC0. Weapon geometry and 
 
 Third-party resources added in 0.8 (see tools/fetch_polyhaven.py, tools/fetch_ambientcg.py, tools/build_soldiers.py for the exact asset lists):
 
+Interior additions (CC0, Poly Haven): [Painted Wooden Chair 02](https://polyhaven.com/a/painted_wooden_chair_02), [Wooden Bookshelf Worn](https://polyhaven.com/a/wooden_bookshelf_worn), [Portable Cassette Player](https://polyhaven.com/a/portable_cassette_player), [Bench Vice 01](https://polyhaven.com/a/bench_vice_01). Sources, authors and SHA-256 hashes: `assets/thirdparty/polyhaven/SOURCES_POLYHAVEN.json`. Processed meshes retain PBR textures; chair scale adjusted at placement.
+Living room: [Sofa 02](https://polyhaven.com/a/sofa_02) and [Modern Coffee Table 01](https://polyhaven.com/a/modern_coffee_table_01), CC0, same provenance manifest.
+
 - Poly Haven (CC0, https://polyhaven.com/license): HDRI kloofendal_38d_partly_cloudy_puresky; urban/industrial props and the modular facade set listed in tools/fetch_polyhaven.py; Mosin-Nagant rifle and service pistol models used for the sniper rifle and P38 viewmodels.
 - ambientCG / Lennart Demes (CC0): the PBR material sets listed in tools/fetch_ambientcg.py.
 - MakeHuman / MPFB2 (CC0 base mesh, skins and cmu_mb rig): soldier bodies. https://static.makehumancommunity.org/
