@@ -35,6 +35,35 @@
     "after-4.png": "6520030e5f15b0dfb416199b9f2ade63d23692c364f6bb7d0d4a9d4251df29ec",
     "before-0.png": "a583599fb68a7784b058690aa3c6162fc37f07af5370c833241a76be8ceb5dff",
     "before-1.png": "9a86c31bb16b3412875a97138e14f352144cb4b7e4f1560c3e4cd66c6f560e36",
-    "before-2.png": "cd778ae42298fef66b2e4354f21537777423c99c2f54c00057ad3232780bb17f"
+    "before-2.png": "cd778ae42298fef66b2e4354f21537777423c99c2f54c00057ad3232780bb17f",
+    "native-linux.png": "1662c351cc4499b9e77d0a3975f38a25007f68ba7b0087255406407edab9f389"
+  },
+  "native_render_exit": 0,
+  "native_render_errors": 0,
+  "native_render_view": "Supported showcase exterior view; interior views are source-game captures",
+  "ci": {
+    "run_id": 38120763305,
+    "game_commit": "476fcd817c65387719421cdebba36deed89a38d0",
+    "conclusion": "success",
+    "regression_assertions": 188,
+    "windows_artifact": {
+      "id": 11695112856,
+      "bytes": 486657298,
+      "sha256": "fc85e57567f17fcc07c6fbe6c2418b3ae8dd51a04d6be6ea12b8833f0b9b03a8",
+      "full_zip_crc": "passed"
+    },
+    "linux_artifact": {
+      "id": 11694953084,
+      "bytes": 477614394,
+      "downloaded_in_this_turn": false
+    },
+    "native_tdm": {
+      "score": [
+        35,
+        41
+      ],
+      "shots": 547,
+      "recoveries": 0
+    }
   }
 }

@@ -56,10 +56,12 @@ Raw images and logs are in docs/verification/interiors-polish.
 
 Source capture: `godot --path . --script tests/capture_interiors.gd -- --tag=next
 --graphics=1`. Optional `--view=4` captures only the sitting area. It requires a
-working X display. Use tests/xorg.conf for software Vulkan captures. Native player
-can load the same external capture script via `--script /absolute/path/to/script`;
-game scenes/models still load from the embedded PCK. It is a QA aid, not a shipped
-dependency. Capture paths resolve relative to the native executable's resource root.
+working X display. Use tests/xorg.conf for software Vulkan captures. The release template does not expose --script in its command-line help. An
+attempt to run this external helper through the exported player did not produce
+a capture and was stopped. Do not use that method. For native graphics smoke use
+its supported `-- --showcase --capture=1 --graphics=1
+--capture-path=/absolute/path.png` flags. Interior captures above are actual
+source-game renders; they are not falsely labelled release-executable captures.
 
 Local builds: build/interior-native/ASHLINE.x86_64 and
 build/interior-native/windows/ASHLINE.exe. Launch normally to reach Play/menu.
@@ -81,4 +83,26 @@ first-person sleeve/metal highlights, character animation review, HUD contrast,
 and the known bot recovery corners. The requested COD4/modern quality bar has
 not been reached; do not describe this as finished AAA art.
 
-CI run 38120763305 will be recorded after clean-import export verification.
+The final local release executable also rendered its supported showcase view and
+exited zero without errors; native-linux.png was viewed. Interior views remain
+source-game captures, as stated above. CI verification is recorded below.
+
+## Final clean CI build
+
+Success: https://github.com/blacksteelman/Ashline/actions/runs/38120763305
+Game SHA 476fcd817c65387719421cdebba36deed89a38d0. All 188 assertions passed.
+CI native Linux TDM seed 801 completed 35:41, 547 shots, zero recoveries/errors.
+Raw CI regression and bot logs and ci-tdm.json are retained in the evidence directory.
+
+- Windows: https://github.com/blacksteelman/Ashline/actions/runs/38120763305/artifacts/11695112856
+- Linux: https://github.com/blacksteelman/Ashline/actions/runs/38120763305/artifacts/11694953084
+
+Windows ZIP was downloaded through the GitHub connector and full CRC-checked.
+It contains ASHLINE.exe, README.md and LICENSES.md; bytes/hash are in verification.json.
+Downloaded local archive: build/ci-interiors/windows.zip. Windows was not run here.
+Linux CI ZIP was not downloaded this turn; the local native Linux export was
+rendered and ran two matches, and CI independently ran its Linux executable.
+GitHub artifact links require access to the private repository. Signed File Service
+URLs returned by the connector expire: do not print or commit them, or treat their
+IDs as Sediment downloads. Prior gh run download redirect problems are described
+in GRAPHICS_HANDOFF.md. Checks here do not prove downloading works on the user's device.
