@@ -1,0 +1,34 @@
+{
+  "revision": "a4d01e943de6d190a6f9a7e595d8500df303f5b0",
+  "ci_run": 38271481205,
+  "checks": 429,
+  "release": "https://github.com/blacksteelman/Ashline/releases/tag/dev-a4d01e9",
+  "local_native_bot_test": {
+    "seed": 808,
+    "matches": 2,
+    "shots": 1148,
+    "headshots": 35,
+    "recoveries": 0,
+    "success": true
+  },
+  "visual": {
+    "renderer": "gl_compatibility",
+    "device": "llvmpipe",
+    "resolution": [
+      640,
+      360
+    ],
+    "settled_pose_pairs": 6,
+    "weapons": 5,
+    "native_first_frame": "native.png",
+    "forward_plus_quality": "timeout 180s, no capture",
+    "forward_plus_performance": "timeout 180s, no capture",
+    "full_material_batch": "timeout 300s after view 4; missing SMG pair and sniper completed in focused reruns"
+  },
+  "limits": [
+    "Windows exported, not run",
+    "Published ZIPs verified by CI publisher and release metadata, not downloaded locally in this session (gh HTTP 401)",
+    "Local native exports are the tested executables, not downloaded release bytes",
+    "No GPU performance measurement"
+  ]
+}

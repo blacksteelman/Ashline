@@ -1,3 +1,5 @@
+Latest continuation: [weapon lighting and a4d01e9 builds](WEAPON_LIGHTING_HANDOFF.md). The export directories listed below have since been refreshed; this file records the previous release.
+
 # Weapon hand alignment — 2026-10-12
 
 Branch `codex/weapon-polish`; final gameplay/release revision `98e84ad85433d410d78bc44baebb272d8882723f`.
