@@ -58,6 +58,16 @@ var walk_phase=0.0
 var landing=0.0
 var step_visual=0.0
 var trigger_was=false
+# Sprint-out: firing while sprinting lowers the weapon instead of dropping the input, so
+# the player does not have to release sprint before the shot registers.
+const SPRINT_OUT=.18
+var sprint_out=0.0
+# The sprint stays dropped until the sprint key is released, so a held sprint cannot
+# restart the run every time the transition ends.
+var sprint_out_latched=false
+# A trigger held through the transition must be released before it fires: the pull that
+# asked for the shot is the one that fires it.
+var sprint_out_armed=false
 var bot_think=0.0
 var bot_age=0.0
 var bot_aim_height=1.17
@@ -192,6 +202,7 @@ func _physics_process(dt):
  if game.state!='match':return
  if not game.authority() and not local_player:return
  cooldown=maxf(-dt,cooldown-dt);shot_age+=dt;last_shot=maxf(0,last_shot-dt);damage_age+=dt;life_age+=dt
+ if sprint_out>0:sprint_out=maxf(0,sprint_out-dt)
  if dead:
   respawn_time-=dt
   if respawn_time<=0 and game.authority():spawn()
@@ -206,10 +217,20 @@ func _physics_process(dt):
  if bot and game.authority():think_bot(dt)
  elif local_player:
   if not game.menu_open:
-   move_wish=Input.get_vector('left','right','forward','back');ads=Input.is_action_pressed('ads');crouched=Input.is_action_pressed('crouch');sprinting=Input.is_action_pressed('sprint') and move_wish.y<-.2 and not ads and not crouched and not Input.is_action_pressed('fire') and reload_left<=0
-   if Input.is_action_just_pressed('jump') and is_on_floor():velocity.y=5.7
+   move_wish=Input.get_vector('left','right','forward','back');ads=Input.is_action_pressed('ads');crouched=Input.is_action_pressed('crouch')
    var pressed=Input.is_action_pressed('fire')
-   if pressed and (Arsenal.WEAPONS[weapon_id].auto or not trigger_was):shoot()
+   # Holding sprint and forward asks to run; the trigger and the sprint-out decide what
+   # happens. The keys never change state themselves.
+   var hold_sprint=Input.is_action_pressed('sprint') and move_wish.y<-.2 and not ads and not crouched and reload_left<=0
+   # A sprint is dropped by the shot it interrupts, and stays dropped until the sprint
+   # key is released. Otherwise a held sprint would restart the run every time the
+   # sprint-out ended and a held trigger would re-trigger the transition in a loop.
+   if pressed and sprinting and weapon_can_fire():trigger_sprint_out()
+   if not hold_sprint:sprint_out_latched=false
+   if not pressed:sprint_out_armed=false
+   sprinting=hold_sprint and not pressed and not sprint_out_latched and sprint_out<=0
+   if Input.is_action_just_pressed('jump') and is_on_floor():velocity.y=5.7
+   if pressed and trigger_ready():shoot()
    trigger_was=pressed
   else:move_wish=Vector2.ZERO;ads=false;sprinting=false
  elif not bot:
@@ -336,8 +357,27 @@ func start_reload():
  if dead or reload_left>0 or ammo[weapon_id]>=Arsenal.WEAPONS[weapon_id].mag or reserves[weapon_id]<=0:return
  reload_left=reload_time(weapon_id)
  recoil_sequence=0
+func weapon_can_fire() -> bool:
+ return not dead and ammo[weapon_id]>0 and reload_left<=0
+# Firing during a sprint lowers the weapon and latches the sprint off: the run resumes
+# only after the sprint key is released, so a held sprint cannot restart it mid-burst.
+func trigger_sprint_out():
+ if sprint_out>0:return
+ sprint_out=SPRINT_OUT;sprint_out_latched=true;sprint_out_armed=true
+func can_fire() -> bool:
+ if dead or reload_left>0:return false
+ if sprinting or sprint_out>0:return false
+ return true
+# The trigger rule: automatic weapons fire while held, the rest need a fresh pull, and a
+# sprint-out has to finish before either.
+func trigger_ready() -> bool:
+ if not can_fire():return false
+ # A sprint-out has to end and the trigger has to be worked again: the pull that
+ # started the transition must not also fire the shot after it.
+ if sprint_out_armed:return false
+ return Arsenal.WEAPONS[weapon_id].auto or not trigger_was
 func shoot():
- if dead or cooldown>0 or reload_left>0 or sprinting:return
+ if not can_fire() or cooldown>0:return
  if ammo[weapon_id]<=0:
   if reserves[weapon_id]>0:start_reload()
   elif local_player:game.sound('dryfire',eye(),true,-12);cooldown=.23

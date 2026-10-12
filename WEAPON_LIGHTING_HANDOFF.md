@@ -73,3 +73,16 @@ Both presets were then exported and packaged with `tools/package_builds.py --rev
 - The automatic weapons keep `recoil_recovery = .65`, so the spray pattern still climbs (8-12 degrees over a full magazine, which is what the player learns and pulls down through), but the debt they leave is capped by `recoil_residual` (2.5 degrees). Measured residual at the end of a 30-shot burst is 0.5-0.7 degrees, and the debt is paid back to 0.0006 degrees after the trigger is released, so holding the trigger for longer than a magazine cannot keep re-aiming the player.
 
 The bot match is unchanged by this (`--bot-test --seed=801 --matches=1`: 520 shots, 18 headshots, 31:40), which is the expected result: the cap only bounds a case the scripted bots never reach, because they fire in short bursts.
+
+## Firing out of a sprint
+
+Pulling the trigger while sprinting used to be dropped on the floor: `sprint()` refused to fire and the sprint condition also required the fire button to be up, so the player had to release sprint, wait for the pose to change and pull again. Measured with `tests/weapon_sprint_regression.gd`, the input now lowers the weapon instead:
+
+- The sprint ends on the frame the trigger is pulled and a `SPRINT_OUT` (0.18 s) timer runs. `can_fire()` is false until it expires, so the shot the player asked for is the shot that happens, just 0.18 s later.
+- The sprint stays dropped until the sprint *key* is released. Without that latch a held sprint restarted the run the moment the transition ended, which re-triggered the sprint-out in a loop.
+- A trigger held through the transition is not the trigger that fires: `sprint_out_armed` needs a release first. Otherwise holding fire through a sprint-out would both start the transition and then fire through it, spending two rounds for one pull.
+- Standing still is unchanged: a standing shot fires on the same frame.
+
+Eleven checks cover it (sprint starts, a sprinting player cannot fire, the trigger starts the transition, a held trigger does not fire during or after it, a fresh pull costs exactly one round, a standing shot is immediate). Bots and remote clients are untouched by this: bots never set the player's sprint state.
+
+The full local suite is now 12 suites / 459 checks plus the runtime asset check, all passing, and the bot match is unchanged.
