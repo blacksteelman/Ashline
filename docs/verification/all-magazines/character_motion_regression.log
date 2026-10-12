@@ -1,0 +1,81 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS Actual reload graph includes UpperArm.R
+PASS Actual reload graph includes Forearm.R
+PASS Actual reload graph includes Hand.R
+PASS Actual reload graph includes UpperArm.L
+PASS Actual reload graph includes Forearm.L
+PASS Actual reload graph includes Hand.L
+PASS Actual reload graph includes Weapon
+PASS Reload leaves torso and legs on locomotion
+PASS Weapon 0 has an actual movable magazine mesh
+PASS Weapon 0 reuses immutable mesh parts
+PASS Weapon 0 split preserves every triangle exactly once
+PASS Weapon 0 bake preserves source geometry count
+PASS Weapon 0 hand reaches magazine well at 0.21
+PASS Weapon 0 carried magazine stays in hand at 0.3
+PASS Weapon 0 magazine stows during swap
+PASS Weapon 0 handling leaves another instance assembled
+PASS Weapon 0 carried magazine stays in hand at 0.55
+PASS Weapon 0 hand reaches magazine well at 0.65
+PASS Weapon 0 replacement seats before hand returns
+PASS Weapon 0 completion restores assembled weapon
+PASS Weapon 0 respawn clears magazine handling
+PASS Weapon 1 has an actual movable magazine mesh
+PASS Weapon 1 reuses immutable mesh parts
+PASS Weapon 1 split preserves every triangle exactly once
+PASS Weapon 1 bake preserves source geometry count
+PASS Weapon 1 hand reaches magazine well at 0.21
+PASS Weapon 1 carried magazine stays in hand at 0.3
+PASS Weapon 1 magazine stows during swap
+PASS Weapon 1 handling leaves another instance assembled
+PASS Weapon 1 carried magazine stays in hand at 0.55
+PASS Weapon 1 hand reaches magazine well at 0.65
+PASS Weapon 1 replacement seats before hand returns
+PASS Weapon 1 completion restores assembled weapon
+PASS Weapon 1 respawn clears magazine handling
+PASS Weapon 2 has an actual movable magazine mesh
+PASS Weapon 2 reuses immutable mesh parts
+PASS Weapon 2 split preserves every triangle exactly once
+PASS Weapon 2 bake preserves source geometry count
+PASS Weapon 2 hand reaches magazine well at 0.21
+PASS Weapon 2 carried magazine stays in hand at 0.3
+PASS Weapon 2 magazine stows during swap
+PASS Weapon 2 handling leaves another instance assembled
+PASS Weapon 2 carried magazine stays in hand at 0.55
+PASS Weapon 2 hand reaches magazine well at 0.65
+PASS Weapon 2 replacement seats before hand returns
+PASS Weapon 2 completion restores assembled weapon
+PASS Weapon 2 respawn clears magazine handling
+PASS Weapon 3 has an actual movable magazine mesh
+PASS Weapon 3 reuses immutable mesh parts
+PASS Weapon 3 split preserves every triangle exactly once
+PASS Weapon 3 bake preserves source geometry count
+PASS Weapon 3 hand reaches magazine well at 0.21
+PASS Weapon 3 carried magazine stays in hand at 0.3
+PASS Weapon 3 magazine stows during swap
+PASS Weapon 3 handling leaves another instance assembled
+PASS Weapon 3 carried magazine stays in hand at 0.55
+PASS Weapon 3 hand reaches magazine well at 0.65
+PASS Weapon 3 replacement seats before hand returns
+PASS Weapon 3 completion restores assembled weapon
+PASS Weapon 3 respawn clears magazine handling
+PASS Weapon 4 has an actual movable magazine mesh
+PASS Weapon 4 reuses immutable mesh parts
+PASS Weapon 4 split preserves every triangle exactly once
+PASS Weapon 4 bake preserves source geometry count
+PASS Weapon 4 hand reaches magazine well at 0.21
+PASS Weapon 4 carried magazine stays in hand at 0.3
+PASS Weapon 4 magazine stows during swap
+PASS Weapon 4 handling leaves another instance assembled
+PASS Weapon 4 carried magazine stays in hand at 0.55
+PASS Weapon 4 hand reaches magazine well at 0.65
+PASS Weapon 4 replacement seats before hand returns
+PASS Weapon 4 completion restores assembled weapon
+PASS Weapon 4 respawn clears magazine handling
+PASS Sprint pose eases in
+PASS Sprint reaches its authored stance
+PASS Sprint exit eases rather than snapping
+PASS Running without sprint does not select lowered weapon
+PASS Respawn clears presentation state
+CHARACTER_MOTION 78 checks, 0 failures

@@ -1,0 +1,15 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+Vulkan 1.4.305 - Forward+ - Using Device #0: Unknown - llvmpipe (LLVM 19.1.7, 256 bits)
+
+MAGAZINE_SURFACES 1 [1] source triangles 23385
+BAKED fp_ak74m surfaces 2 aabb [P: (-0.023935, -0.220087, -0.729572), S: (0.064619, 0.266869, 0.956687)] muzzle (-0.0, -0.016382, -0.713806)
+  grip (0.035832, -0.07, 0.04) support (-0.04649, -0.054899, -0.280257)
+MAGAZINE_SURFACES 2 [1] source triangles 19960
+BAKED fp_sniper surfaces 3 aabb [P: (-0.078382, -0.396419, -0.729841), S: (0.101743, 0.426, 1.07916)] muzzle (-0.0, -0.122577, -0.726628)
+  grip (0.052278, -0.07, 0.04) support (-0.105722, -0.227728, -0.279022)
+MAGAZINE_SURFACES 3 [2] source triangles 17818
+BAKED fp_pistol surfaces 3 aabb [P: (-0.022725, -0.143561, -0.203858), S: (0.062408, 0.143868, 0.180228)] muzzle (-0.0, -0.053022, -0.201629)
+  grip (0.009509, -0.07, 0.04) support (-0.018888, -0.121178, 0.045027)
+MAGAZINE_SURFACES 4 [1] source triangles 13249
+BAKED fp_smg surfaces 3 aabb [P: (-0.066947, -0.355197, -0.459295), S: (0.108691, 0.420635, 0.500561)] muzzle (-0.0, -0.091992, -0.44986)
+  grip (0.035811, -0.07, 0.04) support (-0.113975, -0.113214, -0.236471)

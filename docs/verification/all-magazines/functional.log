@@ -1,0 +1,54 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+NAV_READY points=7534 ms=1208
+PASS: 6v6 roster
+PASS: Cross-map route
+PASS: Shot consumes round
+PASS: Hitscan damages visible enemy
+PASS: Headshots kill
+PASS: Team score increments exactly once
+PASS: K/D recorded
+PASS: Dead actor cannot score twice
+PASS: Respawn resets life and health
+PASS: Ember respawn faces into arena
+PASS: Aegis respawn faces into arena
+PASS: Reload starts
+PASS: Reload transfers reserve
+PASS: Pistol switch
+PASS: Return to primary
+PASS: Class selects weapon 0
+PASS: Class selects weapon 1
+PASS: Class selects weapon 2
+PASS: WASD moves player
+PASS: Sprint increases movement speed
+PASS: Crouch changes collision hull
+PASS: ADS transitions field of view
+PASS: Jump leaves floor
+PASS: Shot drives weapon and camera recoil
+PASS: Weapon 0 hits and damages
+PASS: Weapon 1 hits and damages
+PASS: Weapon 2 hits and damages
+PASS: Weapon 3 hits and damages
+PASS: Viewmodel is the animated first-person set with a magazine bone
+PASS: Magazine moves out during reload
+PASS: Supporting hand works the magazine
+PASS: Magazine returns to its seated pose
+PASS: Spring recoil moves weapon rearward
+PASS: Spring recoil settles without drift
+PASS: Crouched head hit uses head multiplier
+PASS: Crouched headshots can kill
+PASS: Wall blocks weapon damage
+PASS: Navigation routes around the foundry hall walls
+PASS: Frag creates physical grenade
+PASS: Round restart clears grenades
+PASS: Streak rewards 3/5/7
+PASS: Recon reward activates radar
+MATCH_END 2 SCORE [7, 0] HEADSHOTS 3 SHOTS 10
+PASS: Score limit ends match
+PASS: Next match starts with cleared score
+PASS: Queued class keeps current-life weapon
+PASS: Queued class applies on respawn
+PASS: Settings persist
+PASS: Old support timers cannot damage or score in new match
+PASS: Leaving match clears grenade ownership safely
+FUNCTIONAL_OK 49 failed=0

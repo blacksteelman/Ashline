@@ -1,3 +1,5 @@
+Latest continuation: [ALL_MAGAZINES_HANDOFF.md](ALL_MAGAZINES_HANDOFF.md).
+
 # Reload hand contact — 2026-10-11
 
 Branch `codex/weapon-polish`, reload commit `8de2f06205ed881b63c68e47b915090bef2a7671`, final gameplay/build revision `4421b5f3117328626732c63c0779a545d0ab72f6`.

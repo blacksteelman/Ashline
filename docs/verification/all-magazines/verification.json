@@ -1,0 +1,241 @@
+{
+  "revision": "5658ac2c493ba00c6f92b25aac1d88741f6cb664",
+  "checks": 363,
+  "packages": [
+    {
+      "platform": "Linux",
+      "bytes": 377222402,
+      "crc_verified": true,
+      "payload_hashes_verified": true,
+      "build_info": {
+        "game": "ASHLINE",
+        "revision": "5658ac2c493ba00c6f92b25aac1d88741f6cb664",
+        "godot": "4.6.3",
+        "platform": "Linux",
+        "created_utc": "2026-10-12T04:52:07.853120+00:00",
+        "files": {
+          "ASHLINE.x86_64": {
+            "bytes": 472382712,
+            "sha256": "79b18515c1489b17af41d065b0e1839434bd3bc3db8ec94083bd8d3069f9389d"
+          },
+          "LICENSES.md": {
+            "bytes": 6405,
+            "sha256": "63f8038698970bbd2980d131db35049a7b3d48630b651e9127f133b08559259f"
+          },
+          "README.md": {
+            "bytes": 21983,
+            "sha256": "115071352d664ce9a30b6497b9ca79219857006864b45044c79e6812234c004a"
+          },
+          "START_HERE_RU.txt": {
+            "bytes": 1458,
+            "sha256": "5f1bbeb9b75baeeaa52bc309ccd6a6d88a4c591088d39496a543606001d048ad"
+          }
+        }
+      }
+    },
+    {
+      "platform": "Windows",
+      "bytes": 387394912,
+      "crc_verified": true,
+      "payload_hashes_verified": true,
+      "build_info": {
+        "game": "ASHLINE",
+        "revision": "5658ac2c493ba00c6f92b25aac1d88741f6cb664",
+        "godot": "4.6.3",
+        "platform": "Windows",
+        "created_utc": "2026-10-12T04:52:22.829436+00:00",
+        "files": {
+          "ASHLINE.exe": {
+            "bytes": 505825512,
+            "sha256": "351b1aa3206ef9b0cae2167d9b2a88b99af794e36f6858bde558b5102e499a18"
+          },
+          "LICENSES.md": {
+            "bytes": 6405,
+            "sha256": "63f8038698970bbd2980d131db35049a7b3d48630b651e9127f133b08559259f"
+          },
+          "README.md": {
+            "bytes": 21983,
+            "sha256": "115071352d664ce9a30b6497b9ca79219857006864b45044c79e6812234c004a"
+          },
+          "START_HERE_RU.txt": {
+            "bytes": 1458,
+            "sha256": "5f1bbeb9b75baeeaa52bc309ccd6a6d88a4c591088d39496a543606001d048ad"
+          }
+        }
+      }
+    }
+  ],
+  "native_bot": {
+    "fighters": [
+      {
+        "deaths": 7,
+        "id": 0,
+        "kills": 10,
+        "position": [
+          -25.9999828338623,
+          0.140234395861626,
+          23.0738430023193
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 336.421235375106
+      },
+      {
+        "deaths": 8,
+        "id": 1,
+        "kills": 2,
+        "position": [
+          -26.9999694824219,
+          0.140234395861626,
+          33.4489784240723
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 328.037547186483
+      },
+      {
+        "deaths": 5,
+        "id": 2,
+        "kills": 8,
+        "position": [
+          -17.0742244720459,
+          0.140234395861626,
+          36.9997711181641
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 297.529003787553
+      },
+      {
+        "deaths": 5,
+        "id": 3,
+        "kills": 7,
+        "position": [
+          -15.995867729187,
+          0.140310391783714,
+          8.83352375030518
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 307.093944430817
+      },
+      {
+        "deaths": 6,
+        "id": 4,
+        "kills": 4,
+        "position": [
+          -16.7723083496094,
+          0.000546917319297791,
+          3.6756649017334
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 332.318493887782
+      },
+      {
+        "deaths": 7,
+        "id": 5,
+        "kills": 9,
+        "position": [
+          -21.0449466705322,
+          0.180234402418137,
+          17.0462417602539
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 295.403536294587
+      },
+      {
+        "deaths": 7,
+        "id": 6,
+        "kills": 8,
+        "position": [
+          -8.00002002716064,
+          0.14997798204422,
+          -26.889518737793
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 330.518086775206
+      },
+      {
+        "deaths": 8,
+        "id": 7,
+        "kills": 5,
+        "position": [
+          25.0,
+          0.180234402418137,
+          14.0209512710571
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 332.256243105978
+      },
+      {
+        "deaths": 8,
+        "id": 8,
+        "kills": 6,
+        "position": [
+          17.1094074249268,
+          0.178984448313713,
+          5.06212139129639
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 319.642998158059
+      },
+      {
+        "deaths": 6,
+        "id": 9,
+        "kills": 3,
+        "position": [
+          12.5786962509155,
+          0.140504762530327,
+          -22.2202091217041
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 334.871130727232
+      },
+      {
+        "deaths": 6,
+        "id": 10,
+        "kills": 8,
+        "position": [
+          -17.3999996185303,
+          0.140234068036079,
+          -36.2647018432617
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 343.566066795494
+      },
+      {
+        "deaths": 5,
+        "id": 11,
+        "kills": 8,
+        "position": [
+          29.0,
+          0.140630289912224,
+          -14.4461545944214
+        ],
+        "recoveries": 0,
+        "spawn_deaths": 0,
+        "travelled": 305.125212363899
+      }
+    ],
+    "headshots": 35,
+    "matches": 2,
+    "reason": "completed",
+    "recoveries": [],
+    "score": [
+      40,
+      38
+    ],
+    "seed": 804,
+    "shots": 949,
+    "simulation_seconds": 151.799999999997,
+    "success": true
+  },
+  "network": "NETWORK_OK snapshots=120 slot=0 actors=12 score=[1, 5] predicted_shots=30 ammo=[0, 30, 5, 13, 30] acknowledged=30 pending=0"
+}
