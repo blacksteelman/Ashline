@@ -1,0 +1,19 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PASS Bounce follows local camera
+PASS Bounce affects only reserved viewmodel layer
+PASS Default world geometry receives no bounce
+PASS Bounce adds no shadow map
+PASS Bounce cannot leak through SDFGI into the world
+PASS Bounce remains weaker than the key light
+PASS Weapon 0 and arms receive bounce
+PASS Weapon 0 retains world sun and ambient lighting
+PASS Weapon 1 and arms receive bounce
+PASS Weapon 1 retains world sun and ambient lighting
+PASS Weapon 2 and arms receive bounce
+PASS Weapon 2 retains world sun and ambient lighting
+PASS Weapon 3 and arms receive bounce
+PASS Weapon 3 retains world sun and ambient lighting
+PASS Weapon 4 and arms receive bounce
+PASS Weapon 4 retains world sun and ambient lighting
+VIEWMODEL_LIGHTING 16 checks, 0 failures

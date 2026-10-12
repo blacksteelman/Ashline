@@ -1,0 +1,8 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+EXPORTED_CALIBRATION 0 PASS res://assets/viewmodels/world_fp_acr.cfg
+EXPORTED_CALIBRATION 1 PASS res://assets/viewmodels/world_fp_ak74m.cfg
+EXPORTED_CALIBRATION 2 PASS res://assets/viewmodels/world_fp_sniper.cfg
+EXPORTED_CALIBRATION 3 PASS res://assets/viewmodels/world_fp_pistol.cfg
+EXPORTED_CALIBRATION 4 PASS res://assets/viewmodels/world_fp_smg.cfg
+EXPORTED_ASSETS PASS
