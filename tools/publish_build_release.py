@@ -21,6 +21,18 @@ def digest(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
+def find_release(repo, tag):
+    page = 1
+    while True:
+        items = json.loads(gh('api', f'repos/{repo}/releases?per_page=100&page={page}').stdout)
+        for item in items:
+            if item['tag_name'] == tag:
+                return item
+        if len(items) < 100:
+            return None
+        page += 1
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--repo', required=True)
@@ -36,9 +48,8 @@ def main():
     checksum.write_text(''.join(f'{sums[path.name]}  {path.name}\n' for path in files))
     files.append(checksum)
     sums[checksum.name] = digest(checksum)
-    endpoint = f'repos/{args.repo}/releases/tags/{tag}'
-    existing = gh('api', endpoint, check=False)
-    release = json.loads(existing.stdout) if existing.returncode == 0 else None
+    # Drafts are not reliably addressable by tag before publication.
+    release = find_release(args.repo, tag)
     if release and not release['draft']:
         # A retry must never silently replace an already published binary.
         assets = {asset['name']: asset for asset in release['assets']}
@@ -62,7 +73,7 @@ def main():
            '--notes-file', str(notes))
     # Only our unfinished draft may be repaired/retried.
     gh('release', 'upload', tag, *(str(path) for path in files), '--repo', args.repo, '--clobber')
-    release = json.loads(gh('api', endpoint).stdout)
+    release = find_release(args.repo, tag)
     assets = {asset['name']: asset for asset in release['assets']}
     for path in files:
         asset = assets.get(path.name)
@@ -75,7 +86,7 @@ def main():
                 if digest(Path(directory) / path.name) != sums[path.name]:
                     raise SystemExit(f'Uploaded asset hash mismatch: {path.name}')
     gh('release', 'edit', tag, '--repo', args.repo, '--draft=false', '--prerelease', '--latest=false')
-    release = json.loads(gh('api', endpoint).stdout)
+    release = json.loads(gh('api', f"repos/{args.repo}/releases/{release['id']}").stdout)
     (args.packages / 'published-release.json').write_text(json.dumps(release, indent=2) + '\n')
     print(release['html_url'])
 

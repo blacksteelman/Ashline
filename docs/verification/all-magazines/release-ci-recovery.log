@@ -1,0 +1,13 @@
+export	Publish downloadable PC prerelease (manual build)	﻿2026-10-12T09:31:54.3248390Z ##[group]Run python3 tools/package_builds.py --linux-dir build/linux --windows-dir build/windows --revision "$GITHUB_SHA"
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:31:54.3249914Z [36;1mpython3 tools/package_builds.py --linux-dir build/linux --windows-dir build/windows --revision "$GITHUB_SHA"[0m
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:31:54.3251236Z [36;1mpython3 tools/publish_build_release.py --repo "$GITHUB_REPOSITORY" --revision "$GITHUB_SHA"[0m
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:31:54.3346869Z shell: /usr/bin/bash -e {0}
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:31:54.3347337Z env:
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:31:54.3347666Z   GODOT_VERSION: 4.6.3
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:31:54.3348047Z   GODOT_TAG: 4.6.3-stable
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:31:54.3353015Z   GH_TOKEN: ***
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:31:54.3353366Z ##[endgroup]
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:32:25.0185743Z build/packages/ASHLINE-Linux-44a9226.zip 480226221 bytes; CRC verified
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:32:25.0187379Z build/packages/ASHLINE-Windows-44a9226.zip 490398844 bytes; CRC verified
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:32:46.9919484Z GitHub command failed: gh: Not Found (HTTP 404)
+export	Publish downloadable PC prerelease (manual build)	2026-10-12T09:32:47.0002175Z ##[error]Process completed with exit code 1.
