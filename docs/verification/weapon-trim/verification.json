@@ -1,0 +1,52 @@
+{
+  "revision_base": "a3f7e08f606d4e46b0fec6309381992f6c7d04bf",
+  "branch": "codex/weapon-polish",
+  "date": "2026-10-12",
+  "host": "Windows 11, AMD Radeon RX 9070 XT (OpenGL Compatibility used for the asset captures)",
+  "engine": "Godot 4.6.3.stable.official",
+  "scope": "Removed the blue gun-oil can that the sniper set carries on the barrel; kept the rest of the set intact.",
+  "change": {
+    "file": "scripts/fp_set_rig.gd",
+    "function": "FPSetRig.strip_foreign_part / FPSetRig.can_mask",
+    "rule": "Connected island of the fp_sniper 'Rifle' surface whose mean base-colour texel is blue (B - (R+G)/2 > 0.0) and whose centre lies forward of the receiver (z > 0.10) is removed from the index buffer. Vertex arrays are untouched, so the glTF skin bindings stay valid.",
+    "measured_values": {
+      "can_body_island_mean_blueness": 0.238,
+      "sling_swivel_strap_island_mean_blueness": 0.057,
+      "barrel_island_mean_blueness": -0.02,
+      "triangles_removed": 1909,
+      "first_person_triangles_before": 34812,
+      "first_person_triangles_after": 32903
+    },
+    "third_person": "assets/viewmodels/world_fp_sniper.res rebaked with tests/bake_world_weapons.gd --weapons=2 (18051 triangles, 3 surfaces)."
+  },
+  "checks": {
+    "tests/weapon_trim_regression.gd": "14 checks, 0 failures",
+    "tests/functional.gd": "49 checks, 0 failures",
+    "tests/fp_motion_regression.gd": "23 checks, 0 failures",
+    "tests/fp_anchors_regression.gd": "46 checks, 0 failures",
+    "tests/viewmodel_lighting_regression.gd": "16 checks, 0 failures",
+    "tests/fp_actions_regression.gd": "60 checks, 0 failures",
+    "tests/audio_distance_regression.gd": "38 checks, 0 failures",
+    "tests/character_motion_regression.gd": "128 checks, 0 failures",
+    "tests/foundry_routes_regression.gd": "40 checks, 0 failures",
+    "tests/ragdoll_regression.gd": "29 checks, 0 failures"
+  },
+  "test_hygiene": "tests/functional.gd now pins settings.mode='tdm' and settings.classes=[] before start_match(); a saved preference (domination and edited class loadouts) previously made four of its checks fail on any machine whose user:// settings had been changed by playing the game.",
+  "playability_smoke": {
+    "script": ".runtime/capture_play_smoke.gd",
+    "result": "Real main.tscn match: ACR shot consumed 1 round, sniper shot consumed 1 round, 30 physics ticks of held W moved the player 2.14 m. play-weapon-0.png, play-weapon-0-ads.png, play-weapon-2.png, play-weapon-2-ads.png and play-move.png show the HUD, minimap, muzzle flash, ejected case and correct ammo counters.",
+    "bot_match": "godot --headless -- --bot-test --seed=801 --matches=1 : 520 shots, 18 headshots, 31:40, success=true"
+  },
+  "evidence": [
+    "before-right.png / before-top.png - unmodified sniper set, blue can on the barrel",
+    "after-right.png / after-top.png - same pose after strip_foreign_part",
+    "compare-right.png / compare-top.png - labelled before/after",
+    "play-weapon-2.png - the sniper in a real match, no can",
+    "play_smoke.json - shot and movement measurements"
+  ],
+  "known_limits": [
+    "A 5x8 cm blue-coloured bracket on the barrel stays: its island's mean texel is not blue, so the colour rule cannot single it out without risking the barrel. It is small and at the front sight, not the 17 cm can that used to hang off the muzzle.",
+    "Captures are software/Compatibility-rendered frames; no hardware-GPU or gunfeel claim is made.",
+    "Windows export and the headless suites were run on this machine; the Linux build and CI were not re-run here."
+  ]
+}

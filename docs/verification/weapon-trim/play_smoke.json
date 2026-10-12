@@ -1,0 +1,13 @@
+{
+  "travelled": 2.14136695861816,
+  "weapon_0": {
+    "ammo_after": 29,
+    "ammo_before": 30,
+    "shots": 1
+  },
+  "weapon_2": {
+    "ammo_after": 4,
+    "ammo_before": 5,
+    "shots": 2
+  }
+}
