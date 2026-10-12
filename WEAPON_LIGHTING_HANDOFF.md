@@ -40,3 +40,17 @@ Two things this pass measured rather than changed. First, the sniper has no firs
 Evidence and numbers: `docs/verification/weapon-trim/`. Repeated local run on Windows (Godot 4.6.3, RX 9070 XT): ten suites / 448 checks, 0 failures; a real `main.tscn` match with input, damage and HUD captured; bot smoke `--bot-test --seed=801 --matches=1` finished with 520 shots, 18 headshots, success. `tests/functional.gd` now pins `settings.mode` and `settings.classes` before `start_match()`, because saved user preferences (domination, edited loadouts) used to fail four of its checks on any machine where the game had been played. The export templates are not installed here, so no playable export was produced in this session.
 
 For graphical runs here, use Xorg with a `/tmp` logfile and set XDG_DATA_HOME, XDG_CACHE_HOME and MESA_SHADER_CACHE_DIR inside the workspace. `tools` are not required to modify user settings: CLI `--graphics=0` selects Performance for a diagnostic launch. Default remains Quality/Forward+.
+
+## Building and running the PC build on Windows
+
+The export templates must be installed before any export works: download `Godot_v4.6.3-stable_export_templates.tpz` from the Godot release, extract it, and copy its `templates/*` into `%APPDATA%\Godot\export_templates\4.6.3.stable\`. Then:
+
+```powershell
+godot --headless --path . --export-release "Windows PC" build/windows/ASHLINE.exe
+build\windows\ASHLINE.exe --headless --audio-driver Dummy --user-data-dir build/verify-userdata -- --bot-test --seed=801 --matches=1
+build\windows\ASHLINE.exe --resolution 1280x720 --user-data-dir build/verify-userdata -- --showcase
+```
+
+`--user-data-dir` keeps the run away from the player's saved settings, which otherwise decide the mode and the class loadouts. A native launch must print `Vulkan ... Forward+ - Using Device #0` and `NAV_READY`; a missing `load()`ed asset shows up as `No loader found for resource`, which no editor run can reveal. Two such assets were excluded from `export_presets.cfg` and are now included: `assets/smoke.png` (impact and explosion smoke; the shipped build threw on every impact) and the `world_*.cfg` muzzle tables. `tests/runtime_assets_regression.gd` now lists every path the scripts load at runtime so an exporter exclude cannot silently break a build again.
+
+Recorded in this session on Windows 11 / Godot 4.6.3 / RX 9070 XT: the exported `ASHLINE.exe` (536 MB, Vulkan/Forward+) completed a headless bot match with the same numbers as the editor run (520 shots, 18 headshots, 31:40) and opened its window in showcase mode with no loader errors.

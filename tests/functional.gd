@@ -6,7 +6,12 @@ func expect(ok: bool, message: String):
  else:checks+=1;print('PASS: '+message)
 func _initialize():call_deferred('run')
 func run():
- var g=load('res://main.tscn').instantiate();root.add_child(g);await process_frame;g.start_match(false)
+ var g=load('res://main.tscn').instantiate();root.add_child(g);await process_frame
+ # A saved user preference must not decide what this suite checks: it asserts
+ # team-deathmatch scoring, the TDM score limit and the default class loadouts.
+ g.settings.mode='tdm'
+ g.settings.classes=[]
+ g.start_match(false)
  for f in g.fighters:
   f.bot=false;f.local_player=false;f.set_physics_process(false);f.position=Vector3(28,0,29)
  var p=g.fighters[0];var enemy=g.fighters[6];p.position=Vector3(0,.01,-15);enemy.position=Vector3(0,.01,-20);p.yaw=0;p.pitch=0;p.ads=true

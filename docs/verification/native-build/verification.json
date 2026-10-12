@@ -1,0 +1,21 @@
+{
+  "artifact": "build/windows/ASHLINE.exe (536.3 MB, embedded pck) - local only, not published",
+  "checks": "11 editor suites, 448 checks plus the runtime asset check, 0 failures",
+  "date": "2026-10-12",
+  "engine": "Godot 4.6.3.stable.official",
+  "evidence": {
+    "bot-match.log": "exported ASHLINE.exe, --headless --bot-test --seed=801 --matches=1: MATCH_END 1 SCORE [31, 40] HEADSHOTS 18 SHOTS 520, success=true - identical to the editor run",
+    "window-launch.log": "exported ASHLINE.exe --showcase at 1280x720: \"Vulkan 1.4.355 - Forward+ - Using Device #0: AMD Radeon RX 9070 XT\" then \"NAV_READY points=7534 ms=462\", no loader errors, window stayed up until the run was stopped"
+  },
+  "export_fix": {
+    "fix": "assets/smoke.png removed from the exclude_filter of both presets; the world_fp_*.cfg muzzle tables were already covered by the include_filter",
+    "guard": "tests/runtime_assets_regression.gd lists every asset path the scripts load at runtime (audio, fx, fonts, shaders, weapon sets, third-person bakes, soldiers) and runs in CI",
+    "problem": "the exported build threw \"No loader found for resource: res://assets/smoke.png\" on every impact: export_presets.cfg excluded it from both presets, and a load() call is invisible to the exporter"
+  },
+  "host": "Windows 11, AMD Radeon RX 9070 XT, Vulkan 1.4.355 Forward+",
+  "known_limits": [
+    "Only the Windows preset was exported here; CI exports Linux as well.",
+    "The window was observed to start, render and stay up without errors; no frame was captured from the exported build, so this is not a visual sign-off of the shipped binary.",
+    "The 536 MB executable was not uploaded anywhere from this machine."
+  ]
+}
