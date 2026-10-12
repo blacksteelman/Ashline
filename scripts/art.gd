@@ -70,7 +70,7 @@ static func world_weapon(parent: Node3D, kind: int) -> Node3D:
     var movable=MeshInstance3D.new();movable.name='MagazineRig';movable.mesh=world_weapon_parts[source][1];mi.add_child(movable)
    var meta=ConfigFile.new();meta.load(base+'.cfg')
    mi.set_meta('muzzle',meta.get_value('weapon','muzzle',Vector3(0,.03,-.6)))
-   for key in ['grip','support']:
+   for key in ['grip','support','grip_fingers','grip_thumb','support_fingers','support_thumb']:
     if meta.has_section_key('weapon',key):mi.set_meta(key,meta.get_value('weapon',key))
    return mi
  # Third-person weapon from the viewmodel pipeline: weapon space, origin at the grip, Muzzle marker.

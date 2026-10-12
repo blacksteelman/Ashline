@@ -44,19 +44,38 @@ func run():
    a.reload_left=a.reload_time(a.weapon_id)*(1-t)
    motion.reload_blend=1.0 if t<1 else 0.0
    motion.update(1.0/60);motion.tree.set('parameters/Air/blend_amount',0.0);motion.tree.advance(0)
+   # BoneAttachment updates are deferred; inspect the displayed settled pose.
+   for frame in 3:
+    motion.update(1.0/60);motion.tree.set('parameters/Air/blend_amount',0.0)
+    motion.tree.advance(1.0/60)
+    await process_frame
    ik._process_modification()
    if t==.21 or t==.65:
     var wrist=sk.global_transform*sk.get_bone_global_pose(sk.find_bone('Hand.L')).origin
+    print('CONTACT_ERROR ',kind,' ',t,' ',wrist.distance_to(a.world_gun.global_transform*ik.magazine_contact),' contact ',ik.magazine_contact,' shoulder ',a.world_gun.global_transform.affine_inverse()*sk.global_transform*sk.get_bone_global_pose(sk.find_bone('UpperArm.L')).origin)
     expect(wrist.distance_to(a.world_gun.global_transform*ik.magazine_contact)<.005,'Weapon '+str(kind)+' hand reaches magazine well at '+str(t))
    if t==.30 or t==.55:
     var hand=sk.global_transform*sk.get_bone_global_pose(sk.find_bone('Hand.L')).origin
     var contact=magazine.global_transform*ik.magazine_contact
     expect(hand.distance_to(contact)<.001,'Weapon '+str(kind)+' carried magazine stays in hand at '+str(t))
+    var hand_basis=sk.global_basis*sk.get_bone_global_pose(sk.find_bone('Hand.L')).basis
+    var contact_basis=magazine.global_basis*ik.magazine_hand_frame
+    expect(hand_basis.orthonormalized().get_rotation_quaternion().angle_to(contact_basis.orthonormalized().get_rotation_quaternion())<.002,'Weapon '+str(kind)+' carried magazine rotates with wrist at '+str(t))
    if t==.40:
     expect(not magazine.visible,'Weapon '+str(kind)+' magazine stows during swap')
     expect(twin_mag.visible and twin_mag.position==Vector3.ZERO,'Weapon '+str(kind)+' handling leaves another instance assembled')
    if t==.80:expect(magazine.visible and magazine.position.length()<.0001,'Weapon '+str(kind)+' replacement seats before hand returns')
-   if t==1.0:expect(magazine.visible and magazine.position==Vector3.ZERO,'Weapon '+str(kind)+' completion restores assembled weapon')
+   if t==1.0:
+    expect(magazine.visible and magazine.transform.is_equal_approx(Transform3D.IDENTITY),'Weapon '+str(kind)+' completion restores assembled weapon transform')
+    for side in ['L','R']:
+     expect(ik.hold_frames.has(side),'Weapon '+str(kind)+' provides calibrated '+side+' hand orientation')
+     var rest=sk.get_bone_global_rest(sk.find_bone('Hand.'+side))
+     var pose=sk.get_bone_global_pose(sk.find_bone('Hand.'+side))
+     expect(pose.basis.is_finite() and absf(pose.basis.determinant()-rest.basis.determinant())<.001,'Weapon '+str(kind)+' hand orientation preserves rig scale '+side)
+     var actual_fingers=(a.world_gun.global_basis.inverse()*sk.global_basis*pose.basis*ik.hand_frames[side].x).normalized()
+     var expected_fingers: Vector3=a.world_gun.get_meta(('grip' if side=='R' else 'support')+'_fingers')
+     print('HAND_DIRECTION ',kind,' ',side,' ',actual_fingers,' expected ',expected_fingers,' dot ',actual_fingers.dot(expected_fingers.normalized()))
+     expect(actual_fingers.dot(expected_fingers.normalized())>.95,'Weapon '+str(kind)+' idle fingers align with its own grip '+side)
   twin.queue_free()
   a.reload_left=0;motion.reset();motion.update(1.0/60)
   expect(ik.reload_progress<0,'Weapon '+str(kind)+' respawn clears magazine handling')
