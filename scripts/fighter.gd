@@ -104,6 +104,7 @@ func _ready():
  if local_player:
   model.visible=false
   camera=Camera3D.new();add_child(camera);camera.position.y=1.62;camera.current=true;camera.fov=game.settings.fov;camera.near=.045
+  ViewmodelMaterial.add_fill(camera)
   rig=Node3D.new();camera.add_child(rig);build_gun()
  load_class(class_id)
 func build_gun():

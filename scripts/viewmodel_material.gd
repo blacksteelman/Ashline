@@ -4,7 +4,26 @@ extends RefCounted
 # depth range: no fisheye stretching at wide world FOV and no clipping into
 # walls, while sharing the scene's lights, shadows, GI and reflections.
 const GLOBAL='viewmodel_fov_scale'
+const FILL_LAYER=1 << 19
 static var converted: Dictionary={}
+
+static func add_fill(camera: Camera3D) -> OmniLight3D:
+ # A broad, restrained camera-side bounce keeps dark coatings readable. Only
+ # first-person meshes receive it; it must never reveal enemies or light walls.
+ var light=OmniLight3D.new()
+ light.name='ViewmodelBounce'
+ light.position=Vector3(.45,.6,.35)
+ light.light_color=Color('#dce7f2')
+ light.light_energy=1.2
+ light.omni_range=2.5
+ light.omni_attenuation=1.0
+ light.light_specular=.7
+ light.light_cull_mask=FILL_LAYER
+ # GI ignores light cull masks, so exclude this local presentation light.
+ light.light_bake_mode=Light3D.BAKE_DISABLED
+ light.shadow_enabled=false
+ camera.add_child(light)
+ return light
 
 static func ensure_global():
  pass # Declared in project.godot [shader_globals].
@@ -16,6 +35,7 @@ static func update_projection(viewmodel_fov: float, camera_fov: float):
 static func apply(root: Node):
  ensure_global()
  for mi in root.find_children('*','MeshInstance3D',true,false):
+  mi.layers|=FILL_LAYER
   var mesh: Mesh=mi.mesh
   if not mesh:continue
   for i in range(mesh.get_surface_count()):

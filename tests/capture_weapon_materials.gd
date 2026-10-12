@@ -6,9 +6,11 @@ func frames(n):
 func run():
  var tag='review'
  var only=-1
+ var compare_bounce=false
  for a in OS.get_cmdline_user_args():
   if a.begins_with('--tag='):tag=a.substr(6)
   if a.begins_with('--view='):only=int(a.substr(7))
+  if a=='--compare-bounce':compare_bounce=true
  var g=load('res://main.tscn').instantiate();root.add_child(g);g.start_match(false)
  g.set_physics_process(false);g.set_process(false)
  for f in g.fighters:f.set_physics_process(false)
@@ -18,7 +20,8 @@ func run():
   [4,Vector3(1.5,.18,-30),Vector3(1.5,1.4,0)],
   [3,Vector3(-22,3.15,18.3),Vector3(-17.2,4,14.8)],
   [1,Vector3(1.5,.18,-30),Vector3(1.5,1.4,0)],
-  [0,Vector3(1.5,.18,-30),Vector3(1.5,1.4,0)]]
+  [0,Vector3(1.5,.18,-30),Vector3(1.5,1.4,0)],
+  [2,Vector3(1.5,.18,-30),Vector3(1.5,1.4,0)]]
  var folder='res://build/material-captures'
  DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(folder))
  for i in views.size():
@@ -42,4 +45,10 @@ func run():
   await frames(3);await RenderingServer.frame_post_draw
   root.get_texture().get_image().save_png(ProjectSettings.globalize_path(folder+'/%s-%d.png'%[tag,i]))
   print('MATERIAL SHOT ',i)
+  if compare_bounce:
+   var bounce=p.camera.get_node('ViewmodelBounce')
+   bounce.visible=false
+   await frames(3);await RenderingServer.frame_post_draw
+   root.get_texture().get_image().save_png(ProjectSettings.globalize_path(folder+'/%s-%d-no-bounce.png'%[tag,i]))
+   bounce.visible=true
  quit()
