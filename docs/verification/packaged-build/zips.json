@@ -1,0 +1,26 @@
+{
+  "ASHLINE-Windows-98ab6f3.zip": {
+    "bytes": 492630883,
+    "sha256": "785e09768f7bb84f3d6da63d5fe402cd5d86760392e23582e45fd32a28f8d7b7",
+    "crc_check": "ok",
+    "entries": [
+      "ASHLINE.exe",
+      "BUILD_INFO.json",
+      "LICENSES.md",
+      "README.md",
+      "START_HERE_RU.txt"
+    ]
+  },
+  "ASHLINE-Linux-98ab6f3.zip": {
+    "bytes": 482457815,
+    "sha256": "62b6e3a5c63f82718cec207f6d34665d0203684c377d27a3e505ffda94915a71",
+    "crc_check": "ok",
+    "entries": [
+      "ASHLINE.x86_64",
+      "BUILD_INFO.json",
+      "LICENSES.md",
+      "README.md",
+      "START_HERE_RU.txt"
+    ]
+  }
+}

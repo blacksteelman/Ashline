@@ -1,0 +1,17 @@
+{
+  "artifacts": {
+    "ASHLINE-Linux-98ab6f3.zip": "460.1 MB, build/linux/ASHLINE.x86_64 (506.6 MB binary)",
+    "ASHLINE-Windows-98ab6f3.zip": "469.8 MB, build/windows/ASHLINE.exe (538.5 MB binary)"
+  },
+  "date": "2026-10-12",
+  "end_to_end_check": "The Windows ZIP was extracted to build/verify-package and the executable inside it was run: --verify-assets printed EXPORTED_SOUND PASS / EXPORTED_ASSETS PASS, and --bot-test --seed=801 --matches=1 printed the same MATCH_END 1 SCORE [31, 40] HEADSHOTS 18 SHOTS 520 as the build in build/windows. So the delivered bytes, not only the working copy, boot and play.",
+  "engine": "Godot 4.6.3.stable.official",
+  "native_matches": "Three editor-free bot matches on the exported build with --seed=707 --matches=3: MATCH_END 1 SCORE [39, 40] HEADSHOTS 18 SHOTS 543; MATCH_END 2 SCORE [40, 29] HEADSHOTS 33 SHOTS 974; MATCH_END 3 SCORE [23, 40] HEADSHOTS 41 SHOTS 1456. Every fighter reports recoveries 0 in the report that follows in the log.",
+  "not_done": [
+    "The ZIPs were not uploaded anywhere: publishing needs the CI workflow_dispatch job and the repository token, and neither was used here.",
+    "No frame was captured from the packaged executable, so this is a boot/asset/gameplay check, not a visual sign-off.",
+    "The Linux binary was packaged and header-checked but cannot run on this machine."
+  ],
+  "packaging": "tools/package_builds.py --linux-dir build/linux --windows-dir build/windows --revision 98ab6f3. It checked the Linux ELF header and the Windows PE x86-64 header, copied README.md, LICENSES.md and START_HERE_RU.txt into each folder, wrote BUILD_INFO.json with a per-file sha256, and CRC-verified both ZIPs. zips.json holds the archive sizes, sha256 digests and entry lists.",
+  "revision": "98ab6f3"
+}
