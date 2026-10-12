@@ -382,7 +382,17 @@ func local_fire_feedback(w: Dictionary, direction: Vector3):
  var lateral=deg_to_rad(sin(recoil_sequence*1.75)*.17)
  var previous_pitch=pitch
  pitch=clampf(pitch+rise,-1.45,1.45);yaw+=lateral
- recoil_return+=Vector2((pitch-previous_pitch)*.65,lateral);shot_age=0
+ # How much of the kick the rig gives back by itself. Automatic weapons keep a spray
+ # pattern the player pulls down through, and the debt they leave behind is capped, so a
+ # long burst cannot walk the aim arbitrarily far off target: the residual stays around
+ # 2.3 degrees no matter how long the trigger is held. Single-shot weapons return the
+ # kick exactly and never drift.
+ var recovery=w.get('recoil_recovery',.65)
+ var owed=recoil_return+Vector2((pitch-previous_pitch)*recovery,lateral)
+ if w.get('auto',false):
+  var limit=deg_to_rad(w.get('recoil_residual',2.5))
+  if owed.length()>limit:owed=owed.normalized()*limit
+ recoil_return=owed;shot_age=0
  # Resolve the newly restarted pose before locating flash/ejection sockets.
  if view is FPSetRig:view.update(self,0)
  game.muzzle(muzzle_world(),direction,weapon_id,view is FPSetRig)
