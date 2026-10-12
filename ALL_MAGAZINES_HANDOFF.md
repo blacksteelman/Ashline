@@ -1,3 +1,5 @@
+Latest continuation: [HAND_ALIGNMENT_HANDOFF.md](HAND_ALIGNMENT_HANDOFF.md).
+
 # All weapon magazines and interrupted reloads — 2026-10-12
 
 Branch `codex/weapon-polish`; gameplay/build revision `5658ac2c493ba00c6f92b25aac1d88741f6cb664`.

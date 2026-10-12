@@ -1,0 +1,34 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+NAV_READY points=7534 ms=1490
+PASS Nonlethal hit starts a directional skeletal reaction
+PASS Reaction records actual incoming shot direction
+PASS Death activates physical skeleton
+PASS Corpse has thirteen articulated rigid bodies
+PASS Twelve joints connect the body beside dropped weapon
+PASS Death disables animation and hand constraints
+PASS Death releases the actual gun into physics
+RAGDOLL chest (1.503804, 1.574132, -29.98188) -> (0.741874, 0.155188, -29.5797)
+PASS Corpse actually falls under physics
+PASS Body remains finite, near death position and above floor
+PASS Visible skeleton follows simulated chest
+PASS Respawn removes corpse physics
+PASS Respawn restores animation and grip
+PASS Weapon 1 releases the carried magazine independently
+PASS Weapon 1 dropped receiver does not retain a floating magazine
+PASS Weapon 1 respawn cleans loose magazine physics
+PASS Weapon 2 releases the carried magazine independently
+PASS Weapon 2 dropped receiver does not retain a floating magazine
+PASS Weapon 2 respawn cleans loose magazine physics
+PASS Weapon 3 releases the carried magazine independently
+PASS Weapon 3 dropped receiver does not retain a floating magazine
+PASS Weapon 3 respawn cleans loose magazine physics
+PASS Weapon 4 releases the carried magazine independently
+PASS Weapon 4 dropped receiver does not retain a floating magazine
+PASS Weapon 4 respawn cleans loose magazine physics
+PASS Local death camera follows the physical corpse
+PASS Respawn restores first-person camera
+PASS Incoming damage records attacker position for HUD
+PASS Network respawn also removes cosmetic corpse
+PASS Network respawn restores hand constraints
+RAGDOLL 29 checks, 0 failures

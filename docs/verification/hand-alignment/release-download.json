@@ -1,0 +1,18 @@
+[
+  {
+    "name": "ASHLINE-Windows-98e84ad.zip",
+    "bytes": 490402670,
+    "sha256": "f31d4703246ac6bd5dc1eb8163495dcfe39e759a3558db85484c16ec489033c5",
+    "crc_verified": true,
+    "payload_hashes_verified": true,
+    "revision": "98e84ad85433d410d78bc44baebb272d8882723f"
+  },
+  {
+    "name": "ASHLINE-Linux-98e84ad.zip",
+    "bytes": 480229988,
+    "sha256": "f8fcb42faf3d25eba6694297c134674eeb13c9fcb9dbd42d2f251a72cb810f3e",
+    "crc_verified": true,
+    "payload_hashes_verified": true,
+    "revision": "98e84ad85433d410d78bc44baebb272d8882723f"
+  }
+]

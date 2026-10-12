@@ -1,0 +1,2 @@
+ERROR: Failed to open 'user://logs/godot2026-10-12T15.10.21.log'.
+   at: copy (core/io/dir_access.cpp:423)
