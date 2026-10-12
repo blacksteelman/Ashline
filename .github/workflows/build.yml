@@ -65,6 +65,14 @@ jobs:
           python3 tools/package_builds.py --linux-dir build/linux --windows-dir build/windows --revision "$GITHUB_SHA" --no-archives
           ls -la build/linux build/windows
 
+      - name: Verify calibrated weapon assets in native build
+        run: |
+          set -o pipefail
+          build/linux/ASHLINE.x86_64 --headless -- --verify-assets 2>&1 | tee build/verification/native-assets.log
+          if grep -E '^(SCRIPT ERROR|ERROR):' build/verification/native-assets.log; then
+            exit 1
+          fi
+
       - name: Smoke test (Linux build runs a bot match headless)
         run: |
           set -o pipefail

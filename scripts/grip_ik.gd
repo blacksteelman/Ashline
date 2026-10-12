@@ -38,7 +38,7 @@ static func attach(holder: Node3D, socket_node: Node3D, weapon: Node3D) -> GripI
   var bounds=ik.magazine.get_aabb()
   # Place the wrist behind the near magazine edge, leaving room for the palm.
   # A center-based wrist target pushed the rifle magazines beyond arm reach.
-  ik.magazine_contact=Vector3(bounds.position.x-.035,bounds.get_center().y+.01,bounds.end.z+.035)
+  ik.magazine_contact=Vector3(bounds.position.x-.035,bounds.get_center().y-.02,bounds.end.z+.035)
  ik.grip=weapon.get_meta('grip',AUTHORED_GRIP) if weapon else AUTHORED_GRIP
  ik.support=weapon.get_meta('support',AUTHORED_SUPPORT) if weapon else AUTHORED_SUPPORT
  # The first-person hands reach further forward than this stance allows (ACR handguard ~0.40 m): cap it.
@@ -59,11 +59,11 @@ static func attach(holder: Node3D, socket_node: Node3D, weapon: Node3D) -> GripI
   var prefix='grip' if side=='R' else 'support'
   if weapon and weapon.has_meta(prefix+'_fingers') and weapon.has_meta(prefix+'_thumb'):
    ik.hold_frames[side]=contact_frame(weapon.get_meta(prefix+'_fingers'),weapon.get_meta(prefix+'_thumb'))*ik.hand_frames[side].inverse()
- if ik.hand_frames.has('L'):
-  # Same palm-facing-magazine convention as the authored reload clip.
-  var f=Vector3(.55,.75,-.30).normalized()
-  var palm=Vector3(.9,-.4,0).normalized()
-  ik.magazine_hand_frame=contact_frame(f,-palm.cross(f))*ik.hand_frames.L.inverse()
+ if ik.hand_frames.has('L') and ik.magazine:
+  # Fingers reach from the wrist into the magazine; the thumb runs up its side.
+  # Reusing the rifle support frame points fingers away from a detached magazine.
+  var f=(ik.magazine.get_aabb().get_center()-ik.magazine_contact).normalized()
+  ik.magazine_hand_frame=contact_frame(f,Vector3.UP)*ik.hand_frames.L.inverse()
  return ik
 
 static func contact_frame(fingers: Vector3, thumb: Vector3) -> Basis:

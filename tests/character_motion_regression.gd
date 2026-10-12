@@ -61,6 +61,9 @@ func run():
     var hand_basis=sk.global_basis*sk.get_bone_global_pose(sk.find_bone('Hand.L')).basis
     var contact_basis=magazine.global_basis*ik.magazine_hand_frame
     expect(hand_basis.orthonormalized().get_rotation_quaternion().angle_to(contact_basis.orthonormalized().get_rotation_quaternion())<.002,'Weapon '+str(kind)+' carried magazine rotates with wrist at '+str(t))
+    var fingers=(hand_basis*ik.hand_frames.L.x).normalized()
+    var towards_magazine=(magazine.global_transform*magazine.get_aabb().get_center()-hand).normalized()
+    expect(fingers.dot(towards_magazine)>.95,'Weapon '+str(kind)+' fingers point into the carried magazine at '+str(t))
    if t==.40:
     expect(not magazine.visible,'Weapon '+str(kind)+' magazine stows during swap')
     expect(twin_mag.visible and twin_mag.position==Vector3.ZERO,'Weapon '+str(kind)+' handling leaves another instance assembled')

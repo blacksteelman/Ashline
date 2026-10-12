@@ -48,6 +48,10 @@ var local_shots: Array=[]
 var address_field: LineEdit
 var selected_class=0
 func _ready():
+ if '--verify-assets' in OS.get_cmdline_user_args():
+  set_process(false);set_physics_process(false)
+  load('res://scripts/build_verification.gd').run(self)
+  return
  process_physics_priority=-100
  configure_input();configure_network();AudioMix.configure();load_settings()
  if OS.has_feature('editor'):capture_path='res://build/capture.png'
