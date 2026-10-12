@@ -13,6 +13,8 @@ env:
 jobs:
   export:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -71,17 +73,27 @@ jobs:
             exit 1
           fi
 
+      - name: Publish downloadable PC prerelease (manual build)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 tools/package_builds.py --linux-dir build/linux --windows-dir build/windows --revision "$GITHUB_SHA"
+          python3 tools/publish_build_release.py --repo "$GITHUB_REPOSITORY" --revision "$GITHUB_SHA"
+
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && github.event_name != 'workflow_dispatch'
         with:
           name: ASHLINE-verification
           path: build/verification
 
       - uses: actions/upload-artifact@v4
+        if: github.event_name != 'workflow_dispatch'
         with:
           name: ASHLINE-linux
           path: build/linux
       - uses: actions/upload-artifact@v4
+        if: github.event_name != 'workflow_dispatch'
         with:
           name: ASHLINE-windows
           path: build/windows
