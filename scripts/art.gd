@@ -1,6 +1,7 @@
 class_name Art
 extends RefCounted
 static var materials: Dictionary = {}
+static var world_weapon_parts: Dictionary = {}
 static func mat(key: String, color: Color = Color.WHITE, metallic: float = 0.0) -> StandardMaterial3D:
  var cache = key + str(color) + str(metallic)
  if materials.has(cache): return materials[cache]
@@ -50,15 +51,23 @@ static func world_weapon(parent: Node3D, kind: int) -> Node3D:
   var base='res://assets/viewmodels/world_'+Arsenal.WEAPONS[kind].fp.set
   if ResourceLoader.exists(base+'.res'):
    var mi=MeshInstance3D.new();mi.name='WorldWeapon';mi.mesh=load(base+'.res');parent.add_child(mi)
-   if kind==0:
-    # ACR's magazine is a distinct authored surface. Keep it movable rather
-    # than baking it into the receiver while the soldier removes it.
-    var assembled=mi.mesh.duplicate() as ArrayMesh;var magazine=mi.mesh.duplicate() as ArrayMesh
-    for s in range(mi.mesh.get_surface_count()-1,-1,-1):
-     if mi.mesh.surface_get_material(s).resource_name=='Pmag':assembled.surface_remove(s)
-     else:magazine.surface_remove(s)
-    mi.mesh=assembled
-    var movable=MeshInstance3D.new();movable.name='MagazineRig';movable.mesh=magazine;mi.add_child(movable)
+   var magazine_ids: PackedInt32Array=mi.mesh.get_meta('magazine_surfaces',PackedInt32Array())
+   # Older ACR bake already has a distinct magazine material; new bakes split
+   # rigid source-bone geometry even when it shares the receiver's material.
+   if magazine_ids.is_empty() and kind==0:
+    for s in mi.mesh.get_surface_count():
+     if mi.mesh.surface_get_material(s).resource_name=='Pmag':magazine_ids.append(s)
+   if not magazine_ids.is_empty():
+    var source=mi.mesh
+    if not world_weapon_parts.has(source):
+     var assembled=source.duplicate() as ArrayMesh;var magazine=source.duplicate() as ArrayMesh
+     for s in range(source.get_surface_count()-1,-1,-1):
+      if s in magazine_ids:assembled.surface_remove(s)
+      else:magazine.surface_remove(s)
+     world_weapon_parts[source]=[assembled,magazine]
+    # Immutable meshes are shared; each fighter owns its moving magazine node.
+    mi.mesh=world_weapon_parts[source][0]
+    var movable=MeshInstance3D.new();movable.name='MagazineRig';movable.mesh=world_weapon_parts[source][1];mi.add_child(movable)
    var meta=ConfigFile.new();meta.load(base+'.cfg')
    mi.set_meta('muzzle',meta.get_value('weapon','muzzle',Vector3(0,.03,-.6)))
    for key in ['grip','support']:

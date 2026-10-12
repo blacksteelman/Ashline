@@ -42,6 +42,20 @@ func run():
  expect(not is_instance_valid(corpse) and not rag.running and rag.bodies.is_empty(),'Respawn removes corpse physics')
  motion.update(1.0/60)
  expect(motion.tree.active and a.model.find_child('GripIK',true,false).active,'Respawn restores animation and grip')
+ # The receiver and the magazine in the hand must become independent bodies
+ # when death interrupts a reload; a seated magazine stays inside the gun.
+ for kind in [1,2,3,4]:
+  a.weapon_id=kind;a.update_world_weapon();a.reload_left=a.reload_time(kind)*.7
+  motion.reload_blend=1;motion.update(1.0/60);motion.tree.set('parameters/Air/blend_amount',0.0);motion.tree.advance(0)
+  var ik=a.model.find_child('GripIK',true,false);ik._process_modification()
+  a.dead=true;motion.update(1.0/60)
+  var loose=rag.world_root.get_node_or_null('DroppedMagazine')
+  var gun_body=rag.world_root.get_node_or_null('DroppedWeapon')
+  expect(loose is RigidBody3D and loose.mass<1.0,'Weapon '+str(kind)+' releases the carried magazine independently')
+  expect(gun_body.find_child('MagazineRig',true,false)==null and loose.find_child('MagazineRig',true,false)!=null,'Weapon '+str(kind)+' dropped receiver does not retain a floating magazine')
+  var loose_ref=loose
+  a.spawn();await process_frame;await process_frame
+  expect(not is_instance_valid(loose_ref),'Weapon '+str(kind)+' respawn cleans loose magazine physics')
  var p=g.player;p.body_motion.graphical=true
  p.hurt(200,g.fighters[6],'TORSO');p._process(1.0/60)
  expect(p.body_motion.ragdoll.running and p.camera.global_position.distance_to(p.eye())>.05,'Local death camera follows the physical corpse')

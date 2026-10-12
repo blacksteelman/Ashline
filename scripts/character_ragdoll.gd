@@ -69,6 +69,22 @@ func drop_weapon(gun: Node3D, momentum: Vector3, direction: Vector3):
  body.collision_layer=16;body.collision_mask=1|8;body.linear_damp=.6;body.angular_damp=2.0;body.continuous_cd=true
  world_root.add_child(body);body.global_transform=Transform3D(gun.global_basis.orthonormalized(),gun.global_position)
  var copy=gun.duplicate();body.add_child(copy);copy.global_transform=gun.global_transform
+ var magazine=copy.find_child('MagazineRig',true,false) as MeshInstance3D
+ if magazine and magazine.visible and magazine.position.length_squared()>.000001:
+  # A magazine carried in the hand must not remain rigidly floating beside
+  # the dropped receiver. Release it as its own small physical object.
+  var loose=RigidBody3D.new();loose.name='DroppedMagazine';loose.mass=.25
+  loose.collision_layer=16;loose.collision_mask=1|8;loose.linear_damp=.8;loose.angular_damp=2.0;loose.continuous_cd=true
+  world_root.add_child(loose)
+  var transform=magazine.global_transform
+  var local_bounds=magazine.get_aabb()
+  loose.global_transform=Transform3D(transform.basis.orthonormalized(),transform*local_bounds.get_center())
+  magazine.reparent(loose,true)
+  var mag_shape=CollisionShape3D.new();var mag_box=BoxShape3D.new()
+  mag_box.size=local_bounds.size*transform.basis.get_scale().abs();mag_box.size=mag_box.size.max(Vector3.ONE*.015)
+  mag_shape.shape=mag_box;loose.add_child(mag_shape)
+  loose.linear_velocity=momentum.limit_length(9)*.5+direction.limit_length(1)*.3
+  loose.angular_velocity=Vector3(2,1,.5)
  var bounds=AABB();var first=true
  var geometry_list=copy.find_children('*','MeshInstance3D',true,false)
  if copy is MeshInstance3D:geometry_list.push_front(copy)
