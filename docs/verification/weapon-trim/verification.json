@@ -8,19 +8,25 @@
   "change": {
     "file": "scripts/fp_set_rig.gd",
     "function": "FPSetRig.strip_foreign_part / FPSetRig.can_mask",
-    "rule": "Connected island of the fp_sniper 'Rifle' surface whose mean base-colour texel is blue (B - (R+G)/2 > 0.0) and whose centre lies forward of the receiver (z > 0.10) is removed from the index buffer. Vertex arrays are untouched, so the glTF skin bindings stay valid.",
+    "rule": "An island of the fp_sniper 'Rifle' surface counts as the can when at least a third of its vertices sample a clearly blue base-colour texel (B-(R+G)/2 > 0.10) and its centre lies forward of the receiver (z > 0.10). Its triangles are dropped from the index buffer only, so the glTF skin bindings stay valid.",
+    "why_not_a_mean": "Averaging the island hides the can (the label shares the atlas with the barrel rail), and thresholding the average also catches neutral gunmetal: islands of the ACR measure up to 0.015 from their own compressed texture.",
     "measured_values": {
-      "can_body_island_mean_blueness": 0.238,
-      "sling_swivel_strap_island_mean_blueness": 0.057,
-      "barrel_island_mean_blueness": -0.02,
-      "triangles_removed": 1909,
+      "can_body_island_blue_share": 1.0,
+      "can_body_island_size_m": [
+        0.024,
+        0.024,
+        0.197
+      ],
+      "sling_swivel_strap_blue_share": 0.29,
+      "barrel_island_blue_share": 0.0,
+      "triangles_removed": 540,
       "first_person_triangles_before": 34812,
-      "first_person_triangles_after": 32903
+      "first_person_triangles_after": 34272
     },
-    "third_person": "assets/viewmodels/world_fp_sniper.res rebaked with tests/bake_world_weapons.gd --weapons=2 (18051 triangles, 3 surfaces)."
+    "third_person": "assets/viewmodels/world_fp_sniper.res rebaked with tests/bake_world_weapons.gd --weapons=2 (19344 triangles, 3 surfaces)."
   },
   "checks": {
-    "tests/weapon_trim_regression.gd": "14 checks, 0 failures",
+    "tests/weapon_trim_regression.gd": "19 checks, 0 failures",
     "tests/functional.gd": "49 checks, 0 failures",
     "tests/fp_motion_regression.gd": "23 checks, 0 failures",
     "tests/fp_anchors_regression.gd": "46 checks, 0 failures",
@@ -51,10 +57,11 @@
   },
   "sniper_ads_is_intentional": "The sniper viewmodel is hidden in ADS (fighter.gd: gun.visible = camera.current and not (Arsenal.scoped(weapon_id) and aiming and view.aim_blend > .98)) and hud.gd draws scope_overlay() instead. scope-overlay-ads.png is the real scoped view. A HUD-free ADS capture of this weapon therefore looks like an empty street; that is the design, not a broken viewmodel.",
   "known_limits": [
-    "A 5x8 cm blue-coloured bracket on the barrel stays: its island's mean texel is not blue, so the colour rule cannot single it out without risking the barrel. It is small and at the front sight, not the 17 cm can that used to hang off the muzzle.",
+    "The can body is gone (its 74-vertex cylinder, 0.024 x 0.024 x 0.197 m, plus its label straps - 540 triangles in total). What is left is UV bleed: 341 of the barrel's triangles sit over the label patch of the shared atlas, so isolated barrel triangles still sample blue. Removing them would thin the barrel, so they stay; the visible result is a few small dark marks, not the blue box that used to hang off the muzzle.",
     "Finger shape and forearm deformation were not re-authored: this pass measured contact (see hand_contact) but did not rebuild the hand poses.",
     "Captures are software/Compatibility-rendered frames; no hardware-GPU or gunfeel claim is made.",
     "Windows export and the headless suites were run on this machine; the Linux build and CI were not re-run here.",
     "The export templates are not installed on this machine, so no playable export was produced locally."
-  ]
+  ],
+  "checks_total": "448 checks across ten suites, 0 failures"
 }

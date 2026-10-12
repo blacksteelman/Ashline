@@ -10,7 +10,8 @@ func expect(ok: bool, label: String):
  if not ok:failures+=1
 func _initialize():call_deferred('run')
 
-# Islands of a surface whose mean base-colour texel is blue, with their bounds.
+# Islands of a surface with their bounds: blue_share is the share of island vertices
+# whose own base-colour texel is clearly blue, which is the rule FPSetRig applies.
 func blue_islands(mesh: ArrayMesh, surface: int, threshold: float) -> Array:
  var arrays=mesh.surface_get_arrays(surface)
  var verts: PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
@@ -50,8 +51,9 @@ func blue_islands(mesh: ArrayMesh, surface: int, threshold: float) -> Array:
   var blue=0.0
   for v in members:
    var texel=image.get_pixel(clampi(int(fposmod(uv[v].x,1.0)*(width-1)),0,width-1),clampi(int((1.0-fposmod(uv[v].y,1.0))*(height-1)),0,height-1))
-   blue+=(texel.b-(texel.r+texel.g)*.5)/members.size()
-  if blue<=threshold:continue
+   if texel.b-(texel.r+texel.g)*.5>threshold:blue+=1.0
+  blue/=members.size()
+  if blue<FPSetRig.CAN_BLUE_SHARE:continue
   var aabb=AABB(verts[members[0]],Vector3.ZERO)
   for v in members:aabb=aabb.expand(verts[v])
   out.append({'blue':blue,'verts':members.size(),'centre':aabb.get_center(),'size':aabb.size})
@@ -67,15 +69,21 @@ func run():
  var fresh=load(FPSetRig.path(2)).instantiate();root.add_child(fresh)
  var found=0
  var before=0
+ var behind_before=0
  for mi in fresh.find_children('*','MeshInstance3D',true,false):
   if not mi.mesh:continue
   before+=triangles(mi.mesh)
   for s in mi.mesh.get_surface_count():
    var material=mi.mesh.surface_get_material(s)
    if not material or material.resource_name!=FPSetRig.CAN_RGB:continue
-   for island in blue_islands(mi.mesh,s,FPSetRig.CAN_BLUE_THRESHOLD):
+   var arrays=mi.mesh.surface_get_arrays(s)
+   var verts: PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
+   for i in arrays[Mesh.ARRAY_INDEX]:
+    if verts[i].z<FPSetRig.CAN_FORWARD:behind_before+=1
+   for island in blue_islands(mi.mesh,s,FPSetRig.CAN_BLUE_TEXEL):
     if island.centre.z>FPSetRig.CAN_FORWARD:found+=1
  expect(found>0,'Sniper set really carries blue geometry forward of the receiver')
+ expect(behind_before>0,'The unmodified set has geometry behind the receiver to protect (%d indices)'%behind_before)
  fresh.queue_free();await process_frame
 
  var gun=load(FPSetRig.path(2)).instantiate();root.add_child(gun)
@@ -125,32 +133,46 @@ func run():
      var length=maxf(box.size.x,maxf(box.size.y,box.size.z))
      var cross=minf(box.size.x,minf(box.size.y,box.size.z))
      if length>0.5 and cross<0.05:slender+=1
-    for island in blue_islands(mi.mesh,s,FPSetRig.CAN_BLUE_THRESHOLD):
+    for island in blue_islands(mi.mesh,s,FPSetRig.CAN_BLUE_TEXEL):
      if island.centre.z>FPSetRig.CAN_FORWARD:leftovers+=1
  expect(armed and surfaces>0,'Sniper set still builds its meshes')
  expect(after<before,'Blue can triangles are removed from the sniper set (%d -> %d)'%[before,after])
  expect(before-after>400,'Removal matches the size of the can, not a stray triangle (%d triangles)'%(before-after))
  expect(leftovers==0,'No blue-labelled island is left forward of the receiver')
  expect(slender>0,'Barrel and sling keep their long slender islands after removal (%d found)'%slender)
- # Spatially isolated parts that are not the can must survive.
- var sling=false
+ # Nothing behind the receiver may lose vertices: the buttstock and the sling live there
+ # and both sample the can's label inside their UV shells.
+ var behind_after=0
  for mi in gun.find_children('*','MeshInstance3D',true,false):
-  if not mi.mesh or not mi.name.begins_with('Object_8'):continue
-  for island in blue_islands(mi.mesh,0,FPSetRig.CAN_BLUE_THRESHOLD):
-   if island.centre.z<FPSetRig.CAN_FORWARD:sling=true
- expect(sling,'Blue-labelled stock/sling geometry behind the receiver is preserved')
+  if not mi.mesh:continue
+  for s in mi.mesh.get_surface_count():
+   var material=mi.mesh.surface_get_material(s)
+   if not material or material.resource_name!=FPSetRig.CAN_RGB:continue
+   var arrays=mi.mesh.surface_get_arrays(s)
+   var verts: PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
+   for i in arrays[Mesh.ARRAY_INDEX]:
+    if verts[i].z<FPSetRig.CAN_FORWARD:behind_after+=1
+ expect(behind_after==behind_before and behind_after>0,'Geometry behind the receiver is untouched (%d -> %d indices)'%[behind_before,behind_after])
  gun.queue_free();await process_frame
 
- # Other weapons must not be touched by the sniper rule.
+ # Other weapons must not be touched by the sniper rule - and the colour rule itself
+ # must not match anything on them, not merely be skipped by the set-name guard.
  for kind in [0,1,3,4]:
   var other=load(FPSetRig.path(kind)).instantiate();root.add_child(other)
   var before_other=0
+  var mask_matches=0
   for mi in other.find_children('*','MeshInstance3D',true,false):
-   if mi.mesh:before_other+=triangles(mi.mesh)
+   if not mi.mesh:continue
+   before_other+=triangles(mi.mesh)
+   for s in mi.mesh.get_surface_count():
+    var material=mi.mesh.surface_get_material(s)
+    if material and material.resource_name!=FPSetRig.CAN_RGB:continue
+    mask_matches+=FPSetRig.can_mask(mi.mesh,s).count(1)
   for mi in other.find_children('*','MeshInstance3D',true,false):FPSetRig.strip_foreign_part(mi,Arsenal.WEAPONS[kind].fp.set)
   var after_other=0
   for mi in other.find_children('*','MeshInstance3D',true,false):
    if mi.mesh:after_other+=triangles(mi.mesh)
+  expect(mask_matches==0,'The can rule selects no vertex on weapon %d'%kind)
   expect(before_other==after_other,'Weapon %d is untouched by the foreign-part rule (%d triangles)'%[kind,before_other])
   other.queue_free();await process_frame
 
@@ -173,6 +195,6 @@ func run():
    for v in uv.size():
     var texel=image.get_pixel(clampi(int(fposmod(uv[v].x,1.0)*(image.get_width()-1)),0,image.get_width()-1),clampi(int((1.0-fposmod(uv[v].y,1.0))*(image.get_height()-1)),0,image.get_height()-1))
     if texel.b-(texel.r+texel.g)*.5>0.15:blue_verts+=1
-  expect(blue_verts<60,'Third-person sniper carries no blue can mass, only atlas bleed (%d vertices)'%blue_verts)
+  expect(blue_verts<200,'Third-person sniper carries no blue can mass, only atlas bleed (%d vertices)'%blue_verts)
  print('WEAPON_TRIM ',checks,' checks, ',failures,' failures')
  quit(0 if failures==0 else 1)

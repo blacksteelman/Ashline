@@ -38,6 +38,120 @@ const WORDS={'idle':['Idle'],'walk':['Walk'],'sprint':['Run'],'draw':['Draw'],'f
 # Some sets weight a few stray vertices to the rig's root joint, or to nothing (a thin line to the origin):
 # drop the triangles that use them. Cached per mesh resource.
 static var cleaned: Dictionary={}
+
+# The sniper set (ccransh CC-BY, Sketchfab) hangs a blue metal gun-oil can with a
+# Portuguese "P-F-1 / PLATINUM FILTER" label on the barrel in front of the receiver.
+# It is a modelling detail of the source scene, not a weapon part: in a first-person
+# shooter it reads as a blue box hanging off the muzzle. The can is found by paint, not
+# by position: an island counts as the can when a third of its vertices sample a clearly
+# blue texel and it sits forward of the receiver. Averaging the whole island hides it
+# (the label shares the atlas with the barrel rail) and thresholding the average also
+# catches neutral gunmetal (ACR islands read up to 0.015 from their own compression),
+# so the share of blue vertices is what separates them.
+const CAN_SET='fp_sniper'
+const CAN_RGB='Rifle'
+const CAN_BLUE_TEXEL=0.10
+const CAN_BLUE_SHARE=0.33
+const CAN_FORWARD=0.10
+const CAN_MIN_VERTICES=3
+static var foreign: Dictionary={}
+
+static func can_mask(mesh: ArrayMesh, surface: int) -> PackedByteArray:
+ # 1 for every vertex of a triangle that belongs to the foreign can.
+ var arrays=mesh.surface_get_arrays(surface)
+ var verts: PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
+ var uv: PackedVector2Array=arrays[Mesh.ARRAY_TEX_UV]
+ var idx: PackedInt32Array=arrays[Mesh.ARRAY_INDEX]
+ var count=verts.size()
+ var mask=PackedByteArray();mask.resize(count)
+ var material=mesh.surface_get_material(surface)
+ if not material is BaseMaterial3D or not uv.size()==count:return mask
+ var texture: Texture2D=(material as BaseMaterial3D).albedo_texture
+ if not texture:return mask
+ var image=texture.get_image()
+ if not image:return mask
+ var width=image.get_width();var height=image.get_height()
+ var painted=PackedByteArray();painted.resize(count)
+ for v in count:
+  var u=fposmod(uv[v].x,1.0);var w=fposmod(uv[v].y,1.0)
+  var texel=image.get_pixel(clampi(int(u*(width-1)),0,width-1),clampi(int((1.0-w)*(height-1)),0,height-1))
+  if texel.b-(texel.r+texel.g)*.5>CAN_BLUE_TEXEL:painted[v]=1
+ # Connected components over shared vertices (a can is several islands in this mesh).
+ var parent=PackedInt32Array();parent.resize(count)
+ for v in count:parent[v]=v
+ var tri=idx.size()/3 if idx.size()>0 else count/3
+ for t in tri:
+  var a=idx[t*3] if idx.size()>0 else t*3
+  var b=idx[t*3+1] if idx.size()>0 else t*3+1
+  var c=idx[t*3+2] if idx.size()>0 else t*3+2
+  var ra=_root(parent,a);var rb=_root(parent,b)
+  if ra!=rb:parent[rb]=ra
+  var rc=_root(parent,c);ra=_root(parent,a)
+  if ra!=rc:parent[rc]=ra
+ var islands={}
+ for v in count:
+  var r=_root(parent,v)
+  if not islands.has(r):islands[r]=[]
+  islands[r].append(v)
+ var remove={}
+ for r in islands:
+  var members:Array=islands[r]
+  if members.size()<CAN_MIN_VERTICES:continue
+  var blue=0;var centre=Vector3.ZERO
+  for v in members:
+   blue+=painted[v]
+   centre+=verts[v]/members.size()
+  if float(blue)/members.size()>=CAN_BLUE_SHARE and centre.z>CAN_FORWARD:remove[r]=true
+ if remove.is_empty():return mask
+ for v in count:
+  if remove.has(_root(parent,v)):mask[v]=1
+ return mask
+
+static func _root(parent: PackedInt32Array, x: int) -> int:
+ var r=x
+ while parent[r]!=r:r=parent[r]
+ while parent[x]!=r:
+  var next=parent[x];parent[x]=r;x=next
+ return r
+
+# Drop the can's triangles before any other pass: the vertex arrays stay untouched,
+# which keeps the skin bindings the glTF importer produced.
+static func strip_foreign_part(mi: MeshInstance3D, set_name: String):
+ if set_name!=CAN_SET or not mi.mesh:return
+ var mesh: ArrayMesh=mi.mesh
+ if foreign.has(mesh):
+  if foreign[mesh]!=null:mi.mesh=foreign[mesh]
+  return
+ var drop={}
+ var changed=false
+ for s in mesh.get_surface_count():
+  var material=mesh.surface_get_material(s)
+  if material and material.resource_name!=CAN_RGB:continue
+  var mask=can_mask(mesh,s)
+  if mask.count(1)==0:continue
+  drop[s]=mask;changed=true
+ if not changed:
+  foreign[mesh]=null;return
+ var surfaces=[]
+ for s in mesh.get_surface_count():
+  var arrays=mesh.surface_get_arrays(s)
+  if drop.has(s):
+   var mask:PackedByteArray=drop[s]
+   var idx: PackedInt32Array=arrays[Mesh.ARRAY_INDEX]
+   var keep=PackedInt32Array()
+   for t in range(0,idx.size(),3):
+    if mask[idx[t]]==0 and mask[idx[t+1]]==0 and mask[idx[t+2]]==0:keep.append_array([idx[t],idx[t+1],idx[t+2]])
+   arrays[Mesh.ARRAY_INDEX]=keep
+  for c in [Mesh.ARRAY_CUSTOM0,Mesh.ARRAY_CUSTOM1,Mesh.ARRAY_CUSTOM2,Mesh.ARRAY_CUSTOM3]:arrays[c]=null
+  surfaces.append(arrays)
+ var out=ArrayMesh.new()
+ for s in mesh.get_surface_count():
+  var flags=mesh.surface_get_format(s)&(Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS|Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE)
+  out.add_surface_from_arrays(mesh.surface_get_primitive_type(s),surfaces[s],[],{},flags)
+  out.surface_set_material(s,mesh.surface_get_material(s))
+ foreign[mesh]=out
+ mi.mesh=out
+
 static func strip_strays(mi: MeshInstance3D):
  var mesh: ArrayMesh=mi.mesh
  if not mesh or not mi.skin:return
@@ -88,6 +202,7 @@ func bind(node: Node3D, kind: int=-1):
  player=gun.find_child('AnimationPlayer',true,false)
  var ico=gun.find_child('Icosphere',true,false)
  if ico:ico.visible=false
+ for mi in gun.find_children('*','MeshInstance3D',true,false):strip_foreign_part(mi,cfg.get('set',''))
  for mi in gun.find_children('*','MeshInstance3D',true,false):strip_strays(mi)
  for i in skeleton.get_bone_count():
   var n=skeleton.get_bone_name(i)
