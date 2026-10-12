@@ -27,6 +27,16 @@ Evidence: `docs/verification/weapon-lighting/`. Repeat a settled pair with `godo
 
 ## Continue
 
-Inspect actual Forward+ gameplay on a GPU. Check the bounce during ADS, sprint and reload and in bright outdoor light; reduce/tune specular if coated metal looks too glossy. Finger poses, forearm deformation, inconsistent weapon styling and the blue sniper muzzle accessory remain unresolved. This pass does not establish COD4 visual quality. Preserve Claude's audio.
+Inspect actual Forward+ gameplay on a GPU. Check the bounce during ADS, sprint and reload and in bright outdoor light; reduce/tune specular if coated metal looks too glossy. Finger poses, forearm deformation and inconsistent weapon styling between the five sets remain unresolved. This pass does not establish COD4 visual quality. Preserve Claude's audio.
+
+## Follow-up pass: the blue sniper accessory is gone
+
+The sniper set (ccransh CC-BY) hangs a blue gun-oil can with a Portuguese "P-F-1 / PLATINUM FILTER" label on the barrel in front of the receiver. It read as a blue box hanging off the muzzle in every first-person and third-person frame. `FPSetRig.strip_foreign_part()` now drops it at load time: islands of the `Rifle` surface whose mean base-colour texel is blue and whose centre is forward of the receiver are removed from the index buffer only, so the glTF skin bindings stay valid. Barrel, sling and buttstock (which samples the same label inside its UV shell) survive; `tests/weapon_trim_regression.gd` guards all of that, including the untouched other four weapons and the third-person bake. The bake was refreshed: `assets/viewmodels/world_fp_sniper.res`.
+
+One 5x8 cm blue bracket on the barrel remains - its island's mean texel is not blue, so the colour rule cannot single it out without risking the barrel itself. Removing it needs mesh surgery in Blender, not a rule.
+
+Two things this pass measured rather than changed. First, the sniper has no first-person viewmodel in ADS by design: `fighter.gd` hides the gun once `Arsenal.scoped()` and `view.aim_blend > .98`, and `hud.gd` draws `scope_overlay()` instead. A HUD-free ADS capture of that weapon looks like an empty street, and that is not a broken viewmodel - `docs/verification/weapon-trim/scope-overlay-ads.png` shows the real scoped view. Second, the palms and fingers do reach the weapon: engine-baked skinned vertices put the closest palm vertex 0.2-4.4 mm and the closest fingertip 0.2-0.9 mm from the weapon surface on all five sets. Finger shape is still a pose question, not a contact one.
+
+Evidence and numbers: `docs/verification/weapon-trim/`. Repeated local run on Windows (Godot 4.6.3, RX 9070 XT): ten suites / 443 checks, 0 failures; a real `main.tscn` match with input, damage and HUD captured; bot smoke `--bot-test --seed=801 --matches=1` finished with 520 shots, 18 headshots, success. `tests/functional.gd` now pins `settings.mode` and `settings.classes` before `start_match()`, because saved user preferences (domination, edited loadouts) used to fail four of its checks on any machine where the game had been played. The export templates are not installed here, so no playable export was produced in this session.
 
 For graphical runs here, use Xorg with a `/tmp` logfile and set XDG_DATA_HOME, XDG_CACHE_HOME and MESA_SHADER_CACHE_DIR inside the workspace. `tools` are not required to modify user settings: CLI `--graphics=0` selects Performance for a diagnostic launch. Default remains Quality/Forward+.

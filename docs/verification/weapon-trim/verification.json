@@ -44,9 +44,17 @@
     "play-weapon-2.png - the sniper in a real match, no can",
     "play_smoke.json - shot and movement measurements"
   ],
+  "hand_contact": {
+    "method": "Engine-baked skinned vertex positions (MeshInstance3D.bake_mesh_from_current_skeleton_pose) at the idle pose; distance from every arms vertex to the nearest weapon vertex, searched in a 2 cm grid.",
+    "result": "Palms and fingers reach the weapon surface on all five first-person sets: closest palm vertices 0.2-4.4 mm, closest fingertip vertices 0.2-0.9 mm, with 155-1332 left-finger and 573-1332 right-finger vertices inside 10 mm. The hand-alignment defect is not present in the current assets.",
+    "note": "Vertex distance is a contact measurement, not a judgement of finger shape: a finger can touch the mesh and still not read as a proper grip."
+  },
+  "sniper_ads_is_intentional": "The sniper viewmodel is hidden in ADS (fighter.gd: gun.visible = camera.current and not (Arsenal.scoped(weapon_id) and aiming and view.aim_blend > .98)) and hud.gd draws scope_overlay() instead. scope-overlay-ads.png is the real scoped view. A HUD-free ADS capture of this weapon therefore looks like an empty street; that is the design, not a broken viewmodel.",
   "known_limits": [
     "A 5x8 cm blue-coloured bracket on the barrel stays: its island's mean texel is not blue, so the colour rule cannot single it out without risking the barrel. It is small and at the front sight, not the 17 cm can that used to hang off the muzzle.",
+    "Finger shape and forearm deformation were not re-authored: this pass measured contact (see hand_contact) but did not rebuild the hand poses.",
     "Captures are software/Compatibility-rendered frames; no hardware-GPU or gunfeel claim is made.",
-    "Windows export and the headless suites were run on this machine; the Linux build and CI were not re-run here."
+    "Windows export and the headless suites were run on this machine; the Linux build and CI were not re-run here.",
+    "The export templates are not installed on this machine, so no playable export was produced locally."
   ]
 }
