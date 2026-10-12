@@ -178,11 +178,18 @@ func world_muzzle(fallback: Vector3) -> Vector3:
  return fallback
 func eye() -> Vector3:return global_position+Vector3(0,1.03 if crouched else 1.62,0)
 func aim_dir() -> Vector3:return Vector3(-sin(yaw)*cos(pitch),sin(pitch),-cos(yaw)*cos(pitch))
+# Scoped in, the world is magnified, so the same mouse movement must sweep less of the
+# view or the sights become unusable. The turn is scaled by the zoom in use, and the
+# player can turn the scaling off. Kept as one function so the rule has one home.
+static func turn_scale(camera_fov: float, base_fov: float, enabled: bool) -> float:
+ if not enabled:return 1.0
+ return clampf(camera_fov/maxf(1.0,base_fov),.05,1.0)
 func _input(event):
  if not local_player or dead or game.state!='match' or game.menu_open:return
  if event is InputEventMouseMotion and Input.mouse_mode==Input.MOUSE_MODE_CAPTURED:
-  yaw-=event.screen_relative.x*game.settings.sensitivity*.001
-  var look_y=-event.screen_relative.y*game.settings.sensitivity*.001
+  var zoom=turn_scale(camera.fov,game.settings.fov,game.settings.get('ads_sensitivity',true))
+  yaw-=event.screen_relative.x*game.settings.sensitivity*.001*zoom
+  var look_y=-event.screen_relative.y*game.settings.sensitivity*.001*zoom
   if look_y<0:recoil_return.x=maxf(0,recoil_return.x+look_y)
   pitch=clampf(pitch+look_y,-1.45,1.45)
   sway=Vector2(clampf(event.relative.x*.0003,-.02,.02),clampf(event.relative.y*.0003,-.02,.02))

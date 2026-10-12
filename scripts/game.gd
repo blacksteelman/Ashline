@@ -5,7 +5,7 @@ var fighters: Array[Fighter]=[]
 var player: Fighter
 var state='menu'
 var menu_open=false
-var settings={'sensitivity':1.5,'fov':90.0,'volume':.75,'fullscreen':false,'graphics':2,'vsync':true,'camo':0,'classes':[],'mode':'tdm'}
+var settings={'sensitivity':1.5,'ads_sensitivity':true,'fov':90.0,'volume':.75,'fullscreen':false,'graphics':2,'vsync':true,'camo':0,'classes':[],'mode':'tdm'}
 var hud: CanvasLayer
 var ui: Control
 var scores=[0,0]

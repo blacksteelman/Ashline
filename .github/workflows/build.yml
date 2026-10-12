@@ -50,7 +50,7 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p build/verification
-          for suite in functional fp_motion_regression fp_anchors_regression viewmodel_lighting_regression weapon_trim_regression weapon_aim_regression weapon_sprint_regression runtime_assets_regression fp_actions_regression audio_distance_regression character_motion_regression foundry_routes_regression ragdoll_regression; do
+          for suite in functional fp_motion_regression fp_anchors_regression viewmodel_lighting_regression weapon_trim_regression weapon_aim_regression weapon_sprint_regression weapon_sensitivity_regression runtime_assets_regression fp_actions_regression audio_distance_regression character_motion_regression foundry_routes_regression ragdoll_regression; do
             ~/godot/godot --headless --audio-driver Dummy --path . --script tests/${suite}.gd 2>&1 | tee build/verification/${suite}.log
             if grep -E '^(SCRIPT ERROR|ERROR):' build/verification/${suite}.log; then
               exit 1

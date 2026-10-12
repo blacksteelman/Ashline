@@ -86,3 +86,11 @@ Pulling the trigger while sprinting used to be dropped on the floor: `sprint()` 
 Eleven checks cover it (sprint starts, a sprinting player cannot fire, the trigger starts the transition, a held trigger does not fire during or after it, a fresh pull costs exactly one round, a standing shot is immediate). Bots and remote clients are untouched by this: bots never set the player's sprint state.
 
 The full local suite is now 12 suites / 459 checks plus the runtime asset check, all passing, and the bot match is unchanged.
+
+## Scoped sensitivity
+
+Mouse look scaled the same amount with and without the sights, so the 3x sniper scope swept the view three times as fast as hip fire and the player had to fight the sights at exactly the moment aiming should feel precise. `Fighter.turn_scale()` now scales the turn by the zoom the camera is actually using, which is the standard fix and keeps the on-screen travel per mouse count roughly constant; `settings.ads_sensitivity` (on by default) turns it off for players who prefer the old feel, and an unscoped weapon is bit-for-bit unchanged.
+
+`tests/weapon_sensitivity_regression.gd` checks the rule directly, eleven checks: an unscoped weapon returns 1.0, the sniper's 28.8 degrees returns 0.32, three explicit field-of-view ratios match exactly, the option disables the scaling, a degenerate field of view cannot zero the turn, the setting is on by default, and a scoped player is really looking through the zoomed field of view (34.7 degrees measured mid-transition).
+
+One note for whoever writes the next input test here: a headless window never reports `MOUSE_MODE_CAPTURED`, so `_input()` cannot be driven with synthetic mouse motion in this environment. The suite therefore tests the rule in its own function rather than through the event, and says so; `tests/functional.gd` is the only suite that drives real input, and it does it through `Input.action_press`.
