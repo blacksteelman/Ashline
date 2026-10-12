@@ -14,7 +14,12 @@ Raw logs and actual frames: `docs/verification/reload-contact/`.
 
 Local builds: `build/service-linux/ASHLINE.x86_64`, `build/service-windows/ASHLINE.exe`. Linux runs here; Windows is cross-exported and not runtime-tested.
 
-CI: https://github.com/blacksteelman/Ashline/actions/runs/38158301046 (final artifact details to be recorded after completion).
+CI completed successfully: https://github.com/blacksteelman/Ashline/actions/runs/38158301046
+
+- Windows: https://github.com/blacksteelman/Ashline/actions/runs/38158301046/artifacts/11709682715
+- Linux: https://github.com/blacksteelman/Ashline/actions/runs/38158301046/artifacts/11709567809
+
+Download/CRC/revision/payload hash verification of both published artifacts is in `docs/verification/reload-contact/ci-artifacts.json`.
 
 To capture: start Xorg using `tests/xorg.conf`; use `VK_ICD_FILENAMES=/workspace/ashline/.runtime/vulkan/lvp.json`, then Godot with `--script tests/capture_character_motion.gd -- --tag=service-final --weapon=0 --service`. Last display `:158`; use `:159` next. Source captures use the actual Fighter, CharacterMotion, GripIK and world weapon in the live map, with time advanced deterministically. Export templates: `XDG_DATA_HOME=/workspace/ashline/.runtime/data`.
 

@@ -1,0 +1,70 @@
+{
+  "run_id": 38158301046,
+  "conclusion": "success",
+  "artifacts": [
+    {
+      "platform": "Windows",
+      "bytes": 486598390,
+      "download_verified": true,
+      "crc_verified": true,
+      "file_hashes_verified": true,
+      "build_info": {
+        "game": "ASHLINE",
+        "revision": "4421b5f3117328626732c63c0779a545d0ab72f6",
+        "godot": "4.6.3",
+        "platform": "Windows",
+        "created_utc": "2026-10-11T17:13:15.932440+00:00",
+        "files": {
+          "ASHLINE.exe": {
+            "bytes": 562330464,
+            "sha256": "da14104138b0c1b06d31964cdadf7ba96a05bf7b16b61fa5755133ca9f5d2bb1"
+          },
+          "LICENSES.md": {
+            "bytes": 6405,
+            "sha256": "63f8038698970bbd2980d131db35049a7b3d48630b651e9127f133b08559259f"
+          },
+          "README.md": {
+            "bytes": 21983,
+            "sha256": "115071352d664ce9a30b6497b9ca79219857006864b45044c79e6812234c004a"
+          },
+          "START_HERE_RU.txt": {
+            "bytes": 1458,
+            "sha256": "5f1bbeb9b75baeeaa52bc309ccd6a6d88a4c591088d39496a543606001d048ad"
+          }
+        }
+      }
+    },
+    {
+      "platform": "Linux",
+      "bytes": 477557343,
+      "download_verified": true,
+      "crc_verified": true,
+      "file_hashes_verified": true,
+      "build_info": {
+        "game": "ASHLINE",
+        "revision": "4421b5f3117328626732c63c0779a545d0ab72f6",
+        "godot": "4.6.3",
+        "platform": "Linux",
+        "created_utc": "2026-10-11T17:13:15.619891+00:00",
+        "files": {
+          "ASHLINE.x86_64": {
+            "bytes": 528887664,
+            "sha256": "5ecbb42d90c8bbfd8437f3e4c80d18321ee108015f68375de573e3716115c550"
+          },
+          "LICENSES.md": {
+            "bytes": 6405,
+            "sha256": "63f8038698970bbd2980d131db35049a7b3d48630b651e9127f133b08559259f"
+          },
+          "README.md": {
+            "bytes": 21983,
+            "sha256": "115071352d664ce9a30b6497b9ca79219857006864b45044c79e6812234c004a"
+          },
+          "START_HERE_RU.txt": {
+            "bytes": 1458,
+            "sha256": "5f1bbeb9b75baeeaa52bc309ccd6a6d88a4c591088d39496a543606001d048ad"
+          }
+        }
+      }
+    }
+  ]
+}
