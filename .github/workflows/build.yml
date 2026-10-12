@@ -65,18 +65,22 @@ jobs:
           python3 tools/package_builds.py --linux-dir build/linux --windows-dir build/windows --revision "$GITHUB_SHA" --no-archives
           ls -la build/linux build/windows
 
-      - name: Verify calibrated weapon assets in native build
+      - name: Verify runtime assets in the exported build
         run: |
           set -o pipefail
-          build/linux/ASHLINE.x86_64 --headless -- --verify-assets 2>&1 | tee build/verification/native-assets.log
-          if grep -E '^(SCRIPT ERROR|ERROR):' build/verification/native-assets.log; then
+          # A load()ed asset that the exporter skipped only fails inside the shipped
+          # binary, so this runs there: textures, fx, shaders, fonts, scripts, every
+          # sound, the camouflage maps, all weapon sets and both soldiers.
+          build/linux/ASHLINE.x86_64 --headless --audio-driver Dummy -- --verify-assets 2>&1 | tee build/verification/native-assets.log
+          if grep -E '^(SCRIPT ERROR|ERROR):|FAIL' build/verification/native-assets.log; then
             exit 1
           fi
+          grep -q '^EXPORTED_ASSETS PASS' build/verification/native-assets.log
 
       - name: Smoke test (Linux build runs a bot match headless)
         run: |
           set -o pipefail
-          timeout 600 build/linux/ASHLINE.x86_64 --headless -- --bot-test --seed=801 --matches=1 2>&1 | tee build/verification/native-bot.log
+          timeout 600 build/linux/ASHLINE.x86_64 --headless --audio-driver Dummy -- --bot-test --seed=801 --matches=1 2>&1 | tee build/verification/native-bot.log
           if grep -E '^(SCRIPT ERROR|ERROR):' build/verification/native-bot.log; then
             exit 1
           fi

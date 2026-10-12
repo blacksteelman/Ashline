@@ -51,6 +51,14 @@ build\windows\ASHLINE.exe --headless --audio-driver Dummy --user-data-dir build/
 build\windows\ASHLINE.exe --resolution 1280x720 --user-data-dir build/verify-userdata -- --showcase
 ```
 
-`--user-data-dir` keeps the run away from the player's saved settings, which otherwise decide the mode and the class loadouts. A native launch must print `Vulkan ... Forward+ - Using Device #0` and `NAV_READY`; a missing `load()`ed asset shows up as `No loader found for resource`, which no editor run can reveal. Two such assets were excluded from `export_presets.cfg` and are now included: `assets/smoke.png` (impact and explosion smoke; the shipped build threw on every impact) and the `world_*.cfg` muzzle tables. `tests/runtime_assets_regression.gd` now lists every path the scripts load at runtime so an exporter exclude cannot silently break a build again.
+`--user-data-dir` keeps the run away from the player's saved settings, which otherwise decide the mode and the class loadouts. A native launch must print `Vulkan ... Forward+ - Using Device #0` and `NAV_READY`. `--verify-assets` runs inside the shipped binary and checks what the editor cannot: every texture, fx, shader, font and script the game `load()`s, all 26 sound streams (loaded the way the game loads them, and the ambient loop is started through the AudioServer), the three camouflage maps, every first-person weapon set and both soldier models. It prints `EXPORTED_ASSETS PASS` or the failing paths, and CI fails the build without that line.
 
-Recorded in this session on Windows 11 / Godot 4.6.3 / RX 9070 XT: the exported `ASHLINE.exe` (536 MB, Vulkan/Forward+) completed a headless bot match with the same numbers as the editor run (520 shots, 18 headshots, 31:40) and opened its window in showcase mode with no loader errors.
+Three export defects were found this way, all of them invisible in the editor:
+
+- `assets/smoke.png` was excluded from both presets, so the shipped build threw `No loader found for resource` on every impact and had no impact or explosion smoke.
+- `assets/textures/camo_emr_albedo.jpg` and `camo_mm14_albedo.jpg` were excluded too; `FirstPersonRig.camo_texture()` loads them by name, so two of the three camouflage patterns were simply absent from builds (`camo_ocp_albedo.jpg` happened to be missing from the exclude list).
+- The first version of the check itself was wrong: `FileAccess.file_exists()` on a `.wav` cannot succeed in a build, because the importer turns the wav into a `.sample` resource. It now `load()`s the streams the way the game does.
+
+`tests/runtime_assets_regression.gd` keeps the editor side of the same list, so an exporter exclude is caught before an export is even attempted.
+
+Recorded in this session on Windows 11 / Godot 4.6.3 / RX 9070 XT: the exported `ASHLINE.exe` (538.5 MB, Vulkan/Forward+) completed a headless bot match with the same numbers as the editor run (520 shots, 18 headshots, 31:40) and opened its window in showcase mode with no loader errors. With `--verbose` the one-shot verification process reports one leaked `AudioStreamPlaybackWAV` at exit; it holds no `FAIL` line and is written down in `docs/verification/native-build/verification.json` rather than hidden.
